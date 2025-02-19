@@ -1,0 +1,15 @@
+node_modules/
+package-lock.json
+
+.env
+
+.DS_Store
+Thumbs.db
+
+dist/
+build/
+
+.vscode/
+.idea/
+
+*.swp
