@@ -2,7 +2,9 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 RECOMMENDED_NODE_VERSION="22.13.1"
+MYSQL_USER="root"
 
 if [[ $EUID -ne 0 ]]; then
     echo "Please run this script as root (using sudo)."
@@ -35,13 +37,44 @@ if ! command -v node &> /dev/null; then
     fi
 else
     CURRENT_NODE_VERSION=$(node -v | cut -d 'v' -f 2)
-    echo "You are using Node.js v$CURRENT_NODE_VERSION. We recommend using Node.js v$RECOMMENDED_NODE_VERSION."
+    echo "You are using Node.js v$CURRENT_NODE_VERSION. Recommended: v$RECOMMENDED_NODE_VERSION."
+fi
+
+if ! command -v mysql &> /dev/null; then
+    echo "MySQL is not installed. Installing MySQL..."
+    apt install -y mysql-server
+    systemctl enable mysql
+    systemctl start mysql
+    echo "MySQL installed and started."
+else
+    echo "MySQL is already installed."
 fi
 
 echo "Installing npm dependencies..."
-if ! npm install; then
-    echo "Failed to install npm dependencies!"
-    exit 1
+npm install || { echo "Failed to install npm dependencies!"; exit 1; }
+
+echo
+
+read -p "Do you want to migrate the database? (y/n): " MIGRATE
+if [[ "$MIGRATE" == "y" ]]; then
+    echo "Running database migration..."
+    mysql -u $MYSQL_USER -p < "$SCRIPT_DIR/database/migrations/250220-rddb.migration.sql"
+    echo "Migration completed."
+fi
+
+read -p "Do you want to run the database seeder? (y/n): " SEED
+if [[ "$SEED" == "y" ]]; then
+    echo "Running database seeder..."
+    mysql -u $MYSQL_USER -p < "$SCRIPT_DIR/database/seeders/250220-rddb.seeder.sql"
+    echo "Seeding completed."
+fi
+
+read -p "Setup complete! Do you want to start the server? (y/n): " RUNSERVER
+if [[ "$RUNSERVER" == "y" ]]; then
+    echo "Starting the server..."
+    npm run start || { echo "Failed to start the server!"; exit 1; }
+else
+    echo "Skipping server start."
 fi
 
 echo "Setup complete!"
