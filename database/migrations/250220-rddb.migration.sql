@@ -5,7 +5,7 @@ USE `rddb`;
 -- Table: authentications
 CREATE TABLE `authentications` (
     `authentication_id` INT AUTO_INCREMENT PRIMARY KEY,
-    `identifer_email` VARBINARY(1000) NOT NULL,
+    `identifier_email` VARBINARY(1000) NOT NULL,
     `password` VARBINARY(1000) NOT NULL,
     `role` ENUM('ADMIN', 'STORE', 'CUSTOMER') NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
