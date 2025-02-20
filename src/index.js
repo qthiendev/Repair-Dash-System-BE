@@ -5,7 +5,15 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-app.use(cors());
+const corsOptions = {
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : "*",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const apiRoutes = require(`./routes/api.route`);
