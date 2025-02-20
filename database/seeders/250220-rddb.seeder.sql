@@ -10,7 +10,7 @@ TRUNCATE TABLE authentications;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-INSERT INTO `authentications` (`identifer_email`, `password`, `role`) VALUES
+INSERT INTO `authentications` (`identifier_email`, `password`, `role`) VALUES
     (AES_ENCRYPT('admin@example.com', 'secret_key'), AES_ENCRYPT('password123', 'secret_key'), 'ADMIN'),
     (AES_ENCRYPT('store@example.com', 'secret_key'), AES_ENCRYPT('password123', 'secret_key'), 'STORE'),
     (AES_ENCRYPT('customer@example.com', 'secret_key'), AES_ENCRYPT('password123', 'secret_key'), 'CUSTOMER');
