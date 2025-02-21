@@ -55,6 +55,23 @@ npm install || { echo "Failed to install npm dependencies!"; exit 1; }
 
 echo
 
+if [[ -f .env ]]; then
+    echo ".env already exists. Skipping copy."
+else
+    echo "Copying .env.example to .env..."
+    cp .env.example .env
+
+    if [[ -f .env ]]; then
+        echo "Successfully copied .env.example to .env."
+    else
+        echo "ERROR: Failed to copy .env.example to .env!"
+        echo "Please copy the file manually using: cp .env.example .env"
+        exit 1
+    fi
+fi
+
+echo
+
 read -p "Do you want to migrate the database? (y/n): " MIGRATE
 if [[ "$MIGRATE" == "y" ]]; then
     echo "Running database migration..."
