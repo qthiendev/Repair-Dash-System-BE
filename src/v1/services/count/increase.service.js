@@ -1,4 +1,4 @@
-const { incrementCount } = require('../../../../utils/storage/count.storage');
+const { incrementCount } = require('../../utils/storage/count.storage');
 
 /**
  * Increment the current count by 1.

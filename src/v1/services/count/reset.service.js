@@ -1,4 +1,4 @@
-const { resetCount } = require('../../../../utils/storage/count.storage');
+const { resetCount } = require('../../utils/storage/count.storage');
 
 /**
  * Reset the count to 0.

@@ -1,4 +1,4 @@
-const { getCount, setCount } = require('../../../../utils/storage/count.storage');
+const { getCount, setCount } = require('../../utils/storage/count.storage');
 
 /**
  * Set the count to a new value.

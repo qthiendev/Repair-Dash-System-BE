@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { current, increase, set, reset } = require('../../modules/v1/controllers/count.controller');
+const { current, increase, set, reset } = require('../controllers/count.controller');
 
 /**
  * @description RESTful API for managing the count.

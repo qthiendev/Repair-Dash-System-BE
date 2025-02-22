@@ -3,7 +3,7 @@ const { increase } = require('../services/count/increase.service');
 const { set } = require('../services/count/set.service');
 const { reset } = require('../services/count/reset.service');
 
-const { validateCountValue } = require('../../../validators/count.validator');
+const { validateCountValue } = require('../validators/count.validator');
 
 /**
  * Get the current count.

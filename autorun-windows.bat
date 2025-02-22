@@ -63,6 +63,23 @@ echo Dependencies installed successfully.
 
 echo:
 
+if exist .env (
+    echo .env already exists. Skipping copy.
+) else (
+    echo Copying .env.example to .env...
+    copy /Y .env.example .env
+
+    if exist .env (
+        echo Successfully copied .env.example to .env.
+    ) else (
+        echo ERROR: Failed to copy .env.example to .env!
+        echo Please copy the file manually using: copy .env.example .env
+        exit /b 1
+    )
+)
+
+echo:
+
 set /p MIGRATE="Do you want to migrate the database? (y/n): "
 if /I "%MIGRATE%"=="y" (
     echo Running migrate...

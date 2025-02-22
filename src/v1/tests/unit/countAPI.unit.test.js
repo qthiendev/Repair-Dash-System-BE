@@ -1,5 +1,5 @@
 const request = require('supertest');
-const { app, server } = require('../../src/index');
+const { app, server } = require('../../../index');
 
 beforeAll(() => {
     jest.spyOn(console, 'log').mockImplementation(() => { });

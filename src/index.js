@@ -16,7 +16,7 @@ app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const apiRoutes = require(`./routes/api.route`);
+const apiRoutes = require(`./v1/routes/api.route`);
 app.use('/api', apiRoutes);
 
 const port = process.env.PORT || 3000;

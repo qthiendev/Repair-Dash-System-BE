@@ -1,4 +1,4 @@
-const { getCount } = require('../../../../utils/storage/count.storage');
+const { getCount } = require('../../utils/storage/count.storage');
 
 /**
  * Get the current count.
