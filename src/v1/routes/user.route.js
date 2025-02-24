@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
 const {
@@ -6,14 +6,14 @@ const {
     readUser,
     updateUser,
     deleteUser
-} = require("../controllers/user.controller");
+} = require('../controllers/user.controller');
 
 const {
     readValidation,
     createValidation,
     updateValidation,
     deleteValidation
-} = require("../validators/user.validator");
+} = require('../validators/user.validator');
 
 /**
  * @description RESTful API for managing users.
@@ -23,9 +23,9 @@ const {
  * @route PUT    /:user_id  - Update a user
  * @route DELETE /:user_id  - Soft delete a user
  */
-router.post("/", createValidation, createUser);
-router.get("/:user_id?", readValidation, readUser);
-router.put("/:user_id", updateValidation, updateUser);
-router.delete("/:user_id", deleteValidation, deleteUser);
+router.post('/', createValidation, createUser);
+router.get('/:user_id?', readValidation, readUser);
+router.put('/:user_id', updateValidation, updateUser);
+router.delete('/:user_id', deleteValidation, deleteUser);
 
 module.exports = router;

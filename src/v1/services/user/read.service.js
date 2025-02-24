@@ -1,4 +1,4 @@
-const { User } = require("../../models/index");
+const { User } = require('../../models/index.model');
 
 /**
  * Retrieves a specific user by ID or fetches all users if no ID is provided.

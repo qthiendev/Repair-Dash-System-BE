@@ -34,12 +34,12 @@ describe('Feature Test: User API', () => {
 
     it('should create a new user', async () => {
         const userData = {
-            identifier_email: "testuser@example.com",
-            password: "password123",
-            role: "CUSTOMER",
-            user_full_name: "Test User",
-            user_phone_number: "0123456789",
-            user_address: "123 Test Street"
+            identifier_email: 'testuser@example.com',
+            password: 'password123',
+            role: 'CUSTOMER',
+            user_full_name: 'Test User',
+            user_phone_number: '0123456789',
+            user_address: '123 Test Street'
         };
 
         const response = await agent.post('/api/v1/user').send(userData);
@@ -57,12 +57,12 @@ describe('Feature Test: User API', () => {
 
     it('should fail to create a user with invalid data', async () => {
         const response = await agent.post('/api/v1/user').send({
-            identifier_email: "not-an-email",
-            password: "123",
-            role: "UNKNOWN",
-            user_full_name: "A",
-            user_phone_number: "123",
-            user_address: ""
+            identifier_email: 'not-an-email',
+            password: '123',
+            role: 'UNKNOWN',
+            user_full_name: 'A',
+            user_phone_number: '123',
+            user_address: ''
         });
 
         expect(response.status).toBe(400);
@@ -70,9 +70,9 @@ describe('Feature Test: User API', () => {
 
     it('should update the newly created user', async () => {
         const response = await agent.put(`/api/v1/user/${createdUserId}`).send({
-            user_full_name: "Updated User",
-            user_phone_number: "0987654321",
-            user_address: "Updated Address"
+            user_full_name: 'Updated User',
+            user_phone_number: '0987654321',
+            user_address: 'Updated Address'
         });
 
         expect(response.status).toBe(200);
@@ -81,9 +81,9 @@ describe('Feature Test: User API', () => {
 
     it('should fail to update user with invalid data', async () => {
         const response = await agent.put(`/api/v1/user/${createdUserId}`).send({
-            user_full_name: "",
-            user_phone_number: "1",
-            user_address: ""
+            user_full_name: '',
+            user_phone_number: '1',
+            user_address: ''
         });
 
         expect(response.status).toBe(400);

@@ -1,5 +1,5 @@
-const sequelize = require("../../../configs/database.config");
-const { User, Authentication } = require("../../models/index");
+const sequelize = require('../../../configs/database.config');
+const { User, Authentication } = require('../../models/index.model');
 
 /**
  * Creates a new user along with authentication details in a single transaction.
@@ -22,13 +22,13 @@ exports.createUser = async (authData, userData) => {
     try {
         const auth = await Authentication.create(authData, { transaction });
         if (!auth) {
-            throw new Error("Failed to create authentication record.");
+            throw new Error('Failed to create authentication record.');
         }
 
         userData.authentication_id = auth.authentication_id;
         const user = await User.create(userData, { transaction });
         if (!user) {
-            throw new Error("Failed to create user record.");
+            throw new Error('Failed to create user record.');
         }
 
         await transaction.commit();

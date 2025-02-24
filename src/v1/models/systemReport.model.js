@@ -1,6 +1,6 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../../configs/database.config");
-const User = require("./user.model");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../../configs/database.config');
+const User = require('./user.model');
 
 /** 
  * @description System Report Model 
@@ -12,7 +12,7 @@ const User = require("./user.model");
  * @property {boolean} delete_flag - Soft delete flag (true if deleted).
  * @property {number} user_id - Reference to the user who submitted the report.
  */
-const SystemReport = sequelize.define("SystemReport", {
+const SystemReport = sequelize.define('SystemReport', {
     report_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -31,11 +31,11 @@ const SystemReport = sequelize.define("SystemReport", {
         allowNull: false,
         references: {
             model: User,
-            key: "user_id",
+            key: 'user_id',
         },
     },
 }, {
-    tableName: "system_reports",
+    tableName: 'system_reports',
     timestamps: true,
     underscored: true,
 });

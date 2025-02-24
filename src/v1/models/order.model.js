@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../../configs/database.config");
-const User = require("./user.model");
-const Service = require("./service.model");
-const Employee = require("./employee.model");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../../configs/database.config');
+const User = require('./user.model');
+const Service = require('./service.model');
+const Employee = require('./employee.model');
 
 /** 
  * @description Order Model 
@@ -11,7 +11,7 @@ const Employee = require("./employee.model");
  * @property {string} order_description - Description of the order.
  * @property {string} store_address - Address of the store (required).
  * @property {string} customer_address - Address of the customer (required).
- * @property {"PENDING" | "PROCESSING" | "COMPLETED" | "CANCELLED"} order_status - Current status of the order.
+ * @property {'PENDING' | 'PROCESSING' | 'COMPLETED' | 'CANCELLED'} order_status - Current status of the order.
  * @property {string} order_feedback - Feedback from the customer.
  * @property {Date} created_at - Timestamp for when the record was created.
  * @property {Date} updated_at - Timestamp for when the record was last updated.
@@ -20,7 +20,7 @@ const Employee = require("./employee.model");
  * @property {number} service_id - Reference to the service associated with the order.
  * @property {number} employee_id - Reference to the employee handling the order.
  */
-const Order = sequelize.define("Order", {
+const Order = sequelize.define('Order', {
     order_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -38,7 +38,7 @@ const Order = sequelize.define("Order", {
         allowNull: false,
     },
     order_status: {
-        type: DataTypes.ENUM("PENDING", "PROCESSING", "COMPLETED", "CANCELLED"),
+        type: DataTypes.ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'CANCELLED'),
         allowNull: false,
     },
     order_feedback: {
@@ -53,7 +53,7 @@ const Order = sequelize.define("Order", {
         allowNull: false,
         references: {
             model: User,
-            key: "user_id",
+            key: 'user_id',
         },
     },
     service_id: {
@@ -61,7 +61,7 @@ const Order = sequelize.define("Order", {
         allowNull: false,
         references: {
             model: Service,
-            key: "service_id",
+            key: 'service_id',
         },
     },
     employee_id: {
@@ -69,11 +69,11 @@ const Order = sequelize.define("Order", {
         allowNull: false,
         references: {
             model: Employee,
-            key: "employee_id",
+            key: 'employee_id',
         },
     },
 }, {
-    tableName: "orders",
+    tableName: 'orders',
     timestamps: true,
     underscored: true,
 });

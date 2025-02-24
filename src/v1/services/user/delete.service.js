@@ -1,4 +1,4 @@
-const { User } = require("../../models/index");
+const { User } = require('../../models/index.model');
 
 /**
  * Soft deletes a user by setting the `delete_flag` to true.

@@ -19,9 +19,25 @@ fi
 echo "Updating package lists..."
 apt update && apt upgrade -y
 
+# Install missing dependencies
 if ! command -v curl &> /dev/null; then
     echo "Installing curl..."
     apt install -y curl
+fi
+
+if ! command -v git &> /dev/null; then
+    echo "Installing git..."
+    apt install -y git
+fi
+
+if ! command -v unzip &> /dev/null; then
+    echo "Installing unzip..."
+    apt install -y unzip
+fi
+
+if ! command -v tar &> /dev/null; then
+    echo "Installing tar..."
+    apt install -y tar
 fi
 
 if ! command -v node &> /dev/null; then
@@ -48,6 +64,16 @@ if ! command -v mysql &> /dev/null; then
     echo "MySQL installed and started."
 else
     echo "MySQL is already installed."
+fi
+
+if ! command -v redis-server &> /dev/null; then
+    echo "Redis is not installed. Installing Redis..."
+    apt install -y redis-server
+    systemctl enable redis-server
+    systemctl start redis-server
+    echo "Redis installed and started."
+else
+    echo "Redis is already installed."
 fi
 
 echo "Installing npm dependencies..."
@@ -86,6 +112,7 @@ if [[ "$SEED" == "y" ]]; then
     echo "Seeding completed."
 fi
 
+# Start Server
 read -p "Setup complete! Do you want to start the server? (y/n): " RUNSERVER
 if [[ "$RUNSERVER" == "y" ]]; then
     echo "Starting the server..."

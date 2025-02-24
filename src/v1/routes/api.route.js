@@ -1,18 +1,8 @@
 const express = require('express');
 const app = express();
-const countRoutes = require('./count.route');
-const userRoutes = require('./user.route');
-const testRoutes = require('./test.route');
 
-/**
- * @description RESTful API for managing the count.
- *
- * @route GET    /v1/count - Get the current count
- * @route POST   /v1/count - Increment the count by 1
- * @route PUT    /v1/count - Set the count to a specific value
- * @route DELETE /v1/count - Reset the count to 0
- */
-app.use('/v1/count', countRoutes);
+const userRoutes = require('./user.route');
+const authRoutes = require('./auth.route');
 
 /**
  * @description RESTful API for managing users.
@@ -26,10 +16,12 @@ app.use('/v1/count', countRoutes);
 app.use('/v1/user', userRoutes);
 
 /**
- * @description RESTful API for managing users.
+ * @description Authentication-related API endpoints.
  *
- * @route GET    /v1/test       - Retrieve all users
+ * @route POST /api/v1/auth/login   - Log in a user
+ * @route POST /api/v1/auth/refresh - Refresh an access token
+ * @route POST /api/v1/auth/logout  - Log out a user
  */
-app.use('/v1/test', testRoutes);
+app.use('/v1/auth', authRoutes);
 
 module.exports = app;
