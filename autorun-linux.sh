@@ -75,14 +75,14 @@ echo
 read -p "Do you want to migrate the database? (y/n): " MIGRATE
 if [[ "$MIGRATE" == "y" ]]; then
     echo "Running database migration..."
-    mysql -u $MYSQL_USER -p < "$SCRIPT_DIR/database/migrations/250220-rddb.migration.sql"
+    mysql -u $MYSQL_USER -p < "$SCRIPT_DIR/database/migrations/250302-rddb.migration.sql"
     echo "Migration completed."
 fi
 
 read -p "Do you want to run the database seeder? (y/n): " SEED
 if [[ "$SEED" == "y" ]]; then
     echo "Running database seeder..."
-    mysql -u $MYSQL_USER -p < "$SCRIPT_DIR/database/seeders/250220-rddb.seeder.sql"
+    mysql -u $MYSQL_USER -p < "$SCRIPT_DIR/database/seeders/250302-rddb.seeder.sql"
     echo "Seeding completed."
 fi
 

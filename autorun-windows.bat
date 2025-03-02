@@ -83,8 +83,8 @@ echo:
 set /p MIGRATE="Do you want to migrate the database? (y/n): "
 if /I "%MIGRATE%"=="y" (
     echo Running migrate...
-    echo "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\migrations\250220-rddb.migration.sql"
-    "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\migrations\250220-rddb.migration.sql"
+    echo "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\migrations\250302-rddb.migration.sql"
+    "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\migrations\250302-rddb.migration.sql"
     if %errorlevel% neq 0 (
         echo Error: Database migration failed.
     ) else (
@@ -99,8 +99,8 @@ echo:
 set /p SEED="Do you want to run the database seeder? (y/n): "
 if /I "%SEED%"=="y" (
     echo Running seeder...
-    echo "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\seeders\250220-rddb.seeder.sql"
-    "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\seeders\250220-rddb.seeder.sql"
+    echo "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\seeders\250302-rddb.seeder.sql"
+    "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\seeders\250302-rddb.seeder.sql"
     if %errorlevel% neq 0 (
         echo Error: Database seeder failed.
     ) else (

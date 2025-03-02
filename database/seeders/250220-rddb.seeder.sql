@@ -11,9 +11,9 @@ TRUNCATE TABLE authentications;
 SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO `authentications` (`identifier_email`, `password`, `role`) VALUES
-    (AES_ENCRYPT('admin@example.com', 'secret_key'), AES_ENCRYPT('password123', 'secret_key'), 'ADMIN'),
-    (AES_ENCRYPT('store@example.com', 'secret_key'), AES_ENCRYPT('password123', 'secret_key'), 'STORE'),
-    (AES_ENCRYPT('customer@example.com', 'secret_key'), AES_ENCRYPT('password123', 'secret_key'), 'CUSTOMER');
+    (AES_ENCRYPT('admin@example.com', 'secret_key'), AES_ENCRYPT('$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', 'secret_key'), 'ADMIN'),
+    (AES_ENCRYPT('store@example.com', 'secret_key'), AES_ENCRYPT('$2a$12$bA1Lz622MidYK3PRV1bxyeIiPTQcrhbIiEfmUZWRX.IbHGsR0ebqG', 'secret_key'), 'STORE'),
+    (AES_ENCRYPT('customer@example.com', 'secret_key'), AES_ENCRYPT('$2a$12$vV8XlRlcufSGicGkBoptceuM5nr5BjTToor8Bf/zT3OVLr9XTEpjq', 'secret_key'), 'CUSTOMER');
 
 INSERT INTO `users` (`user_full_name`, `user_phone_number`, `user_address`, `authentication_id`) VALUES
     ('Admin User', '1234567890', 'Admin Address', 1),
