@@ -98,3 +98,24 @@ This document outlines the available authentication-related API endpoints, inclu
   - **201 Created**: `{ "message": "User registered successfully", "user_id": number }`
   - **400 Bad Request**: `{ "message": "Email already registered" }`
   - **500 Internal Server Error**: `{ "message": "Unexpected error occurred" }`
+
+### **POST** `/api/v1/auth/send_link`
+
+- **Description**: send link to reset password.
+- **Middleware**: None
+- **Request Body**:
+  - `email` (string, required)
+- **Response**:
+  - **201 Created**: `{ "message": "Link send success"}`
+  - **400 Bad Request**: `{ "message": "Link send fail" }`
+
+
+### **POST** `/api/v1/auth/reset_pass`
+
+- **Description**: send link to reset password.
+- **Middleware**: restPasswordValidation.
+- **Request Body**:
+  - `password` (string, required)
+- **Response**:
+  - **201 Created**: `{ "message": "Rest password success"}`
+  - **400 Bad Request**: `{ "message": "Rest password fail" }`

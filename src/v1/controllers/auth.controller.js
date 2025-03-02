@@ -3,6 +3,8 @@ const refreshService = require('../services/auth/refreshToken.service');
 const logoutService = require('../services/auth/logout.service');
 const authStatusService = require('../services/auth/authStatus.service');
 const createUser = require('../services/user/createUser.service');
+const sendLinkService = require("../services/auth/sendLink.service")
+const resetPassService = require("../services/auth/resetPass.service")
 const terminal = require('../../utils/terminal');
 
 /**
@@ -179,3 +181,41 @@ exports.register = async (req, res) => {
         return res.status(500).json({ message: 'Unexpected error occurred' });
     }
 };
+
+
+/**
+ * Send link rest password for user.
+ * @route POST /api/v1/auth/send_link
+ */
+exports.sendLink = async (req,res) => {
+ try {
+    const { email } = req.body
+    const urlRest = await sendLinkService(email)
+    if(urlRest === 1){
+        return res.status(201).json({message: "Link send success"})
+    }
+ } catch (error) {
+    return res.status(400).json({ message: 'Link send fail' });
+ }
+}
+
+/**
+ * Rest password.
+ * @route POST /api/v1/auth/rest_password
+ */
+exports.resetPass = async (req,res) =>{
+    try {
+        const {password} = req.body
+        const {email} = req.query
+
+        const result = await resetPassService(email,password)
+
+        if(result){
+            return res.status(201).json("Rest password success")
+        }
+
+    } catch (error) {
+        return res.status(400).json({ message: 'Rest password fail' });
+    }
+}
+

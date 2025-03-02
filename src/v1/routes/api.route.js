@@ -21,6 +21,8 @@ app.use('/v1/user', userRoutes);
  * @route POST /api/v1/auth/login   - Log in a user
  * @route POST /api/v1/auth/refresh - Refresh an access token
  * @route POST /api/v1/auth/logout  - Log out a user
+ * @route POST /api/v1/auth/send_link  - Send link for user
+ * @route POST /api/v1/auth/reset_pass  - Reset password a user
  */
 app.use('/v1/auth', authRoutes);
 

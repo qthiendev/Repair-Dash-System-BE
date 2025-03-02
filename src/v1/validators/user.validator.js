@@ -7,6 +7,12 @@ const readUserValidation = validateRequest([
         .withMessage('User ID must be a positive integer or greater than 0')
 ]);
 
+const restPasswordValidation = validateRequest([
+    body('password')
+    .isLength({ min: 6, max: 20 })
+    .withMessage('Password must be between 6 and 20 characters'),
+])
+
 const createUserValidation = validateRequest([
     body('identifier_email')
         .isEmail()
@@ -68,5 +74,6 @@ module.exports = {
     readUserValidation,
     createUserValidation,
     updateUserValidation,
-    deleteUserValidation
+    deleteUserValidation,
+    restPasswordValidation
 };
