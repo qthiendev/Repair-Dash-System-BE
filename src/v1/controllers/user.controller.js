@@ -1,7 +1,7 @@
-const { readUser } = require('../services/user/read.service');
-const { createUser } = require('../services/user/create.service');
-const { deleteUser } = require('../services/user/delete.service');
-const { updateUser } = require('../services/user/update.service');
+const readUser = require('../services/user/readUser.service');
+const createUser = require('../services/user/createUser.service');
+const deleteUser = require('../services/user/deleteUser.service');
+const updateUser = require('../services/user/updateUser.service');
 
 /**
  * Create a new user.

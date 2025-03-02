@@ -9,7 +9,7 @@ const { User } = require('../../models/index.model');
  *                                    - Returns `false` if no rows were updated.
  * @throws {Error} If no valid fields are provided for the update.
  */
-exports.updateUser = async (user_id, updateData) => {
+module.exports = async (user_id, updateData) => {
 
     if (!(await User.findOne({ where: { user_id, delete_flag: false } }))) {
         return -1;

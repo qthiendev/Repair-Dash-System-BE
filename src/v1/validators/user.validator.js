@@ -1,13 +1,13 @@
 const { body, param, validateRequest } = require('./validator');
 
-const readValidation = validateRequest([
+const readUserValidation = validateRequest([
     param('user_id')
         .optional()
         .isInt({ min: 1 })
         .withMessage('User ID must be a positive integer or greater than 0')
 ]);
 
-const createValidation = validateRequest([
+const createUserValidation = validateRequest([
     body('identifier_email')
         .isEmail()
         .withMessage('Invalid email format'),
@@ -37,7 +37,7 @@ const createValidation = validateRequest([
         .withMessage('Address must be at least 5 characters')
 ]);
 
-const updateValidation = validateRequest([
+const updateUserValidation = validateRequest([
     param('user_id')
         .isInt({ min: 1 })
         .withMessage('User ID must be a positive integer or greater than 0'),
@@ -58,15 +58,15 @@ const updateValidation = validateRequest([
         .withMessage('Address must be at least 5 characters')
 ]);
 
-const deleteValidation = validateRequest([
+const deleteUserValidation = validateRequest([
     param('user_id')
         .isInt({ min: 1 })
         .withMessage('User ID must be a positive integer or greater than 0')
 ]);
 
 module.exports = {
-    readValidation,
-    createValidation,
-    updateValidation,
-    deleteValidation
+    readUserValidation,
+    createUserValidation,
+    updateUserValidation,
+    deleteUserValidation
 };

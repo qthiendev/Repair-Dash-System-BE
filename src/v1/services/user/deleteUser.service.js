@@ -7,7 +7,7 @@ const { User } = require('../../models/index.model');
  *                                      Returns `true` if deletion was successful.
  *                                      Returns `false` if no records were updated.
  */
-exports.deleteUser = async (user_id) => {
+module.exports = async (user_id) => {
     const user = await User.findOne({
         where: {
             user_id,

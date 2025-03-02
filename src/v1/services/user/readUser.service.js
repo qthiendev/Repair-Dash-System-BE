@@ -7,7 +7,7 @@ const { User } = require('../../models/index.model');
  *                                          - Returns `null` if the user is not found.
  *                                          - Returns an array of users if no ID is provided.
  */
-exports.readUser = async (user_id) => {
+module.exports = async (user_id) => {
     if (user_id) {
         return await User.findOne({
             where: {

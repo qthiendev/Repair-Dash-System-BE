@@ -9,10 +9,10 @@ const {
 } = require('../controllers/user.controller');
 
 const {
-    readValidation,
-    createValidation,
-    updateValidation,
-    deleteValidation
+    readUserValidation,
+    createUserValidation,
+    updateUserValidation,
+    deleteUserValidation
 } = require('../validators/user.validator');
 
 /**
@@ -23,9 +23,9 @@ const {
  * @route PUT    /:user_id  - Update a user
  * @route DELETE /:user_id  - Soft delete a user
  */
-router.post('/', createValidation, createUser);
-router.get('/:user_id?', readValidation, readUser);
-router.put('/:user_id', updateValidation, updateUser);
-router.delete('/:user_id', deleteValidation, deleteUser);
+router.post('/', createUserValidation, createUser);
+router.get('/:user_id?', readUserValidation, readUser);
+router.put('/:user_id', updateUserValidation, updateUser);
+router.delete('/:user_id', deleteUserValidation, deleteUser);
 
 module.exports = router;

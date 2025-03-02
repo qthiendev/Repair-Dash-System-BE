@@ -2,6 +2,7 @@ const loginService = require('../services/auth/login.service');
 const refreshService = require('../services/auth/refreshToken.service');
 const logoutService = require('../services/auth/logout.service');
 const authStatusService = require('../services/auth/authStatus.service');
+const createUser = require('../services/user/createUser.service');
 const terminal = require('../../utils/terminal');
 
 /**
@@ -65,7 +66,7 @@ exports.login = async (req, res) => {
         });
 
         terminal.success(`auth.controller.js | Login successful: ${identifier_email} | ${password}`);
-        return res.status(200).json({ accessToken: tokens.accessToken });
+        return res.status(200).json({ message: 'Login successful.' });
 
     } catch (err) {
         terminal.error(`Login Error: ${err.message}`);
@@ -127,11 +128,54 @@ exports.refreshToken = async (req, res) => {
             return res.status(403).json({ message: 'Invalid or expired refresh token' });
         }
 
-        terminal.info('Access token refreshed successfully.');
-        return res.status(200).json({ accessToken: newAccessToken });
+        res.cookie('accessToken', newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Lax',
+            path: '/',
+        });
+
+        terminal.info('Access token refreshed and set in cookies successfully.');
+        return res.status(200).json({ message: 'Refresh successful.' });
 
     } catch (err) {
         terminal.error(`Refresh Token Error: ${err.message}`);
+        return res.status(500).json({ message: 'Unexpected error occurred' });
+    }
+};
+
+/**
+ * Register a new user.
+ * @route POST /api/v1/auth/register
+ */
+exports.register = async (req, res) => {
+    try {
+        const {
+            identifier_email,
+            password,
+            role,
+            user_full_name,
+            user_phone_number,
+            user_address
+        } = req.body;
+
+        const authData = { identifier_email, password, role };
+        const userData = { user_full_name, user_phone_number, user_address };
+
+        terminal.info(`auth.controller.js | Register attempt for: ${identifier_email}`);
+
+        const userId = await createUser(authData, userData);
+
+        if (userId === -1) {
+            terminal.warning(`auth.controller.js | Email already registered: ${identifier_email}`);
+            return res.status(400).json({ message: 'Email already registered' });
+        }
+
+        terminal.success(`auth.controller.js | User registered successfully: ${identifier_email}`);
+        return res.status(201).json({ message: 'User registered successfully', user_id: userId });
+
+    } catch (err) {
+        terminal.error(`Register Error: ${err.message}`);
         return res.status(500).json({ message: 'Unexpected error occurred' });
     }
 };

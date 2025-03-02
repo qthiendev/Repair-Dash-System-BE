@@ -26,7 +26,10 @@ erDiagram
         integer user_id PK "NOT NULL;"
         string user_full_name "NOT NULL; LIMIT 500;"
         string user_phone_number "NOT NULL; LIMIT 20;"
-        string user_address "NOT NULL;"
+        string street "NOT NULL; LIMIT 255;"
+        string ward "NOT NULL; LIMIT 255;"
+        string district "NOT NULL; LIMIT 255;"
+        string city "NOT NULL; LIMIT 255;"
         timestamp created_at "NOT NULL; CURRENT_TIMESTAMP;"
         timestamp updated_at "NOT NULL; CURRENT_TIMESTAMP;"
         bool delete_flag "NOT NULL; FALSE;"
@@ -63,16 +66,22 @@ erDiagram
 
     orders {
         integer order_id PK "NOT NULL;"
-        string order_description 
+        string service_name "NOT NULL; LIMIT 500;"
+        string store_name "NOT NULL; LIMIT 500;"
         string store_address "NOT NULL;"
+        string store_number "NOT NULL; LIMIT 20;"
+        string customer_name "NOT NULL; LIMIT 500;"
         string customer_address "NOT NULL;"
+        string order_description 
+        string customer_number "NOT NULL; LIMIT 20;"
         string order_status "ENUM: PENDING, PROCESSING, COMPLETED, CANCELLED; NOT NULL"
         string order_feedback
+        integer order_rateing "NOT NULL;"
         timestamp created_at "NOT NULL; CURRENT_TIMESTAMP;"
         timestamp updated_at "NOT NULL; CURRENT_TIMESTAMP;"
         bool delete_flag "NOT NULL; FALSE;"
-        integer customer_id FK "NOT NULL;"
         integer service_id FK "NOT NULL;"
         integer employee_id FK "NOT NULL;"
+        integer customer_id FK
     }
 ```
