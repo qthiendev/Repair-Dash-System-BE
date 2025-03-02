@@ -1,21 +1,22 @@
 const sendMailHelper = require("../../utils/sendMail")
 const { Authentication } = require('../../models/index.model');
+require('dotenv').config();
 
-module.exports = async (email) =>{
-  const resetLink = `http://localhost:3000/api/reset_pass?email=${email}`;
+module.exports = async (email) => {
+    const mailLink = process.env.CORS_ORIGIN;
 
-  const findEmail = await Authentication.findOne({identifier_email:email})
+    const resetLink = `${mailLink}/reset_pass?email=${email}`;
 
-  if(findEmail){
-    const subject ="Link Rest Password"
-    const html=`Link rest password là <b>${resetLink}</b>. `
+    const findEmail = await Authentication.findOne({ identifier_email: email })
 
-    sendMailHelper.sendMail(email,subject,html)
+    if (findEmail) {
+        const subject = "Link Rest Password"
+        const html = `Link rest password là <b>${resetLink}</b>. `
 
-    return 1
-  }else{
-    return "Email not find"
-  }
+        sendMailHelper.sendMail(email, subject, html)
 
+        return 1;
+    } else {
+        return "Email not find";
+    }
 }
-

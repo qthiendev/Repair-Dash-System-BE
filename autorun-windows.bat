@@ -162,8 +162,8 @@ echo:
 set /p MIGRATE="%YELLOW%Do you want to migrate the database? (y/n): %RESET%"
 if /I "%MIGRATE%"=="y" (
     echo %BLUE%Running migrate...%RESET%
-    echo "%MYSQL_BIN%\mysql" -u root -p < "%SCRIPT_DIR%database\migrations\250220-rddb.migration.sql"
-    "%MYSQL_BIN%\mysql" -u root -p < "%SCRIPT_DIR%database\migrations\250220-rddb.migration.sql"
+    echo "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\migrations\250302-rddb.migration.sql"
+    "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\migrations\250302-rddb.migration.sql"
     if %errorlevel% neq 0 (
         echo %RED%Error: Database migration failed.%RESET%
     ) else (
@@ -177,9 +177,9 @@ echo:
 
 set /p SEED="%YELLOW%Do you want to run the database seeder? (y/n): %RESET%"
 if /I "%SEED%"=="y" (
-    echo %BLUE%Running seeder...%RESET%
-    echo "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\seeders\250220-rddb.seeder.sql"
-    "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\seeders\250220-rddb.seeder.sql"
+    echo %BLUE%Running migrate...%RESET%
+    echo "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\seeders\250302-rddb.seeder.sql"
+    "%MYSQL_CMD%" -u root -p < "%SCRIPT_DIR%database\seeders\250302-rddb.seeder.sql"
     if %errorlevel% neq 0 (
         echo %RED%Error: Database seeder failed.%RESET%
     ) else (

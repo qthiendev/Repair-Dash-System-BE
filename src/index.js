@@ -15,8 +15,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json({ charset: 'utf8' }));
+app.use(express.urlencoded({ extended: true, charset: 'utf8' }));
 app.use(cookieParser());
 
 const apiRoutes = require('./v1/routes/api.route');

@@ -24,11 +24,14 @@ exports.createUser = async (req, res) => {
             role,
             user_full_name,
             user_phone_number,
-            user_address
+            user_street,
+            user_ward,
+            user_district,
+            user_city,
         } = req.body;
 
         const authData = { identifier_email, password, role };
-        const userData = { user_full_name, user_phone_number, user_address };
+        const userData = { user_full_name, user_phone_number, user_street, user_ward, user_district, user_city };
 
         const userID = await createUser(authData, userData);
 

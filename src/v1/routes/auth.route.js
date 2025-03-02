@@ -4,8 +4,8 @@ const router = express.Router();
 const { login, logout, refreshToken, status, register, sendLink, resetPass } = require('../controllers/auth.controller');
 const { authenticate, unauthenticate, ensureAdmin, ensureStore, ensureCustomer } = require('../middlewares/auth.middleware');
 
-const { loginValidation } = require('../validators/auth.validator');
-const { createUserValidation, restPasswordValidation } = require('../validators/user.validator');
+const { loginValidation, registerValidation } = require('../validators/auth.validator');
+const { restPasswordValidation } = require('../validators/user.validator');
 
 /**
  * @description Authentication-related API endpoints.
@@ -20,7 +20,7 @@ router.get('/status', status);
 router.post('/login', loginValidation, unauthenticate, login);
 router.post('/refresh', refreshToken);
 router.post('/logout', authenticate, logout);
-router.post('/register', createUserValidation, register);
+router.post('/register', registerValidation, register);
 router.post('/send_link', sendLink);
 router.post('/reset_pass',restPasswordValidation, resetPass);
 

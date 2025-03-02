@@ -158,11 +158,14 @@ exports.register = async (req, res) => {
             role,
             user_full_name,
             user_phone_number,
-            user_address
+            user_street,
+            user_ward,
+            user_district,
+            user_city,
         } = req.body;
 
         const authData = { identifier_email, password, role };
-        const userData = { user_full_name, user_phone_number, user_address };
+        const userData = { user_full_name, user_phone_number, user_street, user_ward, user_district, user_city };
 
         terminal.info(`auth.controller.js | Register attempt for: ${identifier_email}`);
 
@@ -182,40 +185,45 @@ exports.register = async (req, res) => {
     }
 };
 
-
 /**
  * Send link rest password for user.
  * @route POST /api/v1/auth/send_link
  */
-exports.sendLink = async (req,res) => {
- try {
-    const { email } = req.body
-    const urlRest = await sendLinkService(email)
-    if(urlRest === 1){
-        return res.status(201).json({message: "Link send success"})
+exports.sendLink = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const urlRest = await sendLinkService(email);
+
+        if (urlRest === 1) {
+            return res.status(201).json({ message: "Link send success" });
+        }
+
+        return res.status(400).json({ message: 'Link send fail' });
+    } catch (err) {
+        terminal.error(`Register Error: ${err.message}`);
+        return res.status(500).json({ message: 'Unexpected error occurred' });
     }
- } catch (error) {
-    return res.status(400).json({ message: 'Link send fail' });
- }
 }
 
 /**
  * Rest password.
  * @route POST /api/v1/auth/rest_password
  */
-exports.resetPass = async (req,res) =>{
+exports.resetPass = async (req, res) => {
     try {
-        const {password} = req.body
-        const {email} = req.query
+        const { password } = req.body;
+        const { email } = req.query;
 
-        const result = await resetPassService(email,password)
+        const result = await resetPassService(email, password);
 
-        if(result){
-            return res.status(201).json("Rest password success")
+        if (result) {
+            return res.status(201).json("Rest password success");
         }
 
-    } catch (error) {
         return res.status(400).json({ message: 'Rest password fail' });
+
+    } catch (err) {
+        terminal.error(`Register Error: ${err.message}`);
+        return res.status(500).json({ message: 'Unexpected error occurred' });
     }
 }
-

@@ -37,10 +37,25 @@ const createUserValidation = validateRequest([
         .isLength({ min: 10, max: 20 })
         .withMessage('Phone number must be between 10 and 20 characters'),
 
-    body('user_address')
+    body('user_street')
         .isString()
         .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters')
+        .withMessage('Address must be at least 5 characters'),
+
+    body('user_ward')
+        .isString()
+        .isLength({ min: 5 })
+        .withMessage('Address must be at least 5 characters'),
+
+    body('user_district')
+        .isString()
+        .isLength({ min: 5 })
+        .withMessage('Address must be at least 5 characters'),
+
+    body('user_city')
+        .isString()
+        .isLength({ min: 5 })
+        .withMessage('Address must be at least 5 characters'),
 ]);
 
 const updateUserValidation = validateRequest([

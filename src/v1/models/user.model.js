@@ -29,7 +29,19 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING(20),
         allowNull: false,
     },
-    user_address: {
+    user_street: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    user_ward: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    user_district: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    user_city: {
         type: DataTypes.TEXT,
         allowNull: false,
     },

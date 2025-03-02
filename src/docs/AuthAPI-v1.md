@@ -20,7 +20,7 @@ This document outlines the available authentication-related API endpoints, inclu
 |        |                        |                                      |                                                |                                           | **403** | `{ "message": "No refresh token provided" }`          |
 |        |                        |                                      |                                                |                                           | **403** | `{ "message": "Invalid or expired refresh token" }`   |
 |        |                        |                                      |                                                |                                           | **500** | `{ "message": "Unexpected error occurred" }`          |
-| **POST** | `/api/v1/auth/register` | Registers a new user                | `createUserValidation`                         | `{ "identifier_email": "string", "password": "string", "role": "string", "user_full_name": "string", "user_phone_number": "string", "user_address": "string" }` | **201** | `{ "message": "User registered successfully", "user_id": number }` |
+| **POST** | `/api/v1/auth/register` | Registers a new user                | `createUserValidation`                         | `{ "identifier_email": "string", "password": "string", "role": "string", "user_full_name": "string", "user_phone_number": "string", "user_street": "string", "user_ward": "string", "user_district": "string", "user_city": "string" }` | **201** | `{ "message": "User registered successfully", "user_id": number }` |
 |        |                        |                                      |                                                |                                           | **400** | `{ "message": "Email already registered" }`          |
 |        |                        |                                      |                                                |                                           | **500** | `{ "message": "Unexpected error occurred" }`          |
 
@@ -88,12 +88,15 @@ This document outlines the available authentication-related API endpoints, inclu
 - **Description**: Registers a new user with email, password, role, full name, phone number, and address.
 - **Middleware**: `createUserValidation`
 - **Request Body**:
-  - `identifier_email` (string, required)
-  - `password` (string, required)
-  - `role` (string, required)
-  - `user_full_name` (string, required)
-  - `user_phone_number` (string, required)
-  - `user_address` (string, required)
+  - `identifier_email` (string, required)  
+  - `password` (string, required)  
+  - `role` (string, required) allow STORE and CUSTOMER only
+  - `user_full_name` (string, required)  
+  - `user_phone_number` (string, required)  
+  - `user_street` (string, required)  
+  - `user_ward` (string, required)  
+  - `user_district` (string, required)  
+  - `user_city` (string, required)  
 - **Response**:
   - **201 Created**: `{ "message": "User registered successfully", "user_id": number }`
   - **400 Bad Request**: `{ "message": "Email already registered" }`
