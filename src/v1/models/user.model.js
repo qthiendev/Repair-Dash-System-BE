@@ -1,6 +1,6 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../../configs/database.config");
-const Authentication = require("./authentication.model");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../../configs/database.config');
+const Authentication = require('./authentication.model');
 
 /** 
  * @description User Model 
@@ -15,7 +15,7 @@ const Authentication = require("./authentication.model");
  * @property {boolean} delete_flag - Soft delete flag (true if deleted).
  * @property {number} authentication_id - Reference to the authentication record associated with the user.
  */
-const User = sequelize.define("User", {
+const User = sequelize.define('User', {
     user_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -29,7 +29,19 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING(20),
         allowNull: false,
     },
-    user_address: {
+    user_street: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    user_ward: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    user_district: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
+    user_city: {
         type: DataTypes.TEXT,
         allowNull: false,
     },
@@ -42,11 +54,11 @@ const User = sequelize.define("User", {
         allowNull: false,
         references: {
             model: Authentication,
-            key: "authentication_id",
+            key: 'authentication_id',
         },
     },
 }, {
-    tableName: "users",
+    tableName: 'users',
     timestamps: true,
     underscored: true,
 });

@@ -8,6 +8,7 @@ Thumbs.db
 
 dist/
 build/
+temp/
 
 .vscode/
 .idea/

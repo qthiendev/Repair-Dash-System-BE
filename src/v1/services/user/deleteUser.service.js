@@ -1,4 +1,4 @@
-const { User } = require("../../models/index");
+const { User } = require('../../models/index.model');
 
 /**
  * Soft deletes a user by setting the `delete_flag` to true.
@@ -7,7 +7,7 @@ const { User } = require("../../models/index");
  *                                      Returns `true` if deletion was successful.
  *                                      Returns `false` if no records were updated.
  */
-exports.deleteUser = async (user_id) => {
+module.exports = async (user_id) => {
     const user = await User.findOne({
         where: {
             user_id,

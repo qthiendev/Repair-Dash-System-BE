@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../../configs/database.config");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../../configs/database.config');
 
 /** 
  * @description Authentication Model 
@@ -7,12 +7,12 @@ const sequelize = require("../../configs/database.config");
  * @property {number} authentication_id - Unique identifier for authentication records.
  * @property {string} identifier_email - Email identifier for authentication (max 1000 chars).
  * @property {string} password - Hashed password for authentication.
- * @property {"ADMIN" | "STORE" | "CUSTOMER"} role - Role of the authenticated user.
+ * @property {'ADMIN' | 'STORE' | 'CUSTOMER'} role - Role of the authenticated user.
  * @property {Date} created_at - Timestamp for when the record was created.
  * @property {Date} updated_at - Timestamp for when the record was last updated.
  * @property {boolean} delete_flag - Soft delete flag (true if deleted).
  */
-const Authentication = sequelize.define("Authentication", {
+const Authentication = sequelize.define('Authentication', {
     authentication_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -25,8 +25,8 @@ const Authentication = sequelize.define("Authentication", {
             len: [0, 1000],
         },
         get() {
-            const rawValue = this.getDataValue("identifier_email");
-            return rawValue ? rawValue.toString("utf8") : null;
+            const rawValue = this.getDataValue('identifier_email');
+            return rawValue ? rawValue.toString('utf8') : null;
         },
     },
     password: {
@@ -36,12 +36,12 @@ const Authentication = sequelize.define("Authentication", {
             len: [0, 1000],
         },
         get() {
-            const rawValue = this.getDataValue("password");
-            return rawValue ? rawValue.toString("utf8") : null;
+            const rawValue = this.getDataValue('password');
+            return rawValue ? rawValue.toString('utf8') : null;
         },
     },
     role: {
-        type: DataTypes.ENUM("ADMIN", "STORE", "CUSTOMER"),
+        type: DataTypes.ENUM('ADMIN', 'STORE', 'CUSTOMER'),
         allowNull: false,
     },
     delete_flag: {
@@ -49,7 +49,7 @@ const Authentication = sequelize.define("Authentication", {
         defaultValue: false,
     },
 }, {
-    tableName: "authentications",
+    tableName: 'authentications',
     timestamps: true,
     underscored: true,
 });

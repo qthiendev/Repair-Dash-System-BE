@@ -1,6 +1,6 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../../configs/database.config");
-const User = require("./user.model");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../../configs/database.config');
+const User = require('./user.model');
 
 /** 
  * @description Service Model 
@@ -13,7 +13,7 @@ const User = require("./user.model");
  * @property {boolean} delete_flag - Soft delete flag (true if deleted).
  * @property {number} owner_id - Reference to the user who owns this service.
  */
-const Service = sequelize.define("Service", {
+const Service = sequelize.define('Service', {
     service_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -36,11 +36,11 @@ const Service = sequelize.define("Service", {
         allowNull: false,
         references: {
             model: User,
-            key: "user_id",
+            key: 'user_id',
         },
     },
 }, {
-    tableName: "services",
+    tableName: 'services',
     timestamps: true,
     underscored: true,
 });
