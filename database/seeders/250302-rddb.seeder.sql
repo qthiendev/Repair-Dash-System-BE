@@ -11,15 +11,15 @@ TRUNCATE TABLE authentications;
 SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO `authentications` (`identifier_email`, `password`, `role`) VALUES
-    (AES_ENCRYPT(N'nguyenthanhnhan110503@gmail.com', 'secret_key'), AES_ENCRYPT(N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', 'secret_key'), N'ADMIN'),
-    (AES_ENCRYPT(N'dangvannho7@gmail.com', 'secret_key'), AES_ENCRYPT(N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', 'secret_key'), N'ADMIN'),
-    (AES_ENCRYPT(N'truong10032k@gmail.com', 'secret_key'), AES_ENCRYPT(N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', 'secret_key'), N'ADMIN'),
-    (AES_ENCRYPT(N'addnguyen32@gmail.com', 'secret_key'), AES_ENCRYPT(N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', 'secret_key'), N'ADMIN'),
-    (AES_ENCRYPT(N'trinhquythien.dev@gmail.com', 'secret_key'), AES_ENCRYPT(N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', 'secret_key'), N'ADMIN'),
-    (AES_ENCRYPT(N'dienmayxanh@gmail.com', 'secret_key'), AES_ENCRYPT(N'$2a$12$bA1Lz622MidYK3PRV1bxyeIiPTQcrhbIiEfmUZWRX.IbHGsR0ebqG', 'secret_key'), N'STORE'),
-    (AES_ENCRYPT(N'decseize4work@gmail.com', 'secret_key'), AES_ENCRYPT(N'$2a$12$bA1Lz622MidYK3PRV1bxyeIiPTQcrhbIiEfmUZWRX.IbHGsR0ebqG', 'secret_key'), N'STORE'),
-    (AES_ENCRYPT(N'nguyenvana@example.com', 'secret_key'), AES_ENCRYPT(N'$2a$12$vV8XlRlcufSGicGkBoptceuM5nr5BjTToor8Bf/zT3OVLr9XTEpjq', 'secret_key'), N'CUSTOMER'),
-    (AES_ENCRYPT(N'nguyenvanb@example.com', 'secret_key'), AES_ENCRYPT(N'$2a$12$vV8XlRlcufSGicGkBoptceuM5nr5BjTToor8Bf/zT3OVLr9XTEpjq', 'secret_key'), N'CUSTOMER');
+    (N'nguyenthanhnhan110503@gmail.com', N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', N'ADMIN'),
+    (N'dangvannho7@gmail.com', N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', N'ADMIN'),
+    (N'truong10032k@gmail.com', N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', N'ADMIN'),
+    (N'addnguyen32@gmail.com', N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', N'ADMIN'),
+    (N'trinhquythien.dev@gmail.com', N'$2a$12$jKvZAj1sovvg5O2DcZZw3OJ3R2YHWDcggcu9i2ojFQ0iKDd6x91jq', N'ADMIN'),
+    (N'dienmayxanh@gmail.com', N'$2a$12$bA1Lz622MidYK3PRV1bxyeIiPTQcrhbIiEfmUZWRX.IbHGsR0ebqG', N'STORE'),
+    (N'decseize4work@gmail.com', N'$2a$12$bA1Lz622MidYK3PRV1bxyeIiPTQcrhbIiEfmUZWRX.IbHGsR0ebqG', N'STORE'),
+    (N'nguyenvana@example.com', N'$2a$12$vV8XlRlcufSGicGkBoptceuM5nr5BjTToor8Bf/zT3OVLr9XTEpjq', N'CUSTOMER'),
+    (N'nguyenvanb@example.com', N'$2a$12$vV8XlRlcufSGicGkBoptceuM5nr5BjTToor8Bf/zT3OVLr9XTEpjq', N'CUSTOMER');
 
 INSERT INTO `users` (`user_full_name`, `user_phone_number`, `user_street`, `user_ward`, `user_district`, `user_city`, `authentication_id`) VALUES
     (N'Nguyễn Thành Nhân', N'0379740995', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 1),

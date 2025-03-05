@@ -2,6 +2,8 @@ node_modules/
 package-lock.json
 
 .env
+.env.develop
+.env.build
 
 .DS_Store
 Thumbs.db
@@ -14,3 +16,7 @@ temp/
 .idea/
 
 *.swp
+
+docker-compose.yml
+docker-entrypoint.sh
+Dockerfile

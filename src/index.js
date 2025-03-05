@@ -8,11 +8,20 @@ const terminal = require('./utils/terminal');
 dotenv.config();
 
 const corsOptions = {
-    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
+    origin: (origin, callback) => {
+        const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['*'];
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
     optionsSuccessStatus: 200
 };
+
+app.use(cors(corsOptions));
 
 app.use(cors(corsOptions));
 app.use(express.json({ charset: 'utf8' }));
@@ -26,6 +35,9 @@ const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
     console.clear();
     terminal.info(`index.js | Server running on http://localhost:${port}`);
+    terminal.info(`index.js | ORS_ORIGIN loaded as: ${process.env.CORS_ORIGIN}`);
+    terminal.info(`index.js | NODE_ENV loaded as: ${process.env.NODE_ENV}`);
+    terminal.info(`index.js | CORS_HTTP_ONLY loaded as: ${process.env.CORS_HTTP_ONLY}`);
 });
 
 module.exports = { app, server };

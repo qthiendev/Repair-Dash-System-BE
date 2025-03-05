@@ -2,10 +2,13 @@ const loginService = require('../services/auth/login.service');
 const refreshService = require('../services/auth/refreshToken.service');
 const logoutService = require('../services/auth/logout.service');
 const authStatusService = require('../services/auth/authStatus.service');
+const getRoleService = require('../services/auth/getRole.service');
 const createUser = require('../services/user/createUser.service');
 const sendLinkService = require("../services/auth/sendLink.service")
 const resetPassService = require("../services/auth/resetPass.service")
 const terminal = require('../../utils/terminal');
+
+require('dotenv').config();
 
 /**
  * Check authentication status.
@@ -15,12 +18,13 @@ exports.status = async (req, res) => {
     try {
         const token = req.cookies?.accessToken;
         const { status, user_id } = await authStatusService(token);
+        const role = await getRoleService(token);
 
-        if (status && user_id) {
-            terminal.info(`status.service.js | User ${user_id} currently active.`);
+        if (status && user_id && role) {
+            terminal.info(`status.service.js | User ${user_id} currently active with role ${role}.`);
         }
 
-        return res.status(200).json({ auth_status: status, user_id: user_id });
+        return res.status(200).json({ auth_status: status, user_id: user_id, role: role });
     } catch (err) {
         terminal.error(`Login Error: ${err.message}`);
         return res.status(500).json({ message: 'Unexpected error occurred' });
@@ -54,16 +58,16 @@ exports.login = async (req, res) => {
         }
 
         res.cookie('accessToken', tokens.accessToken, {
-            httpOnly: true,
+            httpOnly: process.env.CORS_HTTP_ONLY,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax',
+            sameSite: process.env.CORS_SAME_SITE,
             path: '/',
         });
 
         res.cookie('refreshToken', tokens.refreshToken, {
-            httpOnly: true,
+            httpOnly: process.env.CORS_HTTP_ONLY,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax',
+            sameSite: process.env.CORS_SAME_SITE,
             path: '/',
         });
 
@@ -99,8 +103,19 @@ exports.logout = async (req, res) => {
             return res.status(401).json({ message: 'Invalid or expired token' });
         }
 
-        res.clearCookie('accessToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Lax', path: '/' });
-        res.clearCookie('refreshToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Lax', path: '/' });
+        res.clearCookie('accessToken', {
+            httpOnly: process.env.CORS_HTTP_ONLY,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.CORS_SAME_SITE,
+            path: '/'
+        });
+        
+        res.clearCookie('refreshToken', {
+            httpOnly: process.env.CORS_HTTP_ONLY,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.CORS_SAME_SITE,
+            path: '/'
+        });
 
         terminal.success('User logged out successfully.');
         return res.status(200).json({ message: 'Logged out successfully' });
@@ -131,9 +146,9 @@ exports.refreshToken = async (req, res) => {
         }
 
         res.cookie('accessToken', newAccessToken, {
-            httpOnly: true,
+            httpOnly: process.env.CORS_HTTP_ONLY,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax',
+            sameSite: process.env.CORS_SAME_SITE,
             path: '/',
         });
 
