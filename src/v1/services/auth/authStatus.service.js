@@ -4,11 +4,9 @@ const terminal = require('../../../utils/terminal');
 require('dotenv').config();
 
 /**
- * Authenticate a user and generate JWT tokens.
- * @param {string} identifier_email - Encrypted user email.
- * @param {string} password - User password.
- * @returns -1 for any error
- * @returns {Object} accessToken and refreshToken - JWT tokens.
+ * Validate an access token and check if the user has an active session.
+ * @param {string} token - The JWT access token.
+ * @returns {Object} { status: boolean, user_id: number | null }
  */
 module.exports = async (token) => {
     if (!token) {
@@ -16,13 +14,21 @@ module.exports = async (token) => {
         return { status: false, user_id: null };
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const storedToken = await client.get(decoded.user_id.toString());
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        const userId = decoded.user_id;
 
-    if (!storedToken) {
-        terminal.warning('authStatus.service.js | No active session found.');
-        return { status: false, user_id: decoded.user_id };
+        const keys = await client.keys(`refresh:${userId}:*`);
+        
+        if (!keys.length) {
+            terminal.warning('authStatus.service.js | No active session found.');
+            return { status: false, user_id: userId };
+        }
+
+        terminal.success(`authStatus.service.js | User ${userId} is authenticated.`);
+        return { status: true, user_id: userId };
+    } catch (err) {
+        terminal.error(`authStatus.service.js | Invalid or expired token: ${err.message}`);
+        return { status: false, user_id: null };
     }
-
-    return { status: true, user_id: decoded.user_id };
 };
