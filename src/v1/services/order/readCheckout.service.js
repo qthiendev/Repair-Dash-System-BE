@@ -1,0 +1,50 @@
+const { User, Service, Employee } = require('../../models/index.model');
+const terminal = require('../../../utils/terminal');
+
+/**
+ * Fetches customer, service, and store owner details including employees.
+ * @param {number} customer_id - The ID of the customer (User).
+ * @param {number} service_id - The ID of the service.
+ * @returns {Promise<Object|number>} The customer, service (with store inside), or error codes (-1, -2, -3, -4).
+ */
+module.exports = async (customer_id, service_id) => {
+    const customer = await User.findByPk(customer_id, {
+        attributes: { exclude: ['delete_flag'] },
+    });
+
+    if (!customer) {
+        terminal.warning(`readCheckout.service.js | Customer ${customer_id} not found.`);
+        return -1;
+    }
+
+    const service = await Service.findByPk(service_id, {
+        include: {
+            model: User,
+            as: 'owner',
+            attributes: { exclude: ['user_phone_number', 'delete_flag'] },
+            include: {
+                model: Employee,
+                as: 'employees',
+                attributes: { exclude: ['delete_flag'] },
+            },
+        },
+        attributes: { exclude: ['delete_flag'] },
+    });
+
+    if (!service) {
+        terminal.warning(`readCheckout.service.js | Service ${service_id} not found.`);
+        return -2;
+    }
+
+    if (!service.owner) {
+        terminal.warning(`readCheckout.service.js | Store not found for service ${service_id}.`);
+        return -3;
+    }
+
+    if (service.owner_id === customer_id) {
+        terminal.warning(`readCheckout.service.js | Store ${service.owner_id} (customer ${customer_id}) cannot order its own service ${service_id}.`);
+        return -4;
+    }
+
+    return { customer, service };
+};

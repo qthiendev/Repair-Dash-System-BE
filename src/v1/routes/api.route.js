@@ -3,6 +3,7 @@ const app = express();
 
 const userRoutes = require('./user.route');
 const authRoutes = require('./auth.route');
+const orderRoutes = require('./order.route');
 
 /**
  * @description RESTful API for managing users.
@@ -13,7 +14,7 @@ const authRoutes = require('./auth.route');
  * @route PUT    /v1/user/:id   - Update a user
  * @route DELETE /v1/user/:id   - Soft delete a user
  */
-app.use('/v1/user', userRoutes);
+app.use('/v1/users', userRoutes);
 
 /**
  * @description Authentication-related API endpoints.
@@ -25,5 +26,7 @@ app.use('/v1/user', userRoutes);
  * @route POST /api/v1/auth/reset_pass  - Reset password a user
  */
 app.use('/v1/auth', authRoutes);
+
+app.use('/v1/orders', orderRoutes);
 
 module.exports = app;

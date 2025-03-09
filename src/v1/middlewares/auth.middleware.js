@@ -3,6 +3,8 @@ const client = require('../../configs/redis.config');
 const terminal = require('../../utils/terminal');
 const getRole = require('../services/auth/getRole.service');
 
+require('dotenv').config();
+
 /**
  * Middleware to authenticate users using JWT.
  * Extracts token from cookies, verifies it, checks if it's blacklisted, 
@@ -23,7 +25,7 @@ exports.authenticate = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        req.user = { user_id: decoded.user_id }; // Store user_id for later use
+        req.user = { user_id: decoded.user_id };
         next();
     } catch (err) {
         terminal.error(`auth.middleware.js | ${err.message}`);
@@ -36,11 +38,17 @@ exports.authenticate = async (req, res, next) => {
  */
 exports.unauthenticate = (req, res, next) => {
     const token = req.cookies?.accessToken;
-    if (token) {
-        terminal.error('auth.middleware.js | Already logged in');
-        return res.status(403).json({ message: 'You are already logged in' });
+
+    if (!token) {
+        return next();
     }
-    next();
+
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        return res.status(403).json({ message: 'You are already logged in' });
+    } catch (err) {
+        return next();
+    }
 };
 
 /**
