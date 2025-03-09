@@ -19,7 +19,7 @@ const { restPasswordValidation } = require('../validators/user.validator');
 router.get('/status', status);
 router.post('/login', loginValidation, unauthenticate, login);
 router.post('/refresh', refreshToken);
-router.post('/logout', authenticate, logout);
+router.post('/logout', logout);
 router.post('/register', registerValidation, register);
 router.post('/send_link', sendLink);
 router.post('/reset_pass',restPasswordValidation, resetPass);

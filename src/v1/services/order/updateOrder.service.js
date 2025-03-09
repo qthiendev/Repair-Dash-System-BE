@@ -1,0 +1,138 @@
+const { Order, Employee, Service } = require('../../models/index.model');
+const terminal = require('../../../utils/terminal');
+
+/**
+ * Updates an existing order with authorization.
+ * 
+ * @param {number} order_id - The ID of the order to update.
+ * @param {number} user_id - The ID of the user making the request.
+ * @param {Object} updateData - The fields to update.
+ * @returns {Promise<Object|number>} Updated order with changed fields, or error codes (-1, -2, -4, -5, -6).
+ */
+module.exports = async (order_id, user_id, updateData) => {
+    const order = await Order.findByPk(order_id, {
+        include: { model: Service, as: 'service', attributes: ['owner_id'] },
+    });
+
+    if (!order) {
+        terminal.warning(`updateOrder.service.js | Order ${order_id} not found.`);
+        return -1;
+    }
+
+    const isCustomer = order.customer_id === user_id;
+    const isStoreOwner = order.service.owner_id === user_id;
+
+    if (!isCustomer && !isStoreOwner) {
+        terminal.warning(`updateOrder.service.js | User ${user_id} not authorized to update order ${order_id}.`);
+        return -4;
+    }
+
+    let updateFields = {};
+
+    if (order.order_status === "COMPLETED") {
+        const result = handleCompletedOrderUpdate(isCustomer, updateData, updateFields, order_id);
+        if (typeof result === "number") return result;
+    }
+
+    if (order.order_status === "PENDING" && isCustomer) {
+        handleCustomerPendingUpdate(updateData, updateFields, order);
+    }
+
+    if (isStoreOwner) {
+        const result = await handleStoreUpdate(updateData, updateFields, order);
+        if (typeof result === "number") return result;
+    }
+
+    if (Object.keys(updateFields).length === 0) {
+        terminal.info(`updateOrder.service.js | No updates made for order ${order_id}.`);
+        return { message: "No changes applied", updated_fields: [] };
+    }
+
+    await order.update(updateFields);
+
+    return {
+        message: "Order updated successfully",
+        updated_fields: Object.keys(updateFields),
+        updated_order: updateFields
+    };
+};
+
+/**
+ * Handles updates for completed orders (only feedback and rating).
+ */
+function handleCompletedOrderUpdate(isCustomer, updateData, updateFields, order_id) {
+    if (!isCustomer) {
+        terminal.warning(`updateOrder.service.js | Only customers can update feedback & rating for COMPLETED orders.`);
+        return -4;
+    }
+
+    if (updateData.order_feedback) updateFields.order_feedback = updateData.order_feedback;
+
+    if (updateData.order_rating !== undefined) {
+        const rating = parseInt(updateData.order_rating, 10);
+        if (isNaN(rating) || rating < 1 || rating > 5) {
+            terminal.warning(`updateOrder.service.js | Invalid rating for order ${order_id}. Must be between 1 and 5.`);
+            return -5;
+        }
+        updateFields.order_rating = rating;
+    }
+
+    return updateFields;
+}
+
+/**
+ * Handles customer updates for PENDING orders.
+ */
+function handleCustomerPendingUpdate(updateData, updateFields, order) {
+    if (updateData.customer_full_name) updateFields.customer_full_name = updateData.customer_full_name;
+    if (updateData.customer_phone_number) updateFields.customer_phone_number = updateData.customer_phone_number;
+    if (updateData.customer_address) updateFields.customer_address = updateData.customer_address;
+    if (updateData.order_description) updateFields.order_description = updateData.order_description;
+
+    if (updateData.order_status === "CANCELED") {
+        updateFields.order_status = "CANCELED";
+        updateFields.order_description = `[Khách hàng hủy đơn] ${order.order_description || ""}`;
+    }
+}
+
+/**
+ * Handles store updates, including PROCESSING (with employee assignment).
+ */
+async function handleStoreUpdate(updateData, updateFields, order) {
+    if (!["PROCESSING", "CANCELED", "COMPLETED"].includes(updateData.order_status)) {
+        terminal.warning(`updateOrder.service.js | Store cannot change order_status to ${updateData.order_status}.`);
+        return -4;
+    }
+
+    updateFields.order_status = updateData.order_status;
+
+    if (updateData.order_status === "PROCESSING") {
+        if (!updateData.employee_id) {
+            terminal.warning(`updateOrder.service.js | Employee ID is required when setting order to PROCESSING.`);
+            return -6;
+        }
+
+        const employee = await Employee.findByPk(updateData.employee_id);
+        if (!employee) {
+            terminal.warning(`updateOrder.service.js | Employee ${updateData.employee_id} not found.`);
+            return -2;
+        }
+
+        if (employee.owner_id !== order.service.owner_id) {
+            terminal.warning(`updateOrder.service.js | Employee ${updateData.employee_id} does not belong to this service owner.`);
+            return -6;
+        }
+
+        updateFields.employee_id = employee.employee_id;
+        updateFields.employee_full_name = employee.employee_full_name;
+
+        return updateFields;
+    }
+
+    updateFields.order_description =
+        updateData.order_status === "CANCELED"
+            ? `[Cửa hàng hủy đơn: ${updateData.order_description || ""}] ${order.order_description || ""}`
+            : `[Hoàn thành đơn hàng: ${updateData.order_description || ""}] ${order.order_description || ""}`;
+
+    return updateFields;
+}
