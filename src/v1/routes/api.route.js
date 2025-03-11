@@ -4,6 +4,7 @@ const app = express();
 const userRoutes = require('./user.route');
 const authRoutes = require('./auth.route');
 const orderRoutes = require('./order.route');
+const serviceRoutes = require("./service.route")
 
 /**
  * @description RESTful API for managing users.
@@ -28,5 +29,7 @@ app.use('/v1/users', userRoutes);
 app.use('/v1/auth', authRoutes);
 
 app.use('/v1/orders', orderRoutes);
+
+app.use('/v1/service',  serviceRoutes)
 
 module.exports = app;
