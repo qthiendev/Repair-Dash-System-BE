@@ -1,9 +1,11 @@
-const express = require('express');
+const express = require("express");
 const app = express();
+
 
 const userRoutes = require('./user.route');
 const authRoutes = require('./auth.route');
 const orderRoutes = require('./order.route');
+const serviceRoutes = require("./service.route");
 
 /**
  * @description RESTful API for managing users.
@@ -25,8 +27,26 @@ app.use('/v1/users', userRoutes);
  * @route POST /api/v1/auth/send_link  - Send link for user
  * @route POST /api/v1/auth/reset_pass  - Reset password a user
  */
-app.use('/v1/auth', authRoutes);
+app.use("/v1/auth", authRoutes);
 
+/**
+ * @description RESTful API for managing orders.
+ *
+ * @route POST   /v1/orders            - Create a new order
+ * @route GET    /v1/orders/:order_id?  - Retrieve all orders or a specific order
+ * @route PUT    /v1/orders/:order_id   - Update an order
+ * @route DELETE /v1/orders/:order_id   - Soft delete an order
+ */
 app.use('/v1/orders', orderRoutes);
+
+/**
+ * @description RESTful API for managing services.
+ *
+ * @route POST   /v1/service          - Create a new service
+ * @route GET    /v1/service/:service_id? - Retrieve all users or a specific service
+ * @route PUT    /v1/service/:service_id  - Update a service
+ * @route DELETE /v1/service/:service_id  - Soft delete a service
+ */
+app.use("/v1/service", serviceRoutes);
 
 module.exports = app;
