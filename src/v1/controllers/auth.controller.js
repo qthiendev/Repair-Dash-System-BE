@@ -1,6 +1,5 @@
 const loginService = require('../services/auth/login.service');
 const refreshService = require('../services/auth/refreshToken.service');
-const logoutService = require('../services/auth/logout.service');
 const authStatusService = require('../services/auth/authStatus.service');
 const getRoleService = require('../services/auth/getRole.service');
 const createUser = require('../services/user/createUser.service');
@@ -16,9 +15,9 @@ require('dotenv').config();
  */
 exports.status = async (req, res) => {
     try {
-        const token = req.cookies?.accessToken;
+        const token = req.cookies?.refreshToken;
         const { status, user_id } = await authStatusService(token);
-        const role = await getRoleService(token);
+        const role = await getRoleService.byToken(token);
 
         if (status && user_id && role) {
             terminal.info(`status.service.js | User ${user_id} currently active with role ${role}.`);
@@ -86,21 +85,11 @@ exports.login = async (req, res) => {
  */
 exports.logout = async (req, res) => {
     try {
-        const authHeader = req.headers.authorization;
-        const accessToken = authHeader?.startsWith('Bearer ')
-            ? authHeader.split(' ')[1]
-            : req.cookies?.accessToken;
+        const accessToken = req.cookies?.accessToken;
 
         if (!accessToken) {
             terminal.error('Logout attempt with no access token.');
             return res.status(401).json({ message: 'Unauthorized' });
-        }
-
-        const result = await logoutService(accessToken);
-
-        if (result === -1) {
-            terminal.error('Logout failed: Invalid or expired token.');
-            return res.status(401).json({ message: 'Invalid or expired token' });
         }
 
         res.clearCookie('accessToken', {

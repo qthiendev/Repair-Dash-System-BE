@@ -46,8 +46,25 @@ INSERT INTO `employees` (`employee_full_name`, `owner_id`) VALUES
     (N'Phạm Quốc Dũng', 6),
     (N'Lê Thị Hồng', 7);
 
-INSERT INTO `orders` (`order_description`, `store_address`, `customer_address`, `order_status`, `customer_id`, `service_id`, `employee_id`) VALUES
-    (N'Sửa tủ lạnh Toshiba tại nhà', N'100 Lê Lợi, Hải Châu, Đà Nẵng', N'40 Bạch Đằng, Hải Châu, Đà Nẵng', N'PROCESSING', 8, 1, 1),
-    (N'Lắp đặt máy nước nóng Ariston', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'75 Trần Phú, Sơn Trà, Đà Nẵng', N'COMPLETED', 9, 2, 3),
-    (N'Kiểm tra tủ lạnh', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'75 Trần Phú, Sơn Trà, Đà Nẵng', N'CANCELLED', 8, 3, 2),
-    (N'Kiểm tra hệ thống điện tại nhà', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'75 Trần Phú, Sơn Trà, Đà Nẵng', N'PENDING', 8, 3, NULL);
+INSERT INTO `orders` (
+    `order_description`, 
+    `order_status`, 
+    `order_feedback`, 
+    `order_rating`,
+    `service_name`,
+    `service_description`,
+    `store_full_name`, 
+    `store_address`, 
+    `store_phone_number`,
+    `employee_full_name`,
+    `customer_full_name`, 
+    `customer_phone_number`, 
+    `customer_address`, 
+    `service_id`, 
+    `employee_id`, 
+    `customer_id`
+) VALUES
+    (N'Sửa tủ lạnh Toshiba, mua cách đây 3 năm', N'PROCESSING', NULL, NULL, N'Sửa chữa điện lạnh', N'Dịch vụ sửa chữa tủ lạnh, máy lạnh tại nhà', N'Siêu thị Điện Máy Xanh', N'100 Lê Lợi, Hải Châu, Đà Nẵng', N'02366554477', N'Trần Văn Công', N'Nguyễn Văn A', N'0905123456', N'40 Bạch Đằng, Hải Châu, Đà Nẵng', 1, 1, 8),
+    (N'Lắp đặt máy nước nóng Ariston', N'COMPLETED', N'Lắp đặt thành công, không có phụ phí', 5, N'Lắp đặt máy nước nóng', N'Dịch vụ lắp đặt, bảo trì máy nước nóng', N'Điện nước Việt Nam', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'02366553388', N'Phạm Quốc Dũng', N'Nguyễn Văn B', N'0935678901', N'75 Trần Phú, Sơn Trà, Đà Nẵng', 2, 3, 9),
+    (N'Sửa điện nước', N'CANCELED', N'[Khách hàng hủy đơn]', NULL, N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', N'Điện nước Việt Nam', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'02366553388', N'Lê Thị Hồng', N'Nguyễn Văn A', N'0905123456', N'75 Trần Phú, Sơn Trà, Đà Nẵng', 3, 2, 8),
+    (N'Kiểm tra hệ thống điện tại nhà', N'PENDING', NULL, NULL, N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', N'Điện nước Việt Nam', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'02366553388', NULL, N'Nguyễn Văn A', N'0905123456', N'75 Trần Phú, Sơn Trà, Đà Nẵng', 3, NULL, 8);
