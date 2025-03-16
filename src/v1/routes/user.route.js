@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multerMiddleware = require('../../middlewares/multer.middleware');
+const authMiddleware = require('../middlewares/auth.middleware');
 
 const {
     createUser,
@@ -23,9 +25,9 @@ const {
  * @route PUT    /:user_id  - Update a user
  * @route DELETE /:user_id  - Soft delete a user
  */
-router.post('/', createUserValidation, createUser);
+router.post('/', authMiddleware.ensureAdmin, createUserValidation, createUser);
 router.get('/:user_id?', readUserValidation, readUser);
-router.put('/:user_id', updateUserValidation, updateUser);
-router.delete('/:user_id', deleteUserValidation, deleteUser);
+router.put('/:user_id', authMiddleware.ensureAdmin, updateUserValidation, updateUser);
+router.delete('/:user_id', authMiddleware.ensureAdmin, deleteUserValidation, deleteUser);
 
 module.exports = router;

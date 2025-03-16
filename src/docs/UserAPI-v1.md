@@ -12,7 +12,7 @@
 | **POST** | `/api/v1/users` | Creates a new users. | `{ "identifier_email": "string", "password": "string", "role": "string", "user_full_name": "string", "user_phone_number": "string", "user_address": "string" }` | **201** | `{ "user_id": number }` |
 | | | | | **400** | `{ "message": "users already exists" }` |
 | | | | | **500** | `{ "message": "Unexpected error occurred" }` |
-| **PUT** | `/api/v1/users/:user_id` | Updates a users. | v`{ "user_full_name": "string", "user_phone_number": "string", "user_address": "string" }` | **200** | `{ "message": "users updated successfully" }` |
+| **PUT** | `/api/v1/users/:user_id` | Updates a users. | v`{ "user_full_name": "string", "user_phone_number": "string", "user_address": "string", "avatar_image": [base64 or file] }` | **200** | `{ "message": "users updated successfully" }` |
 | | | | | **400** | `{ "message": "No valid fields provided for update" }` |
 | | | | | **404** | `{ "message": "users not found" }` |
 | | | | | **501** | `{ "message": "Cannot update users" }` |

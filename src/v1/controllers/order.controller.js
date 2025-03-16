@@ -62,7 +62,8 @@ exports.createOrder = async (req, res) => {
             order_description,
             customer_full_name,
             customer_phone_number,
-            customer_address
+            customer_address,
+            order_images,
         } = req.body;
 
         const order_id = await createOrderService(
@@ -71,7 +72,8 @@ exports.createOrder = async (req, res) => {
             customer_full_name,
             customer_phone_number,
             customer_address,
-            order_description
+            order_description,
+            order_images,
         );
 
         switch (order_id) {

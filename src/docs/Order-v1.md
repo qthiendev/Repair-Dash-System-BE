@@ -9,7 +9,7 @@ This document outlines the available order-related API endpoints, including thei
 | **GET**  | `/api/v1/orders/:order_id?`  | Retrieves orders (all or specific) | `authenticate`                   | None         | **200** | `{ "orders": [..] }` or `{ "order": {...} }` |
 |         |                           |                                     |                                  |              | **403** | `{ "message": "You are not allowed to read this order." }` |
 |         |                           |                                     |                                  |              | **404** | `{ "message": "Order not found" }` |
-| **POST** | `/api/v1/orders`         | Creates a new order                 | `authenticate`, `createOrderValidation` | `{ "service_id": number, "order_description": string, "customer_full_name": string, "customer_phone_number": string, "customer_address": string }` | **201** | `{ "message": "Order created successfully", "order_id": number }` |
+| **POST** | `/api/v1/orders`         | Creates a new order                 | `authenticate`, `createOrderValidation` | `{ "service_id": number, "order_description": string, "customer_full_name": string, "customer_phone_number": string, "customer_address": string, "order_images": [base64 or files] }` | **201** | `{ "message": "Order created successfully", "order_id": number }` |
 |         |                           |                                     |                                  |              | **400** | `{ "message": "Invalid service or customer" }` |
 |         |                           |                                     |                                  |              | **500** | `{ "message": "Unexpected error occurred" }` |
 | **PUT**  | `/api/v1/orders/:order_id` | Updates an existing order           | `authenticate`, `updateOrderValidation` | `{ [updateData] }` | **200** | `{ "message": "Order updated successfully", "order": {...} }` |
@@ -46,11 +46,12 @@ This document outlines the available order-related API endpoints, including thei
 
   ```json
   { 
-    "service_id": number, 
-    "order_description": string, 
-    "customer_full_name": string, 
-    "customer_phone_number": string, 
-    "customer_address": string 
+    "service_id": number,
+    "order_description": string,
+    "customer_full_name": string,
+    "customer_phone_number": string,
+    "customer_address": string,
+    "order_images": [base64 or files]
   }
   ```
 
@@ -76,7 +77,8 @@ This document outlines the available order-related API endpoints, including thei
         "customer_phone_number": string, 
         "customer_address": string, 
         "order_description": string,
-        "order_status": "CANCELED"
+        "order_status": "CANCELED",
+        "order_images": [base64 or files]
       }
       ```
 

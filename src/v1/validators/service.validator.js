@@ -17,6 +17,12 @@ const readServiceValidation = validateRequest([
     .withMessage("Service ID must be a positive integer or greater than 0"),
 ]);
 
+const readServiceStoreValidation = validateRequest([
+  param("owner_id")
+    .isInt({ min: 1 })
+    .withMessage("Service ID must be a positive integer or greater than 0"),
+]);
+
 const deleteServiceValidation = validateRequest([
   param("service_id")
     .isInt({ min: 1 })
@@ -44,4 +50,5 @@ module.exports = {
   readServiceValidation,
   deleteServiceValidation,
   updateServiceValidation,
+  readServiceStoreValidation,
 };
