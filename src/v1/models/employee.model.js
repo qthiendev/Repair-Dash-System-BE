@@ -13,27 +13,11 @@ const User = require('./user.model');
  * @property {number} owner_id - Reference to the user who owns this employee record.
  */
 const Employee = sequelize.define('Employee', {
-    employee_id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-    },
-    employee_full_name: {
-        type: DataTypes.STRING(500),
-        allowNull: false,
-    },
-    delete_flag: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    owner_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'user_id',
-        },
-    },
+    employee_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
+    employee_full_name: { type: DataTypes.STRING(500), allowNull: false, },
+    employee_avatar_url: { type: DataTypes.STRING(500), allowNull: true, },
+    delete_flag: { type: DataTypes.BOOLEAN, defaultValue: false, },
+    owner_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: User, key: 'user_id', }, },
 }, {
     tableName: 'employees',
     timestamps: true,

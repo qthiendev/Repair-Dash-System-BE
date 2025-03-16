@@ -9,8 +9,8 @@ const readUserValidation = validateRequest([
 
 const restPasswordValidation = validateRequest([
     body('password')
-    .isLength({ min: 6, max: 20 })
-    .withMessage('Password must be between 6 and 20 characters'),
+        .isLength({ min: 6, max: 20 })
+        .withMessage('Password must be between 6 and 20 characters'),
 ])
 
 const createUserValidation = validateRequest([
@@ -73,10 +73,25 @@ const updateUserValidation = validateRequest([
         .isLength({ min: 10, max: 20 })
         .withMessage('Phone number must be between 10 and 20 characters'),
 
-    body('user_address')
+    body('user_street')
         .isString()
         .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters')
+        .withMessage('Address must be at least 5 characters'),
+
+    body('user_ward')
+        .isString()
+        .isLength({ min: 5 })
+        .withMessage('Address must be at least 5 characters'),
+
+    body('user_district')
+        .isString()
+        .isLength({ min: 5 })
+        .withMessage('Address must be at least 5 characters'),
+
+    body('user_city')
+        .isString()
+        .isLength({ min: 5 })
+        .withMessage('Address must be at least 5 characters'),
 ]);
 
 const deleteUserValidation = validateRequest([

@@ -1,5 +1,6 @@
 const { Order, User, Service } = require('../../models/index.model');
 const terminal = require('../../../utils/terminal');
+const uploadMedia = require('../cloudinary/uploadMedia.service');
 
 /**
  * Creates a new order.
@@ -11,7 +12,7 @@ const terminal = require('../../../utils/terminal');
  * @param {string} order_description - Description of the order.
  * @returns {Promise<number>} Created order ID or error codes (-1, -2, -3, -4).
  */
-module.exports = async (customer_id, service_id, customer_full_name, customer_phone_number, customer_address, order_description) => {
+module.exports = async (customer_id, service_id, customer_full_name, customer_phone_number, customer_address, order_description, order_images) => {
     const customer = await User.findByPk(customer_id);
     if (!customer) {
         terminal.warning(`order.service.js | Customer ${customer_id} not found.`);
@@ -64,6 +65,12 @@ module.exports = async (customer_id, service_id, customer_full_name, customer_ph
         employee_id: null,
         employee_full_name: null,
     });
+
+    const folderUrl = await uploadMedia.uploadImages(`order_${newOrder.order_id}`, order_images);
+
+    if (folderUrl) {
+        await Order.update({ order_images_url: folderUrl }, { where: { order_id: newOrder.order_id } });
+    }
 
     return newOrder.order_id;
 };

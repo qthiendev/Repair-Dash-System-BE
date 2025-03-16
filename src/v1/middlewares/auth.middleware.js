@@ -59,7 +59,7 @@ const ensureRole = (requiredRole) => {
     return async (req, res, next) => {
         try {
             const token = req.cookies?.accessToken;
-            const userRole = await getRole(token);
+            const userRole = await getRole.byToken(token);
 
             if (!userRole || userRole !== requiredRole) {
                 if (!userRole)

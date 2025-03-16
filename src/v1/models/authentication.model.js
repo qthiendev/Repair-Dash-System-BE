@@ -13,41 +13,11 @@ const sequelize = require('../../configs/database.config');
  * @property {boolean} delete_flag - Soft delete flag (true if deleted).
  */
 const Authentication = sequelize.define('Authentication', {
-    authentication_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    identifier_email: {
-        type: DataTypes.BLOB,
-        allowNull: false,
-        validate: {
-            len: [0, 1000],
-        },
-        get() {
-            const rawValue = this.getDataValue('identifier_email');
-            return rawValue ? rawValue.toString('utf8') : null;
-        },
-    },
-    password: {
-        type: DataTypes.BLOB,
-        allowNull: false,
-        validate: {
-            len: [0, 1000],
-        },
-        get() {
-            const rawValue = this.getDataValue('password');
-            return rawValue ? rawValue.toString('utf8') : null;
-        },
-    },
-    role: {
-        type: DataTypes.ENUM('ADMIN', 'STORE', 'CUSTOMER'),
-        allowNull: false,
-    },
-    delete_flag: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
+    authentication_id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, },
+    identifier_email: { type: DataTypes.STRING(500), allowNull: false, },
+    password: { type: DataTypes.STRING(101000), allowNull: false, },
+    role: { type: DataTypes.ENUM('ADMIN', 'STORE', 'CUSTOMER'), allowNull: false, },
+    delete_flag: { type: DataTypes.BOOLEAN, defaultValue: false, },
 }, {
     tableName: 'authentications',
     timestamps: true,

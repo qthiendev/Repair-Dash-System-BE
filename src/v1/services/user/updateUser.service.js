@@ -1,37 +1,33 @@
 const { User } = require('../../models/index.model');
+const uploadService = require('../cloudinary/uploadMedia.service');
+const terminal = require('../../../utils/terminal');
 
 /**
- * Updates user details if the user exists and is not deleted.
+ * Updates user details and avatar if provided.
+ *
  * @param {number} user_id - The ID of the user to update.
  * @param {Object} updateData - The data to update.
- * @returns {Promise<number|boolean>} - Returns `-1` if the user is not found.
- *                                    - Returns `true` if the update is successful.
- *                                    - Returns `false` if no rows were updated.
- * @throws {Error} If no valid fields are provided for the update.
+ * @param {File} file - The uploaded avatar file (optional).
+ * @returns {Promise<Object|number>} - Response object or error code.
  */
 module.exports = async (user_id, updateData) => {
-
-    if (!(await User.findOne({ where: { user_id, delete_flag: false } }))) {
+    const user = await User.findOne({ where: { user_id, delete_flag: false } });
+    if (!user) {
+        terminal.warning(`updateUser.service.js | User ${user_id} not found.`);
         return -1;
     }
 
-    const allowedFields = ['user_full_name', 'user_phone_number', 'user_address'];
-    const filteredData = Object.fromEntries(
-        Object.entries(updateData).filter(([key]) => allowedFields.includes(key))
-    );
-
-    if (Object.keys(filteredData).length === 0) {
-        throw new Error('No valid fields provided for update');
+    if (updateData.avatar_image) {
+        const fileName = `user_avatar_${user_id}`;
+        updateData.user_avatar_url = await uploadService.uploadImage(fileName, updateData.avatar_image);
+        if (!updateData.user_avatar_url) {
+            terminal.error('updateUser.service.js | Error uploading avatar.');
+        }
     }
 
-    filteredData.updated_at = new Date();
+    const [updatedRows] = await User.update(updateData, { where: { user_id } });
 
-    const [updatedRows] = await User.update(filteredData, {
-        where: {
-            user_id,
-            delete_flag: false
-        }
-    });
+    terminal.success(`updateUser.service.js | User ${user_id} updated.`);
 
     return updatedRows > 0;
 };

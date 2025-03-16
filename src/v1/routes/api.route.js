@@ -43,7 +43,8 @@ app.use('/v1/orders', orderRoutes);
  * @description RESTful API for managing services.
  *
  * @route POST   /v1/service          - Create a new service
- * @route GET    /v1/service/:service_id? - Retrieve all users or a specific service
+ * @route GET    /v1/service/:service_id? - Retrieve all service or a specific service
+ * @route GET    /v1/service/store/:owner_id - Retrieve all store services
  * @route PUT    /v1/service/:service_id  - Update a service
  * @route DELETE /v1/service/:service_id  - Soft delete a service
  */

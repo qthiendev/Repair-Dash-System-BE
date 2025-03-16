@@ -9,6 +9,9 @@
 | **GET** | `/api/v1/service/:service_id` | Retrieves a specific service. | None | **200** | `{ "data": services }` |
 | | | | | **404** | `{ "message": "Service not found" }` |
 | | | | | **500** | `{ "message": "Unexpected error occurred" }` |
+| **GET** | `/api/v1/service/store/:owner_id` | Retrieve all store services. | None | **200** | `{ "data": services }` |
+| | | | | **404** | `{ "message": "Store not found" }` |
+| | | | | **500** | `{ "message": "Unexpected error occurred" }` |
 | **POST** | `/api/v1/service` | Creates a new service. | `{ "service_name": "string", "service_description": "string"}` | **201** | `{ "service_id": number }` |
 | | | | | **400** | `{ "message": "Service already exists" }` |
 | | | | | **500** | `{ "message": "Unexpected error occurred" }` |
@@ -37,6 +40,14 @@
 - **Response**:
   - **200 OK**: Returns the service details.
   - **404 Not Found**: If the service does not exist.
+  - **500 Internal Server Error**: In case of an unexpected error.
+
+### **GET** `/api/v1/service/store/:owner_id`
+
+- **Description**: Retrieve all store services `owner_id`.
+- **Response**:
+  - **200 OK**: Returns the service details.
+  - **404 Not Found**: If the store does not exist.
   - **500 Internal Server Error**: In case of an unexpected error.
 
 ### **POST** `/api/v1/service`

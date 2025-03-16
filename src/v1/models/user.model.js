@@ -16,47 +16,17 @@ const Authentication = require('./authentication.model');
  * @property {number} authentication_id - Reference to the authentication record associated with the user.
  */
 const User = sequelize.define('User', {
-    user_id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-    },
-    user_full_name: {
-        type: DataTypes.STRING(500),
-        allowNull: false,
-    },
-    user_phone_number: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-    },
-    user_street: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
-    user_ward: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
-    user_district: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
-    user_city: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
-    delete_flag: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    authentication_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: Authentication,
-            key: 'authentication_id',
-        },
-    },
+    user_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
+    user_full_name: { type: DataTypes.STRING(500), allowNull: false, },
+    user_avatar_url: { type: DataTypes.STRING(500), allowNull: true, },
+    user_description: { type: DataTypes.TEXT, allowNull: true, },
+    user_phone_number: { type: DataTypes.STRING(20), allowNull: false, },
+    user_street: { type: DataTypes.TEXT, allowNull: false, },
+    user_ward: { type: DataTypes.TEXT, allowNull: false, },
+    user_district: { type: DataTypes.TEXT, allowNull: false, },
+    user_city: { type: DataTypes.TEXT, allowNull: false, },
+    delete_flag: { type: DataTypes.BOOLEAN, defaultValue: false, },
+    authentication_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: Authentication, key: 'authentication_id', }, },
 }, {
     tableName: 'users',
     timestamps: true,

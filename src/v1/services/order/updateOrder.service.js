@@ -1,4 +1,6 @@
 const { Order, Employee, Service } = require('../../models/index.model');
+const uploadMedia = require('../cloudinary/uploadMedia.service');
+const deleteMedia = require('../cloudinary/deleteMedia.service');
 const terminal = require('../../../utils/terminal');
 
 /**
@@ -35,7 +37,7 @@ module.exports = async (order_id, user_id, updateData) => {
     }
 
     if (order.order_status === "PENDING" && isCustomer) {
-        handleCustomerPendingUpdate(updateData, updateFields, order);
+        await handleCustomerPendingUpdate(updateData, updateFields, order);
     }
 
     if (isStoreOwner) {
@@ -83,11 +85,17 @@ function handleCompletedOrderUpdate(isCustomer, updateData, updateFields, order_
 /**
  * Handles customer updates for PENDING orders.
  */
-function handleCustomerPendingUpdate(updateData, updateFields, order) {
+const handleCustomerPendingUpdate = async (updateData, updateFields, order) => {
     if (updateData.customer_full_name) updateFields.customer_full_name = updateData.customer_full_name;
     if (updateData.customer_phone_number) updateFields.customer_phone_number = updateData.customer_phone_number;
     if (updateData.customer_address) updateFields.customer_address = updateData.customer_address;
     if (updateData.order_description) updateFields.order_description = updateData.order_description;
+    if (updateData.order_images) {
+        updateFields.order_images_url = await uploadMedia.uploadImages(`order_${order.order_id}`, updateData.order_images);
+    } else {
+        await deleteMedia.deleteImages(`order_${order.order_id}`);
+        updateFields.order_images_url = null;
+    }
 
     if (updateData.order_status === "CANCELED") {
         updateFields.order_status = "CANCELED";

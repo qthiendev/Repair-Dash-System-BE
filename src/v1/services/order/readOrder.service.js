@@ -1,5 +1,6 @@
 const { Order, User, Authentication, Service, Employee } = require('../../models/index.model');
 const { Op, Sequelize } = require('sequelize');
+const retrieveMedia = require('../cloudinary/retrieveMedia.service');
 const getRole = require('../auth/getRole.service');
 const terminal = require('../../../utils/terminal');
 
@@ -46,7 +47,7 @@ const getSingleOrder = async (order_id, user_id, role) => {
                     {
                         model: User,
                         as: 'owner',
-                        attributes: ['user_id', 'user_full_name'],
+                        attributes: ['user_id', 'user_full_name', 'user_avatar_url'],
                         include: {
                             model: Employee,
                             as: 'employees',
@@ -60,9 +61,14 @@ const getSingleOrder = async (order_id, user_id, role) => {
                             },
                             required: false,
                         },
-                    },
+                    }
                 ],
             },
+            {
+                model: User,
+                as: 'customer',
+                attributes: ['user_id', 'user_full_name', 'user_avatar_url'],
+            }
         ],
     });
 
@@ -76,7 +82,9 @@ const getSingleOrder = async (order_id, user_id, role) => {
         return -2;
     }
 
-    return order;
+    const order_images = await retrieveMedia.getImages(order.order_images_url);
+
+    return { ...order.toJSON(), order_images_url: order_images };
 };
 
 /**
@@ -91,13 +99,39 @@ const getUserOrders = async (user_id, role) => {
 
     if (role !== 'ADMIN') {
         whereCondition[Op.or] = [
-            { customer_id: user_id }, 
+            { customer_id: user_id },
             { '$service.owner_id$': user_id }
         ];
     }
 
-    return await Order.findAll({
+    const orders = await Order.findAll({
         where: whereCondition,
-        attributes: { exclude: ['delete_flag'] }
+        attributes: { exclude: ['delete_flag'] },
+        include: [
+            {
+                model: Service,
+                as: 'service',
+                attributes: ['service_id', 'service_name', 'service_description'],
+                include: [
+                    {
+                        model: User,
+                        as: 'owner',
+                        attributes: ['user_id', 'user_full_name', 'user_avatar_url'],
+                    },
+                ],
+            },
+            {
+                model: User,
+                as: 'customer',
+                attributes: ['user_id', 'user_full_name', 'user_avatar_url'],
+            }
+        ]
     });
+
+    return await Promise.all(
+        orders.map(async (order) => {
+            const order_images = await retrieveMedia.getImages(order.order_images_url);
+            return { ...order.toJSON(), order_images_url: order_images };
+        })
+    );
 };
