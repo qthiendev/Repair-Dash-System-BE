@@ -24,7 +24,7 @@ module.exports = async (
     );
   } else {
     await deleteMedia.deleteImages(`order_${service_id}`);
-    updateFields.order_images_url = null;
+    service_images = null;
   }
 
   const [updatedRows] = await Service.update(
