@@ -6,6 +6,7 @@ const userRoutes = require('./user.route');
 const authRoutes = require('./auth.route');
 const orderRoutes = require('./order.route');
 const serviceRoutes = require("./service.route");
+const rtcRoutes = require("./rtc.route");
 
 /**
  * @description RESTful API for managing users.
@@ -49,5 +50,13 @@ app.use('/v1/orders', orderRoutes);
  * @route DELETE /v1/service/:service_id  - Soft delete a service
  */
 app.use("/v1/service", serviceRoutes);
+
+/**
+ * @description Real-time chat (RTC) API endpoints.
+ *
+ * @route GET  /v1/rtc/:session_id  - Retrieve chat messages for a session
+ * @route POST /v1/rtc/:session_id  - Send a message within a chat session
+ */
+app.use("/v1/rtc", rtcRoutes);
 
 module.exports = app;

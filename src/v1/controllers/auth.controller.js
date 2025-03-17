@@ -15,7 +15,7 @@ require('dotenv').config();
  */
 exports.status = async (req, res) => {
     try {
-        const token = req.cookies?.refreshToken;
+        const token = req.cookies?.accessToken;
         const { status, user_id } = await authStatusService(token);
         const role = await getRoleService.byToken(token);
 

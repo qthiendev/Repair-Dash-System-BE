@@ -99,7 +99,8 @@ const handleCustomerPendingUpdate = async (updateData, updateFields, order) => {
 
     if (updateData.order_status === "CANCELED") {
         updateFields.order_status = "CANCELED";
-        updateFields.order_description = `[Khách hàng hủy đơn] ${order.order_description || ""}`;
+        updateFields.order_description = `${order.order_description || ""}
+            [Khách hàng hủy đơn: ${updateData.order_description || ""}]`;
     }
 }
 
@@ -139,8 +140,10 @@ async function handleStoreUpdate(updateData, updateFields, order) {
 
     updateFields.order_description =
         updateData.order_status === "CANCELED"
-            ? `[Cửa hàng hủy đơn: ${updateData.order_description || ""}] ${order.order_description || ""}`
-            : `[Hoàn thành đơn hàng: ${updateData.order_description || ""}] ${order.order_description || ""}`;
+            ? `${order.order_description || ""}
+                [Cửa hàng hủy đơn: ${updateData.order_description || ""}]`
+            : `${order.order_description || ""}
+                [Hoàn thành đơn hàng: ${updateData.order_description || ""}]`;
 
     return updateFields;
 }

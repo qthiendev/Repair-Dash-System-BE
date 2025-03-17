@@ -87,6 +87,7 @@ CREATE TABLE `orders` (
     `order_status` ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'CANCELED') NOT NULL,
     `order_feedback` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
     `order_rating` INT,
+    `order_rtc_session_id` VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
 
     `service_name` VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `service_description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
