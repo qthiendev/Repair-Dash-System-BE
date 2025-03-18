@@ -1,11 +1,11 @@
 const express = require("express");
 const app = express();
 
-
-const userRoutes = require('./user.route');
-const authRoutes = require('./auth.route');
-const orderRoutes = require('./order.route');
+const userRoutes = require("./user.route");
+const authRoutes = require("./auth.route");
+const orderRoutes = require("./order.route");
 const serviceRoutes = require("./service.route");
+const reportRoutes = require("./report.route");
 
 /**
  * @description RESTful API for managing users.
@@ -16,7 +16,7 @@ const serviceRoutes = require("./service.route");
  * @route PUT    /v1/user/:id   - Update a user
  * @route DELETE /v1/user/:id   - Soft delete a user
  */
-app.use('/v1/users', userRoutes);
+app.use("/v1/users", userRoutes);
 
 /**
  * @description Authentication-related API endpoints.
@@ -37,7 +37,7 @@ app.use("/v1/auth", authRoutes);
  * @route PUT    /v1/orders/:order_id   - Update an order
  * @route DELETE /v1/orders/:order_id   - Soft delete an order
  */
-app.use('/v1/orders', orderRoutes);
+app.use("/v1/orders", orderRoutes);
 
 /**
  * @description RESTful API for managing services.
@@ -49,5 +49,15 @@ app.use('/v1/orders', orderRoutes);
  * @route DELETE /v1/service/:service_id  - Soft delete a service
  */
 app.use("/v1/service", serviceRoutes);
+
+/**
+ * @description RESTful API for managing report.
+ *
+ * @route POST   /v1/report          - Create a new report
+ * @route GET    /v1/report/:report_id? - Retrieve all report or a specific report
+ * @route GET    /v1/report/admin/:report_id? - Retrieve all report
+ * @route DELETE /v1/report/:report_id  - Soft delete a report
+ */
+app.use("/v1/report", reportRoutes);
 
 module.exports = app;

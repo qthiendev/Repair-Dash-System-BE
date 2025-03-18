@@ -15,7 +15,7 @@ const User = require('./user.model');
 const SystemReport = sequelize.define('SystemReport', {
     report_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
     report_description: { type: DataTypes.TEXT, allowNull: false, },
-    report_images_url: { type: DataTypes.TEXT, allowNull: true, },
+    report_image_url: { type: DataTypes.TEXT, allowNull: true, },
     delete_flag: { type: DataTypes.BOOLEAN, defaultValue: false, },
     user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: User, key: 'user_id', }, },
 }, {
