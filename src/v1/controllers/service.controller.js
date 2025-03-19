@@ -149,7 +149,9 @@ exports.updateService = async (req, res) => {
       return res.status(501).json({ message: "Cannot update service" });
     }
 
-    return res.status(200).json({ message: "Service updated successfully" });
+    return res
+      .status(200)
+      .json({ message: "Service updated successfully", result });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Unexpected error occurred" });
