@@ -36,10 +36,10 @@ INSERT INTO `system_reports` (`report_description`, `user_id`) VALUES
     (N'Hệ thống đang hoạt động ổn định', 9),
     (N'Phát hiện lỗi nhỏ ở hệ thống quản lý đơn hàng', 7);
 
-INSERT INTO `services` (`service_name`, `service_description`, `owner_id`) VALUES
-    (N'Sửa chữa điện lạnh', N'Dịch vụ sửa chữa tủ lạnh, máy lạnh tại nhà', 6),
-    (N'Lắp đặt máy nước nóng', N'Dịch vụ lắp đặt, bảo trì máy nước nóng', 7),
-    (N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', 7);
+INSERT INTO `services` (`service_name`, `service_description`, `owner_id`, `service_images_url`) VALUES
+    (N'Sửa chữa điện lạnh', N'Dịch vụ sửa chữa tủ lạnh, máy lạnh tại nhà', 6, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/service_1'),
+    (N'Lắp đặt máy nước nóng', N'Dịch vụ lắp đặt, bảo trì máy nước nóng', 7, NULL),
+    (N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', 7, NULL);
 
 INSERT INTO `employees` (`employee_full_name`, `owner_id`) VALUES
     (N'Trần Văn Công', 6),
@@ -62,9 +62,10 @@ INSERT INTO `orders` (
     `customer_address`, 
     `service_id`, 
     `employee_id`, 
-    `customer_id`
+    `customer_id`,
+    `order_images_url`
 ) VALUES
-    (N'Sửa tủ lạnh Toshiba, mua cách đây 3 năm', N'PROCESSING', NULL, NULL, N'Sửa chữa điện lạnh', N'Dịch vụ sửa chữa tủ lạnh, máy lạnh tại nhà', N'Siêu thị Điện Máy Xanh', N'100 Lê Lợi, Hải Châu, Đà Nẵng', N'02366554477', N'Trần Văn Công', N'Nguyễn Văn A', N'0905123456', N'40 Bạch Đằng, Hải Châu, Đà Nẵng', 1, 1, 8),
-    (N'Lắp đặt máy nước nóng Ariston', N'COMPLETED', N'Lắp đặt thành công, không có phụ phí', 5, N'Lắp đặt máy nước nóng', N'Dịch vụ lắp đặt, bảo trì máy nước nóng', N'Điện nước Việt Nam', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'02366553388', N'Phạm Quốc Dũng', N'Nguyễn Văn B', N'0935678901', N'75 Trần Phú, Sơn Trà, Đà Nẵng', 2, 3, 9),
-    (N'Sửa điện nước', N'CANCELED', N'[Khách hàng hủy đơn]', NULL, N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', N'Điện nước Việt Nam', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'02366553388', N'Lê Thị Hồng', N'Nguyễn Văn A', N'0905123456', N'75 Trần Phú, Sơn Trà, Đà Nẵng', 3, 2, 8),
-    (N'Kiểm tra hệ thống điện tại nhà', N'PENDING', NULL, NULL, N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', N'Điện nước Việt Nam', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'02366553388', NULL, N'Nguyễn Văn A', N'0905123456', N'75 Trần Phú, Sơn Trà, Đà Nẵng', 3, NULL, 8);
+    (N'Sửa tủ lạnh Toshiba, mua cách đây 3 năm', N'PROCESSING', NULL, NULL, N'Sửa chữa điện lạnh', N'Dịch vụ sửa chữa tủ lạnh, máy lạnh tại nhà', N'Siêu thị Điện Máy Xanh', N'100 Lê Lợi, Hải Châu, Đà Nẵng', N'02366554477', N'Trần Văn Công', N'Nguyễn Văn A', N'0905123456', N'40 Bạch Đằng, Hải Châu, Đà Nẵng', 1, 1, 8, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/order_1'),
+    (N'Lắp đặt máy nước nóng Ariston', N'COMPLETED', N'Lắp đặt thành công, không có phụ phí', 5, N'Lắp đặt máy nước nóng', N'Dịch vụ lắp đặt, bảo trì máy nước nóng', N'Điện nước Việt Nam', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'02366553388', N'Phạm Quốc Dũng', N'Nguyễn Văn B', N'0935678901', N'75 Trần Phú, Sơn Trà, Đà Nẵng', 2, 3, 9, NULL),
+    (N'Sửa điện nước', N'CANCELED', N'[Khách hàng hủy đơn]', NULL, N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', N'Điện nước Việt Nam', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'02366553388', N'Lê Thị Hồng', N'Nguyễn Văn A', N'0905123456', N'75 Trần Phú, Sơn Trà, Đà Nẵng', 3, 2, 8, NULL),
+    (N'Kiểm tra hệ thống điện tại nhà', N'PENDING', NULL, NULL, N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', N'Điện nước Việt Nam', N'22 Phan Đình Phùng, Thanh Khê, Đà Nẵng', N'02366553388', NULL, N'Nguyễn Văn A', N'0905123456', N'75 Trần Phú, Sơn Trà, Đà Nẵng', 3, NULL, 8, NULL);

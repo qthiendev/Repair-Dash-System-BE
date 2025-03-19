@@ -33,7 +33,62 @@ This document outlines the available order-related API endpoints, including thei
 - **Request Parameters**:
   - `order_id` (optional, number): The ID of the order to retrieve.
 - **Response**:
-  - **200 OK**: `{ "orders": [...] }` or `{ "order": {...} }`
+  - **200 OK**:
+
+  ```json
+  {
+      "order": {
+          "order_id": INTEGER,
+          "order_description": STRING,
+          "order_images_url": ARRAY,
+          "order_status": STRING,
+          "order_feedback": NULLABLE_STRING,
+          "order_rating": NULLABLE_INTEGER,
+          "order_rtc_session_id": NULLABLE_INTEGER,
+          "service_name": STRING,
+          "service_description": STRING,
+          "store_full_name": STRING,
+          "store_address": STRING,
+          "store_phone_number": STRING,
+          "employee_full_name": STRING,
+          "customer_full_name": STRING,
+          "customer_phone_number": STRING,
+          "customer_address": STRING,
+          "service_id": INTEGER,
+          "employee_id": INTEGER,
+          "customer_id": INTEGER,
+          "createdAt": STRING (ISO TIMESTAMP),
+          "updatedAt": STRING (ISO TIMESTAMP),
+          "service": {
+              "service_id": INTEGER,
+              "service_name": STRING,
+              "service_description": STRING,
+              "owner": {
+                  "user_id": INTEGER,
+                  "user_full_name": STRING,
+                  "user_avatar_url": STRING,
+                  "employees": [
+                      {
+                          "employee_id": INTEGER,
+                          "employee_full_name": STRING,
+                          "employee_avatar_url": NULLABLE_STRING,
+                          "owner_id": INTEGER,
+                          "createdAt": STRING (ISO TIMESTAMP),
+                          "updatedAt": STRING (ISO TIMESTAMP)
+                      }
+                  ]
+              }
+          },
+          "customer": {
+              "user_id": INTEGER,
+              "user_full_name": STRING,
+              "user_avatar_url": STRING
+          }
+      }
+  }
+  ```
+  
+  or `{ "orders": [list of order here] }`
   - **403 Forbidden**: `{ "message": "You are not allowed to read this order." }`
   - **404 Not Found**: `{ "message": "Order not found" }`
   - **500 Internal Server Error**: `{ "message": "Unexpected error occurred" }`

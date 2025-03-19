@@ -31,6 +31,7 @@ const Order = sequelize.define('Order', {
     order_status: { type: DataTypes.ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'CANCELLED'), defaultValue: 'PENDING', allowNull: false, },
     order_feedback: { type: DataTypes.TEXT, allowNull: true, },
     order_rating: { type: DataTypes.INTEGER, allowNull: true, },
+    order_rtc_session_id: { type: DataTypes.STRING(1000), allowNull: true, },
 
     service_name: { type: DataTypes.TEXT, allowNull: false, },
     service_description: { type: DataTypes.TEXT, allowNull: false, },

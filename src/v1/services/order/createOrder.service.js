@@ -1,6 +1,8 @@
 const { Order, User, Service } = require('../../models/index.model');
 const terminal = require('../../../utils/terminal');
 const uploadMedia = require('../cloudinary/uploadMedia.service');
+const createRTCSession = require('../rtc/createRTCSession.service');
+const { or } = require('sequelize');
 
 /**
  * Creates a new order.
@@ -66,7 +68,9 @@ module.exports = async (customer_id, service_id, customer_full_name, customer_ph
         employee_full_name: null,
     });
 
+    
     const folderUrl = await uploadMedia.uploadImages(`order_${newOrder.order_id}`, order_images);
+    await createRTCSession(newOrder.order_id);
 
     if (folderUrl) {
         await Order.update({ order_images_url: folderUrl }, { where: { order_id: newOrder.order_id } });

@@ -58,7 +58,7 @@ exports.uploadImages = async (folderName, files) => {
 
         return folderUrl;
     } catch (error) {
-        console.error(`Error uploading images to folder "${folderName}":`, error);
-        throw error;
+        terminal.error(`Error uploading images to folder "${folderName}":`, error.message);
+        return null;
     }
 };
