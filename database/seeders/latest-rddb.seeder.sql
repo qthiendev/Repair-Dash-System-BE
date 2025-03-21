@@ -36,7 +36,7 @@ INSERT INTO `system_reports` (`report_description`, `user_id`) VALUES
     (N'Hệ thống đang hoạt động ổn định', 9),
     (N'Phát hiện lỗi nhỏ ở hệ thống quản lý đơn hàng', 7);
 
-INSERT INTO `services` (`service_name`, `service_description`, `owner_id`, `service_images_url`) VALUES
+INSERT INTO `services` (`service_name`, `service_description`, `owner_id`, `service_image_url`) VALUES
     (N'Sửa chữa điện lạnh', N'Dịch vụ sửa chữa tủ lạnh, máy lạnh tại nhà', 6, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/service_1'),
     (N'Lắp đặt máy nước nóng', N'Dịch vụ lắp đặt, bảo trì máy nước nóng', 7, NULL),
     (N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', 7, NULL);

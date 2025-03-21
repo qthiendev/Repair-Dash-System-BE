@@ -6,15 +6,13 @@ module.exports = async (
   owner_id,
   service_name,
   service_description,
-  service_images,
-  index = 1,
-  limit = 10
+  service_image
 ) => {
   const owner = await User.findByPk(owner_id);
 
   if (!owner) {
     terminal.warning(`service.service.js | Owner ${owner_id} not found.`);
-    return { message: "Owner not found", error: -1 };
+    return -1;
   }
 
   const service = await Service.findOne({
@@ -26,7 +24,7 @@ module.exports = async (
 
   if (service) {
     terminal.warning(`service.service.js | Service had existed.`);
-    return { message: "Service already exists", error: -2 };
+    return -2;
   }
 
   const newService = await Service.create({
@@ -35,35 +33,18 @@ module.exports = async (
     owner_id: owner_id,
   });
 
-  const folderUrl = await uploadMedia.uploadImages(
-    `service_${newService.service_id}`,
-    service_images
-  );
+  let fileUrl = null;
 
-  if (folderUrl) {
+  if (service_image) {
+    fileUrl = await uploadMedia.uploadImage(
+      `service_${newService.service_id}`,
+      service_image
+    );
     await Service.update(
-      { service_images_url: folderUrl },
+      { service_image_url: fileUrl },
       { where: { service_id: newService.service_id } }
     );
   }
 
-  const totalItems = await Service.count({ where: { owner_id } });
-  const totalPages = Math.ceil(totalItems / limit);
-  const offset = (index - 1) * limit;
-
-  const services = await Service.findAll({
-    where: { owner_id, delete_flag: false },
-    limit,
-    offset,
-    order: [["service_id", "DESC"]],
-  });
-
-  return {
-    message: "Service created successfully",
-    newService: newService.toJSON(),
-    listService: services,
-    limit: limit,
-    index: index,
-    totalPages: totalPages,
-  };
+  return newService.service_id;
 };

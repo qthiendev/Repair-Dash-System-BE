@@ -11,7 +11,7 @@ require("dotenv").config();
  * @route POST /api/v1/create
  * @body {string} service_name -(required)
  * @body {string} service_description (required)
- * @body {file} service_images (optional)
+ * @body {file} service_image (optional)
  * @returns {Object} 201 - { service_id: number } if created successfully
  * @returns {Object} 400 - { message: 'Service already exists' } if the service is already registered
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } if an internal error happens
@@ -23,13 +23,13 @@ exports.createService = async (req, res) => {
       process.env.JWT_SECRET_KEY
     ).user_id;
 
-    const { service_name, service_description, service_images } = req.body;
+    const { service_name, service_description, service_image } = req.body;
 
     const serviceId = await createService(
       owner_id,
       service_name,
       service_description,
-      service_images
+      service_image
     );
 
     switch (serviceId) {
@@ -62,9 +62,16 @@ exports.readService = async (req, res) => {
   try {
     const { service_id } = req.params;
 
-    const services = await readService(service_id);
+    let { index, limit } = req.query;
 
-    if (!services) {
+    index = Number(index);
+    limit = Number(limit) || 10;
+
+    if (isNaN(index) || index < 1) index = 1;
+
+    const services = await readService(service_id, index, limit);
+
+    if (services === -1) {
       return res.status(404).json({ message: "Service not found" });
     }
 
@@ -131,14 +138,14 @@ exports.updateService = async (req, res) => {
 
     const { service_id } = req.params;
 
-    const { service_name, service_description, service_images } = req.body;
+    const { service_name, service_description, service_image } = req.body;
 
     const result = await updateService(
       owner_id,
       service_id,
       service_name,
       service_description,
-      service_images
+      service_image
     );
 
     if (result === -1) {
@@ -170,7 +177,14 @@ exports.readServiceStore = async (req, res) => {
   try {
     const { owner_id } = req.params;
 
-    const services = await readServiceStore(owner_id);
+    let { index, limit } = req.query;
+
+    index = Number(index);
+    limit = Number(limit) || 10;
+
+    if (isNaN(index) || index < 1) index = 1;
+
+    const services = await readServiceStore(owner_id, index, limit);
 
     if (!services) {
       return res.status(404).json({ message: "Store not found" });

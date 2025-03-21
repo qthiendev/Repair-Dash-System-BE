@@ -64,7 +64,14 @@ exports.readReport = async (req, res) => {
       process.env.JWT_SECRET_KEY
     ).user_id;
 
-    const reports = await readReport(report_id, user_id);
+    let { index, limit } = req.query;
+
+    index = Number(index);
+    limit = Number(limit) || 10;
+
+    if (isNaN(index) || index < 1) index = 1;
+
+    const reports = await readReport(report_id, user_id, index, limit);
 
     if (!reports) {
       return res.status(404).json({ message: "Report not found" });
@@ -89,7 +96,14 @@ exports.readReportAdmin = async (req, res) => {
   try {
     const { report_id } = req.params;
 
-    const reports = await readReportAdmin(report_id);
+    let { index, limit } = req.query;
+
+    index = Number(index);
+    limit = Number(limit) || 10;
+
+    if (isNaN(index) || index < 1) index = 1;
+
+    const reports = await readReportAdmin(report_id, index, limit);
 
     if (!reports) {
       return res.status(404).json({ message: "Report not found" });

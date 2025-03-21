@@ -44,6 +44,7 @@ router.get("/store/:owner_id", readServiceStoreValidation, readServiceStore);
 router.put(
   "/:service_id",
   authenticate,
+  ensureStore,
   updateServiceValidation,
   updateService
 );
