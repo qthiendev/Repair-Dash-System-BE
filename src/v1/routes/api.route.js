@@ -7,6 +7,7 @@ const orderRoutes = require("./order.route");
 const serviceRoutes = require("./service.route");
 const rtcRoutes = require("./rtc.route");
 const reportRoutes = require("./report.route");
+const searchServiceRoutes = require("./searching.route");
 
 /**
  * @description RESTful API for managing users.
@@ -68,5 +69,12 @@ app.use("/v1/rtc", rtcRoutes);
  * @route DELETE /v1/report/:report_id  - Soft delete a report
  */
 app.use("/v1/report", reportRoutes);
+
+/**
+ * @description Service search API endpoint.
+ *
+ * @route GET /v1/service/search - Search for services based on keyword and location priority
+ */
+app.use("/v1/search", searchServiceRoutes);
 
 module.exports = app;
