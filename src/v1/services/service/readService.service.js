@@ -30,19 +30,32 @@ module.exports = async (service_id, index = 1, limit = 10) => {
     });
 
     if (!service) {
-      return { message: "Service not found", success: false };
+      return -1;
     }
 
-    const service_images = await retrieveMedia.getImages(
-      service.service_images_url
+    const orders = service.orders || [];
+
+    const validOrders = service.orders.filter(
+      (order) => order.order_feedback !== null && order.order_rating !== null
     );
+
+    const totalReviews = validOrders.length;
+
+    const totalStars = orders.reduce(
+      (sum, order) => sum + (order.order_rating || 0),
+      0
+    );
+    const averageRating =
+      totalReviews > 0 ? (totalStars / totalReviews).toFixed(1) : null;
+
     return {
       message: "Service retrieved successfully",
-      service: { ...service.toJSON(), service_images_url: service_images },
+      service: service.toJSON(),
+      totalReviews,
+      averageRating,
     };
   }
 
-  // Pagination setup
   const totalItems = await Service.count({ where: { delete_flag: false } });
   const totalPages = Math.ceil(totalItems / limit);
   const offset = (index - 1) * limit;
@@ -67,21 +80,12 @@ module.exports = async (service_id, index = 1, limit = 10) => {
     ],
     limit,
     offset,
-    order: [["service_id", "DESC"]], // Sắp xếp từ lớn đến nhỏ
+    order: [["service_id", "DESC"]],
   });
-
-  const listService = await Promise.all(
-    services.map(async (service) => {
-      const service_images = await retrieveMedia.getImages(
-        service.service_images_url
-      );
-      return { ...service.toJSON(), service_images_url: service_images };
-    })
-  );
 
   return {
     message: "Services retrieved successfully",
-    listService,
+    listService: services.map((service) => service.toJSON()),
     limit,
     index,
     totalPages,

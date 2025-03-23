@@ -7,33 +7,27 @@ module.exports = async (
   service_id,
   service_name,
   service_description,
-  service_images,
-  index = 1,
-  limit = 10
+  service_image
 ) => {
-  const existingService = await Service.findOne({
-    where: { owner_id, service_id, delete_flag: false },
-  });
-
-  if (!existingService) {
-    return { success: false, message: "Service not found" };
+  if (
+    !(await Service.findOne({
+      where: { owner_id, service_id, delete_flag: false },
+    }))
+  ) {
+    return -1;
   }
 
-  if (service_images) {
-    service_images = await uploadMedia.uploadImages(
+  if (service_image) {
+    service_image = await uploadMedia.uploadImage(
       `service_${service_id}`,
-      service_images
+      service_image
     );
-  } else {
-    await deleteMedia.deleteImages(`service_${service_id}`);
-    service_images = null;
   }
-
   const [updatedRows] = await Service.update(
     {
       service_name,
       service_description,
-      service_images_url: service_images,
+      service_image_url: service_image,
       updated_at: new Date(),
     },
     {
@@ -45,33 +39,5 @@ module.exports = async (
     }
   );
 
-  if (updatedRows === 0) {
-    return { success: false, message: "No changes made" };
-  }
-
-  const updatedService = await Service.findOne({
-    where: { owner_id, service_id, delete_flag: false },
-  });
-
-  const totalItems = await Service.count({
-    where: { owner_id, delete_flag: false },
-  });
-  const totalPages = Math.ceil(totalItems / limit);
-  const offset = (index - 1) * limit;
-
-  const services = await Service.findAll({
-    where: { owner_id, delete_flag: false },
-    limit,
-    offset,
-    order: [["service_id", "DESC"]],
-  });
-
-  return {
-    message: "Service updated successfully",
-    updatedService: updatedService.toJSON(),
-    listService: services,
-    limit,
-    index,
-    totalPages,
-  };
+  return updatedRows > 0;
 };

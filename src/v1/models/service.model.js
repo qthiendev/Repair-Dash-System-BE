@@ -16,7 +16,7 @@ const User = require('./user.model');
 const Service = sequelize.define('Service', {
     service_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
     service_name: { type: DataTypes.STRING(500), allowNull: false, },
-    service_images_url: { type: DataTypes.STRING(500), allowNull: true, },
+    service_image_url: { type: DataTypes.STRING(500), allowNull: true, },
     service_description: { type: DataTypes.TEXT, allowNull: false, },
     delete_flag: { type: DataTypes.BOOLEAN, defaultValue: false, },
     owner_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: User, key: 'user_id', }, },

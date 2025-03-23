@@ -42,24 +42,5 @@ module.exports = async (
     );
   }
 
-  const totalItems = await SystemReport.count({ where: { user_id } });
-  const totalPages = Math.ceil(totalItems / limit);
-  const offset = (index - 1) * limit;
-
-  const reports = await SystemReport.findAll({
-    where: { user_id },
-    limit,
-    offset,
-    order: [["report_id", "DESC"]],
-  });
-
-  const listReport = reports.map((report) => report.toJSON());
-
-  return {
-    message: "Report created successfully",
-    listReport,
-    limit,
-    index,
-    totalPages,
-  };
+  return newReport.report_id;
 };
