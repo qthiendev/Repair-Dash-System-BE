@@ -10,10 +10,10 @@ const Authentication = require('./authentication.model');
  * @property {string} user_phone_number - Phone number of the user (max 20 chars, required).
  * @property {string} user_address - Address of the user (required).
  * @property {int} authentication_id - Reference to the authentication record associated with the user.
+ * @property {int} user_priority - Priority level of the user (default 0, sponsor levels: 1, 2, flagged stores: -1, -2, etc.).
  * @property {Date} created_at - Timestamp for when the record was created.
  * @property {Date} updated_at - Timestamp for when the record was last updated.
  * @property {boolean} delete_flag - Soft delete flag (true if deleted).
- * @property {number} authentication_id - Reference to the authentication record associated with the user.
  */
 const User = sequelize.define('User', {
     user_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
@@ -25,6 +25,7 @@ const User = sequelize.define('User', {
     user_ward: { type: DataTypes.TEXT, allowNull: false, },
     user_district: { type: DataTypes.TEXT, allowNull: false, },
     user_city: { type: DataTypes.TEXT, allowNull: false, },
+    user_priority: { type: DataTypes.INTEGER, defaultValue: 0, allowNull: false, },
     delete_flag: { type: DataTypes.BOOLEAN, defaultValue: false, },
     authentication_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: Authentication, key: 'authentication_id', }, },
 }, {
