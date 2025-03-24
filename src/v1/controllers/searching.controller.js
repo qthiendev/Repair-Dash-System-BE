@@ -22,7 +22,7 @@ exports.searchService = async (req, res) => {
         const { keyword, user_city, user_district, user_ward, user_street, index, max_range } = req.query;
         const services = await searchService(keyword, user_city, user_district, user_ward, user_street, index, max_range);
         
-        return res.status(200).json({ services });
+        return res.status(200).json({ ...services });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Unexpected error occurred" });

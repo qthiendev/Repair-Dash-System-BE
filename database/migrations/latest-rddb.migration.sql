@@ -19,6 +19,7 @@ CREATE TABLE `authentications` (
 -- Table: users
 CREATE TABLE `users` (
     `user_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_alias` VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
     `user_full_name` VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `user_phone_number` VARCHAR(20) NOT NULL,
     `user_avatar_url` VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -69,6 +70,7 @@ CREATE TABLE `employees` (
 CREATE TABLE `services` (
     `service_id` INT AUTO_INCREMENT PRIMARY KEY,
     `service_name` VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `service_alias` VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
     `service_description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `service_image_url` VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
 
@@ -78,6 +80,21 @@ CREATE TABLE `services` (
 
     `owner_id` INT NOT NULL,
     CONSTRAINT `fk_services_users` FOREIGN KEY (`owner_id`) REFERENCES `users`(`user_id`)
+);
+
+-- Table: favorites
+CREATE TABLE `favorites` (
+    `favorite_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `customer_id` INT NOT NULL,
+    `store_id` INT,
+    `service_id` INT,
+
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `fk_favorites_users` FOREIGN KEY (`customer_id`) REFERENCES `users`(`user_id`),
+    CONSTRAINT `fk_favorites_stores` FOREIGN KEY (`store_id`) REFERENCES `users`(`user_id`),
+    CONSTRAINT `fk_favorites_services` FOREIGN KEY (`service_id`) REFERENCES `services`(`service_id`)
 );
 
 -- Table: orders
