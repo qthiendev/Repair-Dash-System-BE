@@ -8,6 +8,7 @@ const serviceRoutes = require("./service.route");
 const rtcRoutes = require("./rtc.route");
 const reportRoutes = require("./report.route");
 const searchServiceRoutes = require("./searching.route");
+const profileRoutes = require("./profile.route");
 
 /**
  * @description RESTful API for managing users.
@@ -76,5 +77,13 @@ app.use("/v1/report", reportRoutes);
  * @route GET /v1/service/search - Search for services based on keyword and location priority
  */
 app.use("/v1/search", searchServiceRoutes);
+
+/**
+ * @description RESTful API for profile user.
+ *
+ * @route GET /v1/profile - Retrieve user profile
+ * @route PUT /v1/profile - Update user profile
+ */
+app.use("/v1/profile", profileRoutes);
 
 module.exports = app;

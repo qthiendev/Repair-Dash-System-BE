@@ -39,5 +39,9 @@ module.exports = async (
     }
   );
 
-  return updatedRows > 0;
+  const updateService = await Service.findOne({
+    where: { owner_id, service_id, delete_flag: false },
+  });
+
+  return updateService;
 };
