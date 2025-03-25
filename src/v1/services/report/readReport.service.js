@@ -1,7 +1,7 @@
 const { SystemReport, User } = require("../../models/index.model");
 const retrieveMedia = require("../cloudinary/retrieveMedia.service");
 
-module.exports = async (report_id, user_id, index = 1, limit = 10) => {
+module.exports = async (report_id, user_id, current_page = 1, limit = 10) => {
   if (report_id && user_id) {
     const report = await SystemReport.findOne({
       where: { report_id, user_id, delete_flag: false },
@@ -27,8 +27,8 @@ module.exports = async (report_id, user_id, index = 1, limit = 10) => {
   const totalItems = await SystemReport.count({
     where: { user_id, delete_flag: false },
   });
-  const totalPages = Math.ceil(totalItems / limit);
-  const offset = (index - 1) * limit;
+  const total_pages = Math.ceil(totalItems / limit);
+  const offset = (current_page - 1) * limit;
 
   const reports = await SystemReport.findAll({
     where: { user_id, delete_flag: false },
@@ -53,7 +53,7 @@ module.exports = async (report_id, user_id, index = 1, limit = 10) => {
     message: "Report list retrieved successfully",
     listReport: reports.map((report) => report.toJSON()),
     limit,
-    index,
-    totalPages,
+    current_page,
+    total_pages,
   };
 };
