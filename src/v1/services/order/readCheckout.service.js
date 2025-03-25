@@ -1,6 +1,6 @@
 const { User, Service, Employee } = require('../../models/index.model');
 const terminal = require('../../../utils/terminal');
-const { Op, Sequelize } = require('sequelize');
+const { Op, Sequelize, where } = require('sequelize');
 
 /**
  * Fetches customer, service, and store owner details including available employees.
@@ -19,27 +19,35 @@ module.exports = async (customer_id, service_id) => {
         return -1;
     }
 
-    const service = await Service.findByPk(service_id, {
-        include: {
-            model: User,
-            as: 'owner',
-            attributes: { exclude: ['user_phone_number', 'delete_flag'] },
-            include: {
-                model: Employee,
-                as: 'employees',
-                attributes: { exclude: ['delete_flag'] },
-                where: {
-                    employee_id: {
-                        [Op.notIn]: Sequelize.literal(
-                            `(SELECT DISTINCT employee_id FROM orders WHERE order_status = 'PROCESSING' AND employee_id IS NOT NULL)`
-                        ),
-                    },
-                },
-                required: false,
+    const service = await Service.findOne(
+        {
+            where: {
+                [Op.or]: [
+                    { service_id: service_id },
+                    { service_alias: service_id }
+                ],
+                delete_flag: false
             },
-        },
-        attributes: { exclude: ['delete_flag'] },
-    });
+            include: {
+                model: User,
+                as: 'owner',
+                attributes: { exclude: ['user_phone_number', 'delete_flag'] },
+                include: {
+                    model: Employee,
+                    as: 'employees',
+                    attributes: { exclude: ['delete_flag'] },
+                    where: {
+                        employee_id: {
+                            [Op.notIn]: Sequelize.literal(
+                                `(SELECT DISTINCT employee_id FROM orders WHERE order_status = 'PROCESSING' AND employee_id IS NOT NULL)`
+                            ),
+                        },
+                    },
+                    required: false,
+                },
+            },
+            attributes: { exclude: ['delete_flag'] },
+        });
 
     if (!service) {
         terminal.warning(`readCheckout.service.js | Service ${service_id} not found.`);

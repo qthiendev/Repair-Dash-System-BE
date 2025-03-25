@@ -63,7 +63,11 @@ exports.readUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        return res.status(200).json({ data: users });
+        if (!user_id) {
+            return res.status(200).json({ users });
+        }
+
+        return res.status(200).json({ ...users });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Unexpected error occurred' });

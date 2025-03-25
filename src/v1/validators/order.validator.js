@@ -2,8 +2,21 @@ const { body, param, validateRequest } = require('./validator');
 
 const readCheckoutValidation = validateRequest([
     param('service_id')
-        .isInt({ min: 1 })
-        .withMessage('Service ID must be include and greater than 0'),
+        .custom(value => {
+            if (typeof value === 'string') {
+                if (!value.trim()) {
+                    throw new Error('User alias must not be empty');
+                }
+            } else if (typeof value === 'number') {
+                if (!Number.isInteger(value) || value <= 0) {
+                    throw new Error('User ID must be a positive integer greater than 0');
+                }
+            } else {
+                throw new Error('Invalid user identifier format');
+            }
+            return true;
+        })
+        .withMessage('Must include service id or alias')
 ]);
 
 const createOrderValidation = validateRequest([

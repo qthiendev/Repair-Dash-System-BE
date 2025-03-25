@@ -3,8 +3,20 @@ const { body, param, validateRequest } = require('./validator');
 const readUserValidation = validateRequest([
     param('user_id')
         .optional()
-        .isInt({ min: 1 })
-        .withMessage('User ID must be a positive integer or greater than 0')
+        .custom(value => {
+            if (typeof value === 'string') {
+                if (!value.trim()) {
+                    throw new Error('User alias must not be empty');
+                }
+            } else if (typeof value === 'number') {
+                if (!Number.isInteger(value) || value <= 0) {
+                    throw new Error('User ID must be a positive integer greater than 0');
+                }
+            } else {
+                throw new Error('Invalid user identifier format');
+            }
+            return true;
+        })
 ]);
 
 const restPasswordValidation = validateRequest([
@@ -31,6 +43,11 @@ const createUserValidation = validateRequest([
         .isString()
         .isLength({ min: 5, max: 500 })
         .withMessage('Full name must be between 5 and 500 characters'),
+
+    body('user_alias')
+        .isString()
+        .isLength({ min: 1, max: 500 })
+        .withMessage('Alias must be between 1 and 500 characters'),
 
     body('user_phone_number')
         .isString()
@@ -67,6 +84,11 @@ const updateUserValidation = validateRequest([
         .isString()
         .isLength({ min: 5, max: 500 })
         .withMessage('Full name must be between 5 and 500 characters'),
+    
+    body('user_alias')
+        .isString()
+        .isLength({ min: 1, max: 50 })
+        .withMessage('Alias must be between 1 and 20 characters'),
 
     body('user_phone_number')
         .isString()

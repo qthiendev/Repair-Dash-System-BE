@@ -19,6 +19,7 @@ const User = sequelize.define('User', {
     user_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
     user_full_name: { type: DataTypes.STRING(500), allowNull: false, },
     user_avatar_url: { type: DataTypes.STRING(500), allowNull: true, },
+    user_alias: { type: DataTypes.STRING(500), allowNull: true, }, 
     user_description: { type: DataTypes.TEXT, allowNull: true, },
     user_phone_number: { type: DataTypes.STRING(20), allowNull: false, },
     user_street: { type: DataTypes.TEXT, allowNull: false, },
