@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
 const terminal = require('../utils/terminal');
+const migrate = require('../utils/migrateOnLoad');
 require('dotenv').config();
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -28,8 +29,11 @@ const sequelize = new Sequelize({
 });
 
 sequelize.authenticate()
-    .then(() => {
+    .then(async () => {
         terminal.info(`database.config.js | Database connected: ${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`);
+        if (process.env.MIGRATE_ON_LOAD === 'true') {
+            await migrate();
+        }
     })
     .catch((err) => {
         terminal.error(`database.config.js | Database connection failed at ${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, err);
