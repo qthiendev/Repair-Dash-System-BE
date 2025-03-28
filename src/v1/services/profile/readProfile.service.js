@@ -15,6 +15,8 @@ module.exports = async (user_id) => {
           "service_name",
           "service_description",
           "service_image_url",
+          "created_at",
+          "updated_at"
         ],
       },
     });

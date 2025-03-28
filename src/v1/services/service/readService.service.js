@@ -1,11 +1,12 @@
 const { Service, User, Order } = require("../../models/index.model");
 const retrieveMedia = require("../cloudinary/retrieveMedia.service");
+const { Op } = require("sequelize");
 
 module.exports = async (service_id, current_page = 1, limit = 10) => {
   if (service_id) {
     const service = await Service.findOne({
       where: {
-        service_id,
+        [Op.or]: [{ service_id: service_id }, { service_alias: service_id }],
         delete_flag: false,
       },
       include: [
@@ -15,6 +16,7 @@ module.exports = async (service_id, current_page = 1, limit = 10) => {
           attributes: [
             "user_full_name",
             "user_street",
+            "user_alias",
             "user_ward",
             "user_district",
             "user_city",
@@ -49,7 +51,6 @@ module.exports = async (service_id, current_page = 1, limit = 10) => {
       totalReviews > 0 ? (totalStars / totalReviews).toFixed(1) : null;
 
     return {
-      message: "Service retrieved successfully",
       service: service.toJSON(),
       totalReviews,
       averageRating,
@@ -84,7 +85,6 @@ module.exports = async (service_id, current_page = 1, limit = 10) => {
   });
 
   return {
-    message: "Services retrieved successfully",
     listService: services.map((service) => service.toJSON()),
     limit,
     current_page,

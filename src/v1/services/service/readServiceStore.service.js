@@ -1,30 +1,39 @@
 const { Service, User } = require("../../models/index.model");
-const retrieveMedia = require("../cloudinary/retrieveMedia.service");
+const { Op } = require("sequelize");
 
 module.exports = async (owner_id, current_page = 1, limit = 10) => {
-  const totalItems = await Service.count({
-    where: { owner_id, delete_flag: false },
-  });
-  const total_pages = Math.ceil(totalItems / limit);
-  const offset = (current_page - 1) * limit;
+  const whereCondition = {
+    delete_flag: false,
+  };
 
-  const services = await Service.findAll({
-    where: {
-      owner_id,
-      delete_flag: false,
-    },
+  if (owner_id) {
+    whereCondition[Op.or] = [
+      { owner_id: owner_id },
+      { "$owner.user_alias$": owner_id },
+    ];
+  }
+
+  const totalItems = await Service.count({
+    where: whereCondition,
     include: [
       {
         model: User,
         as: "owner",
-        attributes: [
-          "user_full_name",
-          "user_street",
-          "user_ward",
-          "user_district",
-          "user_city",
-          "user_phone_number",
-        ],
+        attributes: [],
+      },
+    ],
+  });
+
+  const total_pages = Math.ceil(totalItems / limit);
+  const offset = (current_page - 1) * limit;
+
+  const services = await Service.findAll({
+    where: whereCondition,
+    include: [
+      {
+        model: User,
+        as: "owner",
+        attributes: [],
       },
     ],
     limit,
@@ -33,7 +42,6 @@ module.exports = async (owner_id, current_page = 1, limit = 10) => {
   });
 
   return {
-    message: "Services retrieved successfully",
     listService: services.map((service) => service.toJSON()),
     limit,
     current_page,

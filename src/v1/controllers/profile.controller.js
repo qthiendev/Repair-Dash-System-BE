@@ -23,7 +23,7 @@ exports.readProfile = async (req, res) => {
       case -1:
         return res.status(400).json({ message: "User not found.", code: -1 });
       default:
-        return res.status(200).json({ data: profile });
+        return res.status(200).json( profile );
     }
   } catch (error) {
     console.error(error);

@@ -23,13 +23,15 @@ exports.createService = async (req, res) => {
       process.env.JWT_SECRET_KEY
     ).user_id;
 
-    const { service_name, service_description, service_image } = req.body;
+    const { service_name, service_description, service_image, service_alias } =
+      req.body;
 
     const serviceId = await createService(
       owner_id,
       service_name,
       service_description,
-      service_image
+      service_image,
+      service_alias
     );
 
     switch (serviceId) {
@@ -39,6 +41,10 @@ exports.createService = async (req, res) => {
         return res
           .status(400)
           .json({ message: "Service already exists.", code: -2 });
+      case -3:
+        return res
+          .status(400)
+          .json({ message: "Service alias already exists.", code: -3 });
       default:
         return res
           .status(201)
@@ -75,7 +81,7 @@ exports.readService = async (req, res) => {
       return res.status(404).json({ message: "Service not found" });
     }
 
-    return res.status(200).json({ data: services });
+    return res.status(200).json( services );
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Unexpected error occurred" });
@@ -138,27 +144,32 @@ exports.updateService = async (req, res) => {
 
     const { service_id } = req.params;
 
-    const { service_name, service_description, service_image } = req.body;
+    const { service_name, service_description, service_image, service_alias } =
+      req.body;
 
     const result = await updateService(
       owner_id,
       service_id,
       service_name,
       service_description,
-      service_image
+      service_image,
+      service_alias
     );
 
-    if (result === -1) {
-      return res.status(404).json({ message: "Service not found" });
+    switch (result) {
+      case -1:
+        return res
+          .status(400)
+          .json({ message: "Service not found.", code: -1 });
+      case -2:
+        return res
+          .status(400)
+          .json({ message: "Service alias already exists.", code: -2 });
+      default:
+        return res
+          .status(201)
+          .json({ message: "Service created successfully", result });
     }
-
-    if (!result) {
-      return res.status(501).json({ message: "Cannot update service" });
-    }
-
-    return res
-      .status(200)
-      .json({ message: "Service updated successfully", result });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Unexpected error occurred" });
@@ -190,7 +201,7 @@ exports.readServiceStore = async (req, res) => {
       return res.status(404).json({ message: "Store not found" });
     }
 
-    return res.status(200).json({ data: services });
+    return res.status(200).json(services );
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Unexpected error occurred" });
