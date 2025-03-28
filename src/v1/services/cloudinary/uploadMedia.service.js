@@ -21,7 +21,7 @@ exports.uploadImage = async (fileName, file) => {
         return result.secure_url;
     } catch (error) {
         console.error(`Error uploading image "${fileName}":`, error);
-        throw error;
+        return null;
     }
 };
 

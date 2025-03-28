@@ -6,7 +6,8 @@ module.exports = async (
   owner_id,
   service_name,
   service_description,
-  service_image
+  service_image,
+  service_alias
 ) => {
   const owner = await User.findByPk(owner_id);
 
@@ -19,6 +20,7 @@ module.exports = async (
     where: {
       service_name: service_name,
       owner_id: owner_id,
+      delete_flag: false,
     },
   });
 
@@ -27,9 +29,20 @@ module.exports = async (
     return -2;
   }
 
+  const existAlias = await Service.findOne({
+    where: { service_alias },
+    delete_flag: false,
+  });
+
+  if (existAlias) {
+    terminal.warning(`service.service.js | Alias had existed.`);
+    return -3;
+  }
+
   const newService = await Service.create({
     service_name,
     service_description,
+    service_alias,
     owner_id: owner_id,
   });
 

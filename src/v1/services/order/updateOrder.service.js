@@ -36,6 +36,11 @@ module.exports = async (order_id, user_id, updateData) => {
         if (typeof result === "number") return result;
     }
 
+    if (order.order_status === "PROCESSING" && isCustomer) {
+        const result = handleCustomerProcessingToComplete(updateData, updateFields, order_id);
+        if (typeof result === "number") return result;
+    }
+
     if (order.order_status === "PENDING" && isCustomer) {
         await handleCustomerPendingUpdate(updateData, updateFields, order);
     }
@@ -83,13 +88,39 @@ function handleCompletedOrderUpdate(isCustomer, updateData, updateFields, order_
 }
 
 /**
+ * Allows customers to mark PROCESSING orders as COMPLETED.
+ */
+function handleCustomerProcessingToComplete(updateData, updateFields, order_id) {
+    if (updateData.order_status !== "COMPLETED") {
+        terminal.warning(`updateOrder.service.js | Customer can only change order_status from PROCESSING to COMPLETED.`);
+        return -4;
+    }
+
+    updateFields.order_status = "COMPLETED";
+
+    if (updateData.order_feedback) updateFields.order_feedback = updateData.order_feedback;
+    
+    if (updateData.order_rating !== undefined) {
+        const rating = parseInt(updateData.order_rating, 10);
+        if (isNaN(rating) || rating < 1 || rating > 5) {
+            terminal.warning(`updateOrder.service.js | Invalid rating for order ${order_id}. Must be between 1 and 5.`);
+            return -5;
+        }
+        updateFields.order_rating = rating;
+    }
+
+    return updateFields;
+}
+
+/**
  * Handles customer updates for PENDING orders.
  */
 const handleCustomerPendingUpdate = async (updateData, updateFields, order) => {
     if (updateData.customer_full_name) updateFields.customer_full_name = updateData.customer_full_name;
     if (updateData.customer_phone_number) updateFields.customer_phone_number = updateData.customer_phone_number;
-    if (updateData.customer_address) updateFields.customer_address = updateData.customer_address;
     if (updateData.order_description) updateFields.order_description = updateData.order_description;
+    if (updateData.customer_address) updateFields.customer_address = updateData.customer_address;
+    
     if (updateData.order_images) {
         updateFields.order_images_url = await uploadMedia.uploadImages(`order_${order.order_id}`, updateData.order_images);
     } else {
@@ -102,7 +133,7 @@ const handleCustomerPendingUpdate = async (updateData, updateFields, order) => {
         updateFields.order_description = `${order.order_description || ""}
             [Khách hàng hủy đơn: ${updateData.order_description || ""}]`;
     }
-}
+};
 
 /**
  * Handles store updates, including PROCESSING (with employee assignment).

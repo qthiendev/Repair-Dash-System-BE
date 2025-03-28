@@ -54,7 +54,7 @@ module.exports = async (customer_id, service_id, customer_full_name, customer_ph
     const newOrder = await Order.create({
         customer_id,
         service_id,
-        order_description,
+        order_description: `[Khách hàng đặt đơn: ${order_description}]`,
         order_status: 'PENDING',
         service_name,
         service_description,

@@ -47,6 +47,7 @@ module.exports = async (customer_id, service_id) => {
                 },
             },
             attributes: { exclude: ['delete_flag'] },
+            nest: true,
         });
 
     if (!service) {

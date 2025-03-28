@@ -3,7 +3,9 @@ const { body, param, validateRequest } = require('./validator');
 const loginValidation = validateRequest([
     body('identifier_email')
         .isEmail()
-        .withMessage('Invalid email format'),
+        .withMessage('Invalid email format')
+        .isLength({ min: 5, max: 100 })
+        .withMessage('Email must be between 5 and 100 characters'),
 
     body('password')
         .isLength({ min: 6, max: 20 })
@@ -13,7 +15,9 @@ const loginValidation = validateRequest([
 const registerValidation = validateRequest([
     body('identifier_email')
         .isEmail()
-        .withMessage('Invalid email format'),
+        .withMessage('Invalid email format')
+        .isLength({ min: 5, max: 100 })
+        .withMessage('Email must be between 5 and 100 characters'),
 
     body('password')
         .isLength({ min: 6, max: 20 })
@@ -26,8 +30,8 @@ const registerValidation = validateRequest([
 
     body('user_full_name')
         .isString()
-        .isLength({ min: 5, max: 500 })
-        .withMessage('Full name must be between 5 and 500 characters'),
+        .isLength({ min: 5, max: 200 })
+        .withMessage('Full name must be between 5 and 200 characters'),
 
     body('user_phone_number')
         .isString()

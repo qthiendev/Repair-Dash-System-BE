@@ -24,15 +24,14 @@ module.exports = async (user_id) => {
                     as: 'authentication',
                     attributes: ['role']
                 }
-            ]
+            ],
         });
 
         if (!user) return null;
 
-        const userData = user.get({ plain: true });
         return {
-            ...userData,
-            role: userData.authentication?.role || null,
+            ...user.toJSON(),
+            role: user.authentication?.role || null,
             authentication: undefined
         };
     }
@@ -47,14 +46,13 @@ module.exports = async (user_id) => {
                 as: 'authentication',
                 attributes: ['role']
             }
-        ]
+        ],
     });
 
     return users.map(user => {
-        const userData = user.get({ plain: true });
         return {
-            ...userData,
-            role: userData.authentication?.role || null,
+            ...user.toJSON(),
+            role: user.authentication?.role || null,
             authentication: undefined
         };
     });

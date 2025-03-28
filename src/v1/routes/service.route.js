@@ -40,7 +40,7 @@ router.get(
   readServiceValidation, 
   readService
 );
-router.get("/store/:owner_id", readServiceStoreValidation, readServiceStore);
+router.get("/stores/:owner_id", readServiceStoreValidation, readServiceStore);
 router.put(
   "/:service_id",
   authenticate,

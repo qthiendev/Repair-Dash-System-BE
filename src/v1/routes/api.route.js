@@ -51,7 +51,7 @@ app.use("/v1/orders", orderRoutes);
  * @route PUT    /v1/service/:service_id  - Update a service
  * @route DELETE /v1/service/:service_id  - Soft delete a service
  */
-app.use("/v1/service", serviceRoutes);
+app.use("/v1/services", serviceRoutes);
 
 /**
  * @description Real-time chat (RTC) API endpoints.

@@ -41,7 +41,7 @@ const createUserValidation = validateRequest([
 
     body('user_full_name')
         .isString()
-        .isLength({ min: 5, max: 500 })
+        .isLength({ min: 1, max: 250 })
         .withMessage('Full name must be between 5 and 500 characters'),
 
     body('user_alias')
