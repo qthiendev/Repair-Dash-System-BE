@@ -9,6 +9,7 @@ const rtcRoutes = require("./rtc.route");
 const reportRoutes = require("./report.route");
 const searchServiceRoutes = require("./searching.route");
 const profileRoutes = require("./profile.route");
+const employeeRoutes = require("./employee.route");
 
 /**
  * @description RESTful API for managing users.
@@ -85,5 +86,15 @@ app.use("/v1/search", searchServiceRoutes);
  * @route PUT /v1/profile - Update user profile
  */
 app.use("/v1/profile", profileRoutes);
+
+/**
+ * @description RESTful API for store's employee.
+ *
+ * @route POST    /v1/employees          - Create a new employee
+ * @route GET     /v1/employees/:employee_id? - Retrieve all employee
+ * @route PUT     /v1/employees/:employee_id  - Update employee profile
+ * @route DELETE  /v1/employees/:employee_id  - Soft delete a employee
+ */
+app.use("/v1/employees", employeeRoutes);
 
 module.exports = app;
