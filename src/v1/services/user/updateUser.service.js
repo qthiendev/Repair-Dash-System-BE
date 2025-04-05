@@ -1,4 +1,5 @@
 const { User } = require('../../models/index.model');
+const { Op } = require('sequelize');
 const uploadService = require('../cloudinary/uploadMedia.service');
 const terminal = require('../../../utils/terminal');
 
@@ -15,6 +16,19 @@ module.exports = async (user_id, updateData) => {
     if (!user) {
         terminal.warning(`updateUser.service.js | User ${user_id} not found.`);
         return -1;
+    }
+
+    const existingAlias = await User.findOne({
+        where:
+        {
+            user_alias: updateData.user_alias,
+            delete_flag: false,
+            user_id: { [Op.ne]: user_id },
+        },
+    });
+
+    if (existingAlias) {
+        return -2;
     }
 
     if (updateData.avatar_image) {

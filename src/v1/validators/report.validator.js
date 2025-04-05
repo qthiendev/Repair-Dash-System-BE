@@ -3,7 +3,7 @@ const { body, param, validateRequest } = require("./validator");
 const createReportValidation = validateRequest([
   body("report_description")
     .isLength({ min: 10, max: 100 })
-    .withMessage("Description report must be between 6 and 20 characters"),
+    .withMessage("Description report must be between 6 and 100 characters"),
 ]);
 
 const readReportValidation = validateRequest([

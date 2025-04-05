@@ -22,6 +22,8 @@ const SystemReport = sequelize.define('SystemReport', {
     tableName: 'system_reports',
     timestamps: true,
     underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
 });
 
 module.exports = SystemReport;

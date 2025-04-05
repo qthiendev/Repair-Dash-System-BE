@@ -54,6 +54,8 @@ const Order = sequelize.define('Order', {
     tableName: 'orders',
     timestamps: true,
     underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
 });
 
 module.exports = Order;

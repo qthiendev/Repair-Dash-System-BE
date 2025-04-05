@@ -125,7 +125,7 @@ const getUserOrders = async (user_id, role) => {
                 as: 'customer',
                 attributes: ['user_id', 'user_full_name', 'user_avatar_url'],
             }
-        ]
+        ],
     });
 
     return await Promise.all(

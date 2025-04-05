@@ -23,6 +23,7 @@ exports.createUser = async (req, res) => {
             password,
             role,
             user_full_name,
+            user_alias,
             user_phone_number,
             user_street,
             user_ward,
@@ -31,12 +32,16 @@ exports.createUser = async (req, res) => {
         } = req.body;
 
         const authData = { identifier_email, password, role };
-        const userData = { user_full_name, user_phone_number, user_street, user_ward, user_district, user_city };
+        const userData = { user_full_name, user_alias, user_phone_number, user_street, user_ward, user_district, user_city };
 
         const userID = await createUser(authData, userData);
 
         if (userID === -1) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists', code: -1 });
+        }
+
+        if (userID === -2) {
+            return res.status(400).json({ message: 'Alias already taken', code: -2 });
         }
 
         return res.status(201).json({ user_id: userID });
@@ -63,7 +68,11 @@ exports.readUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        return res.status(200).json({ data: users });
+        if (!user_id) {
+            return res.status(200).json({ users });
+        }
+
+        return res.status(200).json({ ...users });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Unexpected error occurred' });
@@ -90,11 +99,15 @@ exports.updateUser = async (req, res) => {
         const result = await updateUser(user_id, updateData);
 
         if (result === -1) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found', code: -1 });
+        }
+
+        if (result === -2) {
+            return res.status(400).json({ message: 'Alias already taken', code: -2 });
         }
 
         if (!result) {
-            return res.status(501).json({ message: 'Cannot update user' });
+            return res.status(501).json({ message: 'Cannot update user', code: -3 });
         }
 
         return res.status(200).json({ message: 'User updated successfully' });
@@ -119,11 +132,11 @@ exports.deleteUser = async (req, res) => {
         const result = await deleteUser(user_id);
 
         if (result === -1) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found', code: -1 });
         }
 
         if (!result) {
-            return res.status(501).json({ message: 'Cannot delete user' });
+            return res.status(501).json({ message: 'Cannot delete user', code: -2 });
         }
 
         return res.status(200).json({ message: 'User deleted successfully' });

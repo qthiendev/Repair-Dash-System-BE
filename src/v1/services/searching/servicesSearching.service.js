@@ -41,7 +41,16 @@ module.exports = async (keyword = '', user_city, user_district, user_ward, user_
                 {
                     model: User,
                     as: 'owner',
-                    attributes: ['user_full_name', 'user_city', 'user_district', 'user_ward', 'user_street', 'user_avatar_url', 'user_priority'],
+                    attributes: [
+                        'user_full_name', 
+                        'user_city',
+                        'user_district',
+                        'user_ward',
+                        'user_street',
+                        'user_avatar_url',
+                        'user_priority'
+                    ],
+                    where: { delete_flag: false },
                 },
                 {
                     model: Order,
@@ -52,12 +61,13 @@ module.exports = async (keyword = '', user_city, user_district, user_ward, user_
                     ],
                 }
             ],
+            where: { delete_flag: false },
             attributes: { exclude: ['delete_flag'] },
             group: ['Service.service_id', 'owner.user_id'],
             raw: true,
             nest: true,
         });
-
+        
         const SCORE_CITY_MATCH = 1000;
         const SCORE_DISTRICT_MATCH = 900;
         const SCORE_WARD_MATCH = 800;
@@ -129,6 +139,7 @@ module.exports = async (keyword = '', user_city, user_district, user_ward, user_
 
             return {
                 service_id: service.service_id,
+                service_alias: service.service_alias,
                 service_name: service.service_name,
                 service_image: service.service_image_url || null,
                 owner_id: service.owner_id,

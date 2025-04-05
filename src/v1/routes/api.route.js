@@ -9,6 +9,8 @@ const rtcRoutes = require("./rtc.route");
 const reportRoutes = require("./report.route");
 const searchServiceRoutes = require("./searching.route");
 const favoriteRoutes = require("./favorite.route");
+const profileRoutes = require("./profile.route");
+const employeeRoutes = require("./employee.route");
 
 /**
  * @description RESTful API for managing users.
@@ -51,7 +53,7 @@ app.use("/v1/orders", orderRoutes);
  * @route PUT    /v1/service/:service_id  - Update a service
  * @route DELETE /v1/service/:service_id  - Soft delete a service
  */
-app.use("/v1/service", serviceRoutes);
+app.use("/v1/services", serviceRoutes);
 
 /**
  * @description Real-time chat (RTC) API endpoints.
@@ -86,5 +88,23 @@ app.use("/v1/search", searchServiceRoutes);
  * @route DELETE /v1/favorite/:fav_id  - Remove a service from favorites
  */
 app.use("/v1/favorites", favoriteRoutes);
+
+/**
+ * @description RESTful API for profile user.
+ *
+ * @route GET /v1/profile - Retrieve user profile
+ * @route PUT /v1/profile - Update user profile
+ */
+app.use("/v1/profile", profileRoutes);
+
+/**
+ * @description RESTful API for store's employee.
+ *
+ * @route POST    /v1/employees          - Create a new employee
+ * @route GET     /v1/employees/:employee_id? - Retrieve all employee
+ * @route PUT     /v1/employees/:employee_id  - Update employee profile
+ * @route DELETE  /v1/employees/:employee_id  - Soft delete a employee
+ */
+app.use("/v1/employees", employeeRoutes);
 
 module.exports = app;

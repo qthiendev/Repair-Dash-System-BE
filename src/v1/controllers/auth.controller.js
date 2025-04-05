@@ -177,7 +177,12 @@ exports.register = async (req, res) => {
 
         if (userId === -1) {
             terminal.warning(`auth.controller.js | Email already registered: ${identifier_email}`);
-            return res.status(400).json({ message: 'Email already registered' });
+            return res.status(400).json({ message: 'Email already registered', code: -1 });
+        }
+
+        if (userId === -2) {
+            terminal.warning(`auth.controller.js | Alias already taken: ${user_alias}`);
+            return res.status(400).json({ message: 'Alias already taken', code: -2 });
         }
 
         terminal.success(`auth.controller.js | User registered successfully: ${identifier_email}`);
