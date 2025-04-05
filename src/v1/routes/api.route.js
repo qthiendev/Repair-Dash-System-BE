@@ -8,6 +8,7 @@ const serviceRoutes = require("./service.route");
 const rtcRoutes = require("./rtc.route");
 const reportRoutes = require("./report.route");
 const searchServiceRoutes = require("./searching.route");
+const favoriteRoutes = require("./favorite.route");
 const profileRoutes = require("./profile.route");
 const employeeRoutes = require("./employee.route");
 
@@ -78,6 +79,15 @@ app.use("/v1/report", reportRoutes);
  * @route GET /v1/service/search - Search for services based on keyword and location priority
  */
 app.use("/v1/search", searchServiceRoutes);
+
+/**
+ * @description RESTful API for managing favorite services.
+ *
+ * @route POST   /v1/favorite          - Add a service to favorites
+ * @route GET    /v1/favorite/:user_id - Retrieve all favorite services for a user
+ * @route DELETE /v1/favorite/:fav_id  - Remove a service from favorites
+ */
+app.use("/v1/favorites", favoriteRoutes);
 
 /**
  * @description RESTful API for profile user.

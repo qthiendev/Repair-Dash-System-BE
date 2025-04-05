@@ -29,6 +29,8 @@ This document outlines the available search-related API endpoints, including the
   
     ```json
     {
+      "total_pages": INTERGER,
+      "current_page": INTERGER,
       "services": [
         {
             "service_id": INTERGER,

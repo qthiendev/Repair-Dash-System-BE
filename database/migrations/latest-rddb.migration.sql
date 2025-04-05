@@ -82,6 +82,21 @@ CREATE TABLE `services` (
     CONSTRAINT `fk_services_users` FOREIGN KEY (`owner_id`) REFERENCES `users`(`user_id`)
 );
 
+-- Table: favorites
+CREATE TABLE `favorites` (
+    `favorite_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `customer_id` INT NOT NULL,
+    `store_id` INT,
+    `service_id` INT,
+
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `fk_favorites_users` FOREIGN KEY (`customer_id`) REFERENCES `users`(`user_id`),
+    CONSTRAINT `fk_favorites_stores` FOREIGN KEY (`store_id`) REFERENCES `users`(`user_id`),
+    CONSTRAINT `fk_favorites_services` FOREIGN KEY (`service_id`) REFERENCES `services`(`service_id`)
+);
+
 -- Table: orders
 CREATE TABLE `orders` (
     `order_id` INT AUTO_INCREMENT PRIMARY KEY,

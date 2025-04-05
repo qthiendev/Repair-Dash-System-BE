@@ -24,10 +24,12 @@ const normalizeString = (str) => {
  * @param {string} user_street - The user's street (optional).
  * @param {number} index - The page index (starting from 1).
  * @param {number} max_range - The number of services per page.
- * @returns {Promise<Array>} A list of matching services sorted by priority.
+ * @returns {Promise<Object>} Paginated list of matching services.
  */
 module.exports = async (keyword = '', user_city, user_district, user_ward, user_street, index = 1, max_range = 20) => {
     try {
+        if (index < 1) index = 1;
+
         const normKeyword = normalizeString(keyword);
         const normCity = normalizeString(user_city);
         const normDistrict = normalizeString(user_district);
@@ -155,15 +157,24 @@ module.exports = async (keyword = '', user_city, user_district, user_ward, user_
 
         const sortedServices = servicesWithPriority.sort((a, b) => b.priority - a.priority);
 
+        const total_services = sortedServices.length;
+        const total_pages = Math.ceil(total_services / max_range);
         const startIndex = (index - 1) * max_range;
         const endIndex = startIndex + max_range;
 
         const paginatedServices = sortedServices.slice(startIndex, endIndex);
 
-        return paginatedServices;
+        return {
+            total_pages: total_pages,
+            current_page: Number.parseInt(index),
+            services: paginatedServices,
+        };
 
     } catch (error) {
         terminal.error(`searchService.js | Error: ${error.message}`);
-        return [];
+        return {
+            total_pages: 0,
+            services: [],
+        };
     }
 };
