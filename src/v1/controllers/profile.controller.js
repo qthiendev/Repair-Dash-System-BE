@@ -17,13 +17,20 @@ exports.readProfile = async (req, res) => {
       process.env.JWT_SECRET_KEY
     ).user_id;
 
-    const profile = await readProfile(user_id);
+    let { current_page, limit } = req.query;
+
+    current_page = Number(current_page);
+    limit = Number(limit) || 10;
+
+    if (isNaN(current_page) || current_page < 1) current_page = 1;
+
+    const profile = await readProfile(user_id, current_page, limit);
 
     switch (profile) {
       case -1:
         return res.status(400).json({ message: "User not found.", code: -1 });
       default:
-        return res.status(200).json({ data: profile });
+        return res.status(200).json(profile);
     }
   } catch (error) {
     console.error(error);
@@ -57,6 +64,7 @@ exports.updateProfile = async (req, res) => {
 
     const {
       user_full_name,
+      user_alias,
       user_phone_number,
       user_avatar,
       user_description,
@@ -69,17 +77,22 @@ exports.updateProfile = async (req, res) => {
     const result = await updateProfile(
       user_id,
       user_full_name,
+      user_alias,
       user_phone_number,
       user_avatar,
       user_description,
       user_street,
       user_ward,
       user_district,
-      user_city,
+      user_city
     );
 
     if (result === -1) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found", code: -1 });
+    }
+
+    if (result === -2) {
+      return res.status(400).json({ message: 'Alias already taken', code: -2 });
     }
 
     if (!result) {

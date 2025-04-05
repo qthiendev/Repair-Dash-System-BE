@@ -5,6 +5,12 @@ const updateProfileValidation = validateRequest([
     .optional()
     .isLength({ min: 6, max: 200 })
     .withMessage("Name must be between 6 and 200 characters"),
+  
+  body('user_alias')
+    .optional()
+    .isString()
+    .isLength({ min: 1, max: 500 })
+    .withMessage('Alias must be between 1 and 500 characters'),
 
   body("user_phone_number")
     .optional()
@@ -14,7 +20,7 @@ const updateProfileValidation = validateRequest([
   body("user_description")
     .optional()
     .isLength({ min: 6, max: 500 })
-    .withMessage("Description must be between 6 and 20 characters"),
+    .withMessage("Description must be between 6 and 500 characters"),
 
   body("user_street")
     .optional()

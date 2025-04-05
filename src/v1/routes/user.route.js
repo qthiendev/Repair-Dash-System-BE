@@ -26,7 +26,8 @@ const {
  * @route DELETE /:user_id  - Soft delete a user
  */
 router.post('/', authMiddleware.ensureAdmin, createUserValidation, createUser);
-router.get('/:user_id?', readUserValidation, readUser);
+router.get('/', authMiddleware.ensureAdmin, readUser);
+router.get('/:user_id', readUserValidation, readUser);
 router.put('/:user_id', authMiddleware.ensureAdmin, updateUserValidation, updateUser);
 router.delete('/:user_id', authMiddleware.ensureAdmin, deleteUserValidation, deleteUser);
 

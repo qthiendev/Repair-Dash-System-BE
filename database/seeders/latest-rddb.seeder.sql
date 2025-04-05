@@ -21,25 +21,25 @@ INSERT INTO `authentications` (`identifier_email`, `password`, `role`) VALUES
     (N'nguyenvana@example.com', N'$2a$12$vV8XlRlcufSGicGkBoptceuM5nr5BjTToor8Bf/zT3OVLr9XTEpjq', N'CUSTOMER'),
     (N'nguyenvanb@example.com', N'$2a$12$vV8XlRlcufSGicGkBoptceuM5nr5BjTToor8Bf/zT3OVLr9XTEpjq', N'CUSTOMER');
 
-INSERT INTO `users` (`user_full_name`, `user_phone_number`, `user_street`, `user_ward`, `user_district`, `user_city`, `authentication_id`, `user_avatar_url`, `user_priority`) VALUES
-    (N'Nguyễn Thành Nhân', N'0379740995', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 1, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_1.png', 0),
-    (N'Đặng Văn Nhớ', N'0773688203', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 2, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_2.png', 0),
-    (N'Lưu Văn Trường', N'0363611957', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 3, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_3.png', 0),
-    (N'Nguyễn Nhật Thảo', N'0354399768', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 4, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_4.png', 0),
-    (N'Trịnh Quý Thiện', N'0395075100', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 5, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_5.png', 0),
-    (N'Siêu thị Điện Máy Xanh', N'02366554477', N'100 Lê Lợi', N'Thạch Thang', N'Hải Châu', N'Đà Nẵng', 6, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_6.png', 1),
-    (N'Điện nước Việt Nam', N'02366553388', N'22 Phan Đình Phùng', N'Hải Châu 1', N'Hải Châu', N'Đà Nẵng', 7, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_7.png', 0),
-    (N'Nguyễn Văn A', N'0905123456', N'40 Bạch Đằng', N'Thạch Thang', N'Hải Châu', N'Đà Nẵng', 8, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_8.png', 0),
-    (N'Nguyễn Văn B', N'0935678901', N'75 Trần Phú', N'Hải Châu 1', N'Hải Châu', N'Đà Nẵng', 9, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_9.png', 0);
+INSERT INTO `users` (`user_full_name`, `user_phone_number`, `user_street`, `user_ward`, `user_district`, `user_city`, `authentication_id`, `user_avatar_url`, `user_priority`, `user_alias`) VALUES
+    (N'Nguyễn Thành Nhân', N'0379740995', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 1, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_1.png', 0, 'y7C9On7mMo'),
+    (N'Đặng Văn Nhớ', N'0773688203', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 2, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_2.png', 0, 'xuaswzm7ST'),
+    (N'Lưu Văn Trường', N'0363611957', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 3, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_3.png', 0, 'pRFtjh0x9c'),
+    (N'Nguyễn Nhật Thảo', N'0354399768', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 4, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_4.png', 0, 'z4m3VVRRC9'),
+    (N'Trịnh Quý Thiện', N'0395075100', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 5, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_5.png', 0, 'qthiendev'),
+    (N'Siêu thị Điện Máy Xanh', N'02366554477', N'100 Lê Lợi', N'Thạch Thang', N'Hải Châu', N'Đà Nẵng', 6, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_6.png', 1, 'hCsuSk7l5b'),
+    (N'Điện nước Việt Nam', N'02366553388', N'22 Phan Đình Phùng', N'Hải Châu 1', N'Hải Châu', N'Đà Nẵng', 7, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_7.png', 0, 'Eu1zfAxngQ'),
+    (N'Nguyễn Văn A', N'0905123456', N'40 Bạch Đằng', N'Thạch Thang', N'Hải Châu', N'Đà Nẵng', 8, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_8.png', 0, 'KxeU09OgfT'),
+    (N'Nguyễn Văn B', N'0935678901', N'75 Trần Phú', N'Hải Châu 1', N'Hải Châu', N'Đà Nẵng', 9, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/user_avatar_9.png', 0, 'tFq6WFF4WL');
 
 INSERT INTO `system_reports` (`report_description`, `user_id`) VALUES
     (N'Hệ thống đang hoạt động ổn định', 9),
     (N'Phát hiện lỗi nhỏ ở hệ thống quản lý đơn hàng', 7);
 
-INSERT INTO `services` (`service_name`, `service_description`, `owner_id`, `service_image_url`) VALUES
-    (N'Sửa chữa điện lạnh', N'Dịch vụ sửa chữa tủ lạnh, máy lạnh tại nhà', 6, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/service_1'),
-    (N'Lắp đặt máy nước nóng', N'Dịch vụ lắp đặt, bảo trì máy nước nóng', 7, NULL),
-    (N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', 7, NULL);
+INSERT INTO `services` (`service_name`, `service_description`, `owner_id`, `service_image_url`, `service_alias`) VALUES
+    (N'Sửa chữa điện lạnh', N'Dịch vụ sửa chữa tủ lạnh, máy lạnh tại nhà', 6, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/service_1.png', 'suachuadienlanh1'),
+    (N'Lắp đặt máy nước nóng', N'Dịch vụ lắp đặt, bảo trì máy nước nóng', 7, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/service_2.png', 'nuocnong'),
+    (N'Bảo trì điện nước', N'Dịch vụ sửa chữa, lắp đặt điện nước tại nhà', 7, N'https://res.cloudinary.com/dlim7nhsf/image/upload/v1742105116/service_3.png', 'baotridiennuoc');
 
 INSERT INTO `employees` (`employee_full_name`, `owner_id`) VALUES
     (N'Trần Văn Công', 6),
