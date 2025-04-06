@@ -27,15 +27,17 @@ exports.createFavorite = async (req, res) => {
 
         switch (result) {
             case -1:
-                return res.status(404).json({ message: 'Customer not found' });
+                return res.status(404).json({ message: 'Customer not found', code: -1 });
             case -2:
-                return res.status(400).json({ message: 'Must provide either store_id or service_id, but not both' });
+                return res.status(400).json({ message: 'Must provide either store_id or service_id, but not both', code: -2 });
             case -3:
-                return res.status(404).json({ message: 'Store not found or deleted' });
+                return res.status(404).json({ message: 'Store not found or deleted', code: -3 });
             case -4:
-                return res.status(404).json({ message: 'Service not found or deleted' });
+                return res.status(404).json({ message: 'Service not found or deleted', code: -4 });
             case -5:
-                return res.status(400).json({ message: 'User is not a store' });
+                return res.status(400).json({ message: 'User is not a store', code: -5 });
+            case -6:
+                return res.status(400).json({ message: 'Favorite already exists', code: -6 });
             default:
                 return res.status(201).json({ favorite_id: result });
         }

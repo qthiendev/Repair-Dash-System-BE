@@ -1,13 +1,13 @@
-const { Favorite, User, Service } = require('../../models/index.model');
-const { Op } = require('sequelize');
+const { Favorite, User, Service, Order } = require('../../models/index.model');
+const { Op, Sequelize } = require('sequelize');
 
 /**
  * Retrieves paginated favorites for a customer with an optional store/service filter.
  * @param {number} customer_id - The ID of the customer.
- * @param {number} index - Page number (starts from 0).
+ * @param {number} index - Page number (starts from 1).
  * @param {number} max_range - Number of items per page.
  * @param {boolean|null} store_only - If true, get only stores; if false, get only services; if null, get all.
- * @returns {Promise<Object>} Paginated list of favorites.
+ * @returns {Promise<Object>} Paginated list of favorites with average ratings inside service.
  */
 module.exports = async (customer_id, index = 1, max_range = 10, store_only = null) => {
     let whereClause = { customer_id };
@@ -21,12 +21,21 @@ module.exports = async (customer_id, index = 1, max_range = 10, store_only = nul
             {
                 model: User,
                 as: 'store',
-                attributes: ['user_id', 'user_full_name', 'user_avatar_url'],
+                attributes: ['user_id', 'user_full_name', 'user_alias', 'user_avatar_url'],
             },
             {
                 model: Service,
                 as: 'service',
-                attributes: ['service_id', 'service_name', 'service_image_url'],
+                attributes: ['service_id', 'service_name', 'service_alias', 'service_image_url'],
+                include: [
+                    {
+                        model: User,
+                        as: 'owner',
+                        required: true,
+                        where: { delete_flag: false },
+                        attributes: ['user_id', 'user_full_name', 'user_alias', 'user_avatar_url'],
+                    },
+                ],
             },
         ],
         order: [['created_at', 'DESC']],
@@ -34,12 +43,40 @@ module.exports = async (customer_id, index = 1, max_range = 10, store_only = nul
         offset: (index - 1) * max_range,
     });
 
-    const favorites = rows.map((fav) => ({
-        favorite_id: fav.favorite_id,
-        is_store: !!fav.store_id,
-        store: fav.store || null,
-        service: fav.service || null,
-    }));
+    const favorites = await Promise.all(
+        rows.map(async (fav) => {
+            let serviceWithRating = fav.service;
+
+            if (fav.service_id && serviceWithRating) {
+                const serviceRating = await Order.findOne({
+                    where: {
+                        service_id: fav.service_id,
+                        delete_flag: false,
+                    },
+                    attributes: [
+                        [Sequelize.fn('AVG', Sequelize.col('order_rating')), 'average_rating'],
+                    ],
+                    raw: true,
+                });
+
+                const average_rating = serviceRating && serviceRating.average_rating 
+                    ? Number(serviceRating.average_rating) 
+                    : null;
+
+                serviceWithRating = {
+                    ...serviceWithRating.toJSON(),
+                    average_rating: average_rating !== null ? parseFloat(average_rating.toFixed(2)) : null,
+                };
+            }
+
+            return {
+                favorite_id: fav.favorite_id,
+                is_store: !!fav.store_id,
+                store: fav.store || null,
+                service: serviceWithRating || null,
+            };
+        })
+    );
 
     return {
         current_pages: index,

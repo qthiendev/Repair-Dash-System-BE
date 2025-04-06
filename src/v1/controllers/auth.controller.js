@@ -17,7 +17,7 @@ exports.status = async (req, res) => {
     try {
         const token = req.cookies?.accessToken;
         const { status, user_id } = await authStatusService(token);
-        const role = await getRoleService.byToken(token);
+        const role = await getRoleService.byID(user_id);
 
         if (status && user_id && role) {
             terminal.info(`status.service.js | User ${user_id} currently active with role ${role}.`);

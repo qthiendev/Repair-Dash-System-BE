@@ -1,5 +1,4 @@
 const createEmployee = require("../services/employee/createEmployee.service");
-const readEmployeeStore = require("../services/employee/readEmployeeStore.service");
 const readEmployee = require("../services/employee/readEmployee.service");
 const updateEmployee = require("../services/employee/updateEmployee.service");
 const deleteEmployee = require("../services/employee/deleteEmployee.service");
@@ -68,7 +67,7 @@ exports.readEmployeeStore = async (req, res) => {
 
     if (isNaN(current_page) || current_page < 1) current_page = 1;
 
-    const employees = await readEmployeeStore(
+    const employees = await readEmployee(
       owner_id,
       employee_id,
       current_page,

@@ -19,8 +19,8 @@ require("dotenv").config();
  */
 exports.searchService = async (req, res) => {
     try {
-        const { keyword, user_city, user_district, user_ward, user_street, index, max_range } = req.query;
-        const services = await searchService(keyword, user_city, user_district, user_ward, user_street, index, max_range);
+        const { keyword, user_city, user_district, user_ward, user_street, index, max_range, name_only } = req.query;
+        const services = await searchService(keyword, user_city, user_district, user_ward, user_street, index, max_range, name_only);
         
         return res.status(200).json({ ...services });
     } catch (error) {

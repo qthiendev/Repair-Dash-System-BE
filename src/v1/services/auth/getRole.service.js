@@ -31,7 +31,6 @@ exports.byID = async (uid) => {
             as: 'authentication',
             attributes: ['role'],
         },
-        raw: true,
         nest: true,
     });
 

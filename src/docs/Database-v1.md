@@ -69,7 +69,7 @@ erDiagram
         text order_description "NULLABLE; utf8mb4"
         text store_address "NOT NULL; utf8mb4"
         text customer_address "NOT NULL; utf8mb4"
-        enum order_status "PENDING, PROCESSING, COMPLETED, CANCELLED; NOT NULL"
+        enum order_status "PENDING, PROCESSING, COMPLETED, CANCELED; NOT NULL"
         text order_feedback "NULLABLE; utf8mb4"
         timestamp created_at "NOT NULL; DEFAULT CURRENT_TIMESTAMP"
         timestamp updated_at "NOT NULL; DEFAULT CURRENT_TIMESTAMP ON UPDATE"

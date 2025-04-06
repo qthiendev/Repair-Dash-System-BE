@@ -5,6 +5,38 @@ const getRole = require('../auth/getRole.service');
 const terminal = require('../../../utils/terminal');
 
 /**
+ * Parses order_description to extract specific descriptions.
+ * @param {string} description - The full order_description string.
+ * @returns {Object} Extracted descriptions.
+ */
+const parseOrderDescription = (description) => {
+    const result = {
+        created_description: null,
+        customer_canceled_description: null,
+        store_canceled_description: null,
+        completed_description: null,
+    };
+
+    if (!description) return result;
+
+    const patterns = [
+        { key: 'created_description', pattern: /\[Khách hàng đặt đơn: (.*?)\]/ },
+        { key: 'customer_canceled_description', pattern: /\[Khách hàng hủy đơn: (.*?)\]/ },
+        { key: 'store_canceled_description', pattern: /\[Cửa hàng hủy đơn: (.*?)\]/ },
+        { key: 'completed_description', pattern: /\[Hoàn thành đơn hàng: (.*?)\]/ },
+    ];
+
+    patterns.forEach(({ key, pattern }) => {
+        const match = description.match(pattern);
+        if (match) {
+            result[key] = match[1].trim() || null;
+        }
+    });
+
+    return result;
+};
+
+/**
  * Retrieves all non-deleted orders or a specific order by ID.
  * Ensures only ADMIN, the order's customer, or the service owner can access.
  * @param {number|null} order_id - The ID of the order (optional).
@@ -51,24 +83,25 @@ const getSingleOrder = async (order_id, user_id, role) => {
                         include: {
                             model: Employee,
                             as: 'employees',
-                            attributes: { exclude: ['delete_flag'] },
+                            attributes: ['employee_id', 'employee_full_name', 'employee_avatar_url'],
                             where: {
                                 employee_id: {
                                     [Op.notIn]: Sequelize.literal(
                                         `(SELECT DISTINCT employee_id FROM orders WHERE order_status = 'PROCESSING' AND employee_id IS NOT NULL)`
                                     ),
                                 },
+                                delete_flag: false,
                             },
                             required: false,
                         },
-                    }
+                    },
                 ],
             },
             {
                 model: User,
                 as: 'customer',
                 attributes: ['user_id', 'user_full_name', 'user_avatar_url'],
-            }
+            },
         ],
     });
 
@@ -83,8 +116,13 @@ const getSingleOrder = async (order_id, user_id, role) => {
     }
 
     const order_images = await retrieveMedia.getImages(order.order_images_url);
+    const parsedDescriptions = parseOrderDescription(order.order_description);
 
-    return { ...order.toJSON(), order_images_url: order_images };
+    return {
+        ...order.toJSON(),
+        order_images_url: order_images,
+        ...parsedDescriptions,
+    };
 };
 
 /**
@@ -100,7 +138,7 @@ const getUserOrders = async (user_id, role) => {
     if (role !== 'ADMIN') {
         whereCondition[Op.or] = [
             { customer_id: user_id },
-            { '$service.owner_id$': user_id }
+            { '$service.owner_id$': user_id },
         ];
     }
 
@@ -111,27 +149,25 @@ const getUserOrders = async (user_id, role) => {
             {
                 model: Service,
                 as: 'service',
-                attributes: ['service_id', 'service_name', 'service_description'],
-                include: [
-                    {
-                        model: User,
-                        as: 'owner',
-                        attributes: ['user_id', 'user_full_name', 'user_avatar_url'],
-                    },
-                ],
+                attributes: ['service_id', 'service_name', 'service_description', 'owner_id'],
             },
             {
                 model: User,
                 as: 'customer',
                 attributes: ['user_id', 'user_full_name', 'user_avatar_url'],
-            }
+            },
         ],
     });
 
     return await Promise.all(
         orders.map(async (order) => {
             const order_images = await retrieveMedia.getImages(order.order_images_url);
-            return { ...order.toJSON(), order_images_url: order_images };
+            const parsedDescriptions = parseOrderDescription(order.order_description);
+            return {
+                ...order.toJSON(),
+                order_images_url: order_images,
+                ...parsedDescriptions,
+            };
         })
     );
 };

@@ -15,7 +15,7 @@ const Employee = require('./employee.model');
  * @property {string} customer_full_name - Customer's full name at the time of order.
  * @property {string} customer_phone_number - Customer's phone number at the time of order.
  * @property {string} customer_address - Customer's address at the time of order.
- * @property {'PENDING' | 'PROCESSING' | 'COMPLETED' | 'CANCELLED'} order_status - Order status.
+ * @property {'PENDING' | 'PROCESSING' | 'COMPLETED' | 'CANCELED'} order_status - Order status.
  * @property {string} order_feedback - Customer feedback.
  * @property {Date} created_at - Timestamp when the order was created.
  * @property {Date} updated_at - Timestamp when the order was last updated.
@@ -28,7 +28,7 @@ const Order = sequelize.define('Order', {
     order_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
     order_description: { type: DataTypes.TEXT, allowNull: true, },
     order_images_url: { type: DataTypes.TEXT, allowNull: true, },
-    order_status: { type: DataTypes.ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'CANCELLED'), defaultValue: 'PENDING', allowNull: false, },
+    order_status: { type: DataTypes.ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'CANCELED'), defaultValue: 'PENDING', allowNull: false, },
     order_feedback: { type: DataTypes.TEXT, allowNull: true, },
     order_rating: { type: DataTypes.INTEGER, allowNull: true, },
     order_rtc_session_id: { type: DataTypes.STRING(1000), allowNull: true, },

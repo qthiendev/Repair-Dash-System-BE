@@ -58,11 +58,25 @@ module.exports = async (customer_id, store_id = null, service_id = null) => {
     if (store_id) {
         const storeCheck = await isValidStore(store_id);
         if (storeCheck < 0) return storeCheck;
+
+        const existing = await Favorite.findOne({ where: { customer_id, store_id } });
+        if (existing) {
+            terminal.warning(`createFavorite.service.js | Favorite already exists for customer ${customer_id} and store ${store_id}.`);
+            return -6;
+        }
     }
 
-    if (service_id && !(await isValidService(service_id))) {
-        terminal.warning(`createFavorite.service.js | Service ${service_id} not found or deleted.`);
-        return -4;
+    if (service_id) {
+        if (!(await isValidService(service_id))) {
+            terminal.warning(`createFavorite.service.js | Service ${service_id} not found or deleted.`);
+            return -4;
+        }
+
+        const existing = await Favorite.findOne({ where: { customer_id, service_id } });
+        if (existing) {
+            terminal.warning(`createFavorite.service.js | Favorite already exists for customer ${customer_id} and service ${service_id}.`);
+            return -6;
+        }
     }
 
     const favorite = await Favorite.create({ customer_id, store_id, service_id });
