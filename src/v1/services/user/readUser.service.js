@@ -1,4 +1,4 @@
-const { User, Authentication } = require('../../models/index.model');
+const { User, Authentication, Favorite } = require('../../models/index.model');
 const { Op } = require('sequelize');
 
 /**
@@ -8,7 +8,7 @@ const { Op } = require('sequelize');
  *                                          - Returns `null` if the user is not found.
  *                                          - Returns an array of users if no ID or alias is provided.
  */
-module.exports = async (user_id) => {
+module.exports = async (user_id, sub_user_id = null) => {
     if (user_id) {
         const user = await User.findOne({
             where: {
@@ -29,10 +29,35 @@ module.exports = async (user_id) => {
 
         if (!user) return null;
 
+        let favorite_id = null;
+        if (sub_user_id) {
+            const favoriteRecord = await Favorite.findOne({
+                where: {
+                    customer_id: sub_user_id,
+                },
+                include: [
+                    {
+                        model: User,
+                        as: 'store',
+                        where: {
+                            [Op.or]: [
+                                { user_id: user_id },
+                                { user_alias: user_id }
+                            ],
+                            delete_flag: false
+                        },
+                        attributes: []
+                    }
+                ]
+            });
+            favorite_id = favoriteRecord ? favoriteRecord.favorite_id : -1;
+        }
+
         return {
             ...user.toJSON(),
             role: user.authentication?.role || null,
-            authentication: undefined
+            authentication: undefined,
+            favorite_id
         };
     }
 

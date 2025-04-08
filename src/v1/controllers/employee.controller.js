@@ -105,13 +105,22 @@ exports.updateEmployee = async (req, res) => {
 
     const { employee_id } = req.params;
 
+    let { current_page, limit } = req.query;
+
+    current_page = Number(current_page);
+    limit = Number(limit) || 10;
+
+    if (isNaN(current_page) || current_page < 1) current_page = 1;
+
     const { employee_full_name, avatar_image } = req.body;
 
     const result = await updateEmployee(
       owner_id,
       employee_id,
       employee_full_name,
-      avatar_image
+      avatar_image,
+      current_page,
+      limit
     );
 
     if (result === -1) {

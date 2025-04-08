@@ -1,4 +1,4 @@
-const { Employee } = require("../../models/index.model");
+const { Employee, User } = require("../../models/index.model");
 const uploadMedia = require("../cloudinary/uploadMedia.service");
 const terminal = require("../../../utils/terminal");
 

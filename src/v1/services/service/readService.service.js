@@ -48,7 +48,7 @@ module.exports = async (service_id, user_id = null, current_page = 1, limit = 10
     const average_rating =
       total_reviews > 0 ? (totalStars / total_reviews).toFixed(1) : null;
 
-    let favorite = null;
+    let favorite_id = null;
     if (user_id) {
       const favoriteRecord = await Favorite.findOne({
         where: {
@@ -56,7 +56,7 @@ module.exports = async (service_id, user_id = null, current_page = 1, limit = 10
           service_id: service.service_id
         }
       });
-      favorite = !!favoriteRecord;
+      favorite_id = favoriteRecord ? favoriteRecord.favorite_id : -1;
     }
 
     return {
@@ -65,7 +65,7 @@ module.exports = async (service_id, user_id = null, current_page = 1, limit = 10
         ...service.get({ plain: true }),
         total_reviews,
         average_rating,
-        favorite
+        favorite_id
       },
     };
   }

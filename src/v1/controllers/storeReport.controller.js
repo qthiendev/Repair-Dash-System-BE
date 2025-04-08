@@ -20,14 +20,16 @@ require('dotenv').config();
  */
 exports.readServiceReport = async (req, res) => {
     try {
-        const { service_id, index = 1, max_range = 10 } = req.params;
+        const { service_id } = req.params;
+        const { index, max_range } = req.query;
+        
         const user_id = jwt.verify(req.cookies?.accessToken, process.env.JWT_SECRET_KEY).user_id;
 
         const result = await readServiceReportService(
             user_id,
-            service_id ? Number(service_id) : null,
-            Number(index),
-            Number(max_range)
+            service_id ?? null,
+            Number(index) ?? 1,
+            Number(max_range) ?? 10
         );
 
         if (result === -1) {
