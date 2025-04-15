@@ -11,6 +11,7 @@ const searchServiceRoutes = require("./searching.route");
 const favoriteRoutes = require("./favorite.route");
 const profileRoutes = require("./profile.route");
 const employeeRoutes = require("./employee.route");
+const storeReportRoutes = require("./storeReport.route");
 
 /**
  * @description RESTful API for managing users.
@@ -106,5 +107,12 @@ app.use("/v1/profile", profileRoutes);
  * @route DELETE  /v1/employees/:employee_id  - Soft delete a employee
  */
 app.use("/v1/employees", employeeRoutes);
+
+/**
+ * @description RESTful API for store's report.
+ * 
+ * @route GET /v1/reports/services/:service_id? - Get service report for store user
+ */
+app.use("/v1/reports", storeReportRoutes);
 
 module.exports = app;

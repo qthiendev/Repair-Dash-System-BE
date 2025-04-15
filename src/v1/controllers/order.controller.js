@@ -158,7 +158,7 @@ exports.readOrder = async (req, res) => {
             return res.status(403).json({ message: 'You are not allowed to read this order.', code: -2 });
         }
 
-        res.status(200).json(order_id ? { order: result } : { orders: result });
+        res.status(200).json(order_id ? { ...result } : { orders: result });
     } catch (error) {
         terminal.error(`order.controller.js | Read Order Error: ${error.message}`);
         res.status(500).json({ message: 'Unexpected error occurred' });

@@ -67,7 +67,7 @@ CREATE TABLE `orders` (
     `order_description` TEXT,
     `store_address` TEXT NOT NULL,
     `customer_address` TEXT NOT NULL,
-    `order_status` ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'CANCELLED') NOT NULL,
+    `order_status` ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'CANCELED') NOT NULL,
     `order_feedback` TEXT,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

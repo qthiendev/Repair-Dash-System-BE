@@ -1,8 +1,7 @@
-const { Service, User, Order } = require("../../models/index.model");
-const retrieveMedia = require("../cloudinary/retrieveMedia.service");
+const { Service, User, Order, Favorite } = require("../../models/index.model");
 const { Op } = require("sequelize");
 
-module.exports = async (service_id, current_page = 1, limit = 10) => {
+module.exports = async (service_id, user_id = null, current_page = 1, limit = 10) => {
   if (service_id) {
     const service = await Service.findOne({
       where: {
@@ -42,7 +41,6 @@ module.exports = async (service_id, current_page = 1, limit = 10) => {
 
     const orders = service.orders || [];
     const total_reviews = orders.length;
-
     const totalStars = orders.reduce(
       (sum, order) => sum + (order.order_rating || 0),
       0
@@ -50,12 +48,24 @@ module.exports = async (service_id, current_page = 1, limit = 10) => {
     const average_rating =
       total_reviews > 0 ? (totalStars / total_reviews).toFixed(1) : null;
 
+    let favorite_id = null;
+    if (user_id) {
+      const favoriteRecord = await Favorite.findOne({
+        where: {
+          customer_id: user_id,
+          service_id: service.service_id
+        }
+      });
+      favorite_id = favoriteRecord ? favoriteRecord.favorite_id : -1;
+    }
+
     return {
       message: "Service retrieved successfully",
       service: {
         ...service.get({ plain: true }),
         total_reviews,
         average_rating,
+        favorite_id
       },
     };
   }
@@ -86,9 +96,26 @@ module.exports = async (service_id, current_page = 1, limit = 10) => {
     order: [["service_id", "DESC"]],
   });
 
+  const servicesWithFavorites = await Promise.all(services.map(async (service) => {
+    let favorite = null;
+    if (user_id) {
+      const favoriteRecord = await Favorite.findOne({
+        where: {
+          customer_id: user_id,
+          service_id: service.service_id
+        }
+      });
+      favorite = !!favoriteRecord;
+    }
+    return {
+      ...service.get({ plain: true }),
+      favorite
+    };
+  }));
+
   return {
     message: "Services retrieved successfully",
-    services: services,
+    services: servicesWithFavorites,
     limit,
     current_page,
     total_pages,

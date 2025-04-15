@@ -37,6 +37,7 @@
     "nodemon": "^3.1.9",
     "redis": "^4.7.0",
     "sequelize": "^6.37.5",
+    "string-similarity": "^4.0.4",
     "supertest": "^7.0.0",
     "uuid": "^11.1.0"
   }

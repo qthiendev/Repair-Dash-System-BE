@@ -67,7 +67,6 @@ exports.createService = async (req, res) => {
 exports.readService = async (req, res) => {
   try {
     const { service_id } = req.params;
-
     let { index, limit } = req.query;
 
     index = Number(index);
@@ -75,13 +74,25 @@ exports.readService = async (req, res) => {
 
     if (isNaN(index) || index < 1) index = 1;
 
-    const services = await readService(service_id, index, limit);
+    let user_id = null;
+    try {
+      if (req.cookies?.accessToken) {
+        user_id = jwt.verify(
+          req.cookies.accessToken,
+          process.env.JWT_SECRET_KEY
+        ).user_id;
+      }
+    } catch (error) {
+      console.error('Token verification failed:', error);
+    }
 
-    if (services === -1) {
+    const result = await readService(service_id, user_id, index, limit);
+
+    if (result === -1) {
       return res.status(404).json({ message: "Service not found" });
     }
 
-    return res.status(200).json( services );
+    return res.status(200).json(result);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Unexpected error occurred" });

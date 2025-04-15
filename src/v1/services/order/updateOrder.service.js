@@ -16,6 +16,8 @@ module.exports = async (order_id, user_id, updateData) => {
         include: { model: Service, as: 'service', attributes: ['owner_id'] },
     });
 
+    terminal.debug(order);
+
     if (!order) {
         terminal.warning(`updateOrder.service.js | Order ${order_id} not found.`);
         return -1;
@@ -90,24 +92,14 @@ function handleCompletedOrderUpdate(isCustomer, updateData, updateFields, order_
 /**
  * Allows customers to mark PROCESSING orders as COMPLETED.
  */
-function handleCustomerProcessingToComplete(updateData, updateFields, order_id) {
+function handleCustomerProcessingToComplete(updateData, updateFields, order) {
     if (updateData.order_status !== "COMPLETED") {
         terminal.warning(`updateOrder.service.js | Customer can only change order_status from PROCESSING to COMPLETED.`);
         return -4;
     }
-
-    updateFields.order_status = "COMPLETED";
-
-    if (updateData.order_feedback) updateFields.order_feedback = updateData.order_feedback;
     
-    if (updateData.order_rating !== undefined) {
-        const rating = parseInt(updateData.order_rating, 10);
-        if (isNaN(rating) || rating < 1 || rating > 5) {
-            terminal.warning(`updateOrder.service.js | Invalid rating for order ${order_id}. Must be between 1 and 5.`);
-            return -5;
-        }
-        updateFields.order_rating = rating;
-    }
+    updateFields.order_status = "COMPLETED";
+    updateFields.order_description = `${order.order_description || ""} [Hoàn thành đơn hàng: ${updateData.order_description || ""}]`;
 
     return updateFields;
 }
@@ -116,9 +108,15 @@ function handleCustomerProcessingToComplete(updateData, updateFields, order_id) 
  * Handles customer updates for PENDING orders.
  */
 const handleCustomerPendingUpdate = async (updateData, updateFields, order) => {
+    if (updateData.order_status === "CANCELED") {
+        updateFields.order_status = "CANCELED";
+        updateFields.order_description = `${order.order_description || ""} [Khách hàng hủy đơn: ${updateData.order_description || ""}]`;
+        return updateFields;
+    }
+
     if (updateData.customer_full_name) updateFields.customer_full_name = updateData.customer_full_name;
     if (updateData.customer_phone_number) updateFields.customer_phone_number = updateData.customer_phone_number;
-    if (updateData.order_description) updateFields.order_description = updateData.order_description;
+    if (updateData.order_description) updateFields.order_description = `[Khách hàng đặt đơn: ${updateData.order_description}]`;
     if (updateData.customer_address) updateFields.customer_address = updateData.customer_address;
     
     if (updateData.order_images) {
@@ -128,11 +126,7 @@ const handleCustomerPendingUpdate = async (updateData, updateFields, order) => {
         updateFields.order_images_url = null;
     }
 
-    if (updateData.order_status === "CANCELED") {
-        updateFields.order_status = "CANCELED";
-        updateFields.order_description = `${order.order_description || ""}
-            [Khách hàng hủy đơn: ${updateData.order_description || ""}]`;
-    }
+    return updateFields;
 };
 
 /**
@@ -171,10 +165,8 @@ async function handleStoreUpdate(updateData, updateFields, order) {
 
     updateFields.order_description =
         updateData.order_status === "CANCELED"
-            ? `${order.order_description || ""}
-                [Cửa hàng hủy đơn: ${updateData.order_description || ""}]`
-            : `${order.order_description || ""}
-                [Hoàn thành đơn hàng: ${updateData.order_description || ""}]`;
-
+            ? `${order.order_description || ""} [Cửa hàng hủy đơn: ${updateData.order_description || ""}]`
+            : `${order.order_description || ""} [Hoàn thành đơn hàng: ${updateData.order_description || ""}]`;
+            
     return updateFields;
 }

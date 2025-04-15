@@ -23,6 +23,7 @@ This document outlines the available search-related API endpoints, including the
   - `user_street` (string, optional): The user's street for finer location accuracy.
   - `index` (number, optional): The pagination index for result offset.
   - `max_range` (number, optional): Maximum search radius in kilometers.
+  - `name_only` (string(but only 'true'/'false'), optional): Get all non-duplicate services name, avoid every filter in previous.
 
 - **Response**:
   - **200 OK**:
@@ -39,6 +40,7 @@ This document outlines the available search-related API endpoints, including the
             "owner_id": INTERGER,
             "owner": {
                 "user_full_name": STRING,
+                "user_alias": STRING,
                 "user_avatar": STRING,
                 "user_priority": INTERGER,
             },

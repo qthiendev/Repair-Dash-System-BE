@@ -2,6 +2,8 @@ const readUser = require('../services/user/readUser.service');
 const createUser = require('../services/user/createUser.service');
 const deleteUser = require('../services/user/deleteUser.service');
 const updateUser = require('../services/user/updateUser.service');
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 /**
  * Create a new user.
@@ -62,7 +64,20 @@ exports.createUser = async (req, res) => {
 exports.readUser = async (req, res) => {
     try {
         const { user_id } = req.params;
-        const users = await readUser(user_id);
+
+        let sub_user_id = null;
+        try {
+            if (req.cookies?.accessToken) {
+                sub_user_id = jwt.verify(
+                    req.cookies.accessToken,
+                    process.env.JWT_SECRET_KEY
+                ).user_id;
+            }
+        } catch (error) {
+            console.error('Token verification failed:', error);
+        }
+
+        const users = await readUser(user_id, sub_user_id);
 
         if (!users) {
             return res.status(404).json({ message: 'User not found' });

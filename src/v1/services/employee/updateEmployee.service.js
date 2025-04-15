@@ -6,7 +6,9 @@ module.exports = async (
   owner_id,
   employee_id,
   employee_full_name,
-  avatar_image
+  avatar_image,
+  current_page,
+  limit = 10
 ) => {
   if (
     !(await Employee.findOne({

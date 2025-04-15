@@ -33,6 +33,7 @@ module.exports = async (user_id, current_page = 1, limit = 10) => {
     attributes: [
       "service_id",
       "service_name",
+      "service_alias",
       "service_description",
       "service_image_url",
       "created_at",
