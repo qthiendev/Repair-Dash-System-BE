@@ -1,4 +1,4 @@
-const { body, param, validationResult } = require('express-validator');
+const { query, body, param, validationResult } = require('express-validator');
 
 const validateRequest = (rules) => [
     rules,
@@ -11,4 +11,4 @@ const validateRequest = (rules) => [
     }
 ];
 
-module.exports = { body, param, validateRequest };
+module.exports = { query, body, param, validateRequest };

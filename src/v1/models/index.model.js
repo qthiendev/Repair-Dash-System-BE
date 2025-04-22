@@ -5,6 +5,7 @@ const Service = require('./service.model');
 const Employee = require('./employee.model');
 const Order = require('./order.model');
 const Favorite = require('./favorite.model');
+const Payment = require('./payment.model');
 
 User.hasOne(Authentication, { foreignKey: 'authentication_id', as: 'authentication' });
 Authentication.belongsTo(User, { foreignKey: 'authentication_id', as: 'authentication' });
@@ -36,6 +37,9 @@ Favorite.belongsTo(User, { foreignKey: 'store_id', as: 'store' });
 Service.hasMany(Favorite, { foreignKey: 'service_id', as: 'favorites' });
 Favorite.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
 
+User.hasMany(Payment, { foreignKey: 'user_id', as: 'payments' });
+Payment.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 module.exports = {
     User,
     Authentication,
@@ -44,4 +48,5 @@ module.exports = {
     Employee,
     Order,
     Favorite,
+    Payment,
 };

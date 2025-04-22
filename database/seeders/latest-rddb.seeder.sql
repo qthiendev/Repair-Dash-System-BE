@@ -1,3 +1,4 @@
+-- Active: 1741525707925@@127.0.0.1@3306@rddb
 USE `rddb`;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -5,6 +6,7 @@ TRUNCATE TABLE orders;
 TRUNCATE TABLE services;
 TRUNCATE TABLE employees;
 TRUNCATE TABLE system_reports;
+TRUNCATE TABLE payments;
 TRUNCATE TABLE users;
 TRUNCATE TABLE authentications;
 
@@ -43,7 +45,7 @@ INSERT INTO `users` (`user_full_name`, `user_phone_number`, `user_street`, `user
     (N'Lưu Văn Trường', N'0363611957', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 3, NULL, 0, 'pRFtjh0x9c'),
     (N'Nguyễn Nhật Thảo', N'0354399768', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 4, NULL, 0, 'z4m3VVRRC9'),
     (N'Trịnh Quý Thiện', N'0395075100', N'K318/17 Tôn Đản', N'Hòa An', N'Cẩm Lệ', N'Đà Nẵng', 5, NULL, 0, 'qthiendev'),
-    (N'Siêu thị Điện Máy Xanh', N'02366554477', N'100 Lê Lợi', N'Thạch Thang', N'Hải Châu', N'Đà Nẵng', 6, NULL, 1, 'hCsuSk7l5b'),
+    (N'Siêu thị Điện Máy Xanh', N'02366554477', N'100 Lê Lợi', N'Thạch Thang', N'Hải Châu', N'Đà Nẵng', 6, NULL, 0, 'hCsuSk7l5b'),
     (N'Điện nước Việt Nam', N'02366553388', N'22 Phan Đình Phùng', N'Hải Châu 1', N'Hải Châu', N'Đà Nẵng', 7, NULL, 0, 'Eu1zfAxngQ'),
     (N'Nguyễn Văn A', N'0905123456', N'40 Bạch Đằng', N'Thạch Thang', N'Hải Châu', N'Đà Nẵng', 8, NULL, 0, 'KxeU09OgfT'),
     (N'Nguyễn Văn B', N'0935678901', N'75 Trần Phú', N'Hải Châu 1', N'Hải Châu', N'Đà Nẵng', 9, NULL, 0, 'tFq6WFF4WL'),

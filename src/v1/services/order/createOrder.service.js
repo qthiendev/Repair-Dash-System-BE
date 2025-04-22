@@ -2,7 +2,8 @@ const { Order, User, Service } = require('../../models/index.model');
 const terminal = require('../../../utils/terminal');
 const uploadMedia = require('../cloudinary/uploadMedia.service');
 const createRTCSession = require('../rtc/createRTCSession.service');
-const { or } = require('sequelize');
+const { Sequelize, Op, fn, col, where, literal } = require('sequelize');
+const dayjs = require('dayjs');
 
 /**
  * Creates a new order.
@@ -25,7 +26,7 @@ module.exports = async (customer_id, service_id, customer_full_name, customer_ph
         include: {
             model: User,
             as: 'owner',
-            attributes: ['user_full_name', 'user_phone_number', 'user_street', 'user_ward', 'user_district', 'user_city'],
+            attributes: ['user_full_name', 'user_phone_number', 'user_priority', 'user_street', 'user_ward', 'user_district', 'user_city'],
         },
     });
 
@@ -44,6 +45,38 @@ module.exports = async (customer_id, service_id, customer_full_name, customer_ph
         return -4;
     }
 
+    const TOTAL_ORDER_PER_MONTH_BASIC = 20;
+    const TOTAL_ORDER_PER_MONTH_MONTHLY = 100;
+    let TOTAL_ORDER_PER_MONTH = null;
+
+    if (TOTAL_ORDER_PER_MONTH = service.owner.user_priority === 0)
+        TOTAL_ORDER_PER_MONTH = TOTAL_ORDER_PER_MONTH_BASIC;
+    else if (TOTAL_ORDER_PER_MONTH = service.owner.user_priority === 1)
+        TOTAL_ORDER_PER_MONTH = TOTAL_ORDER_PER_MONTH_MONTHLY;
+
+    if (TOTAL_ORDER_PER_MONTH === null) {
+        const startOfMonth = dayjs().startOf('month').toDate();
+        const endOfMonth = dayjs().endOf('month').toDate();
+
+        const orderCount = await Order.count({
+            where: {
+                service_id: {
+                    [Op.in]: Sequelize.literal(`(SELECT service_id FROM services WHERE owner_id = ${service.owner_id})`)
+                },
+                created_at: {
+                    [Op.between]: [startOfMonth, endOfMonth]
+                },
+                order_status: 'COMPLETED',
+                delete_flag: false
+            }
+        });
+
+        if (orderCount >= TOTAL_ORDER_PER_MONTH) {
+            terminal.warning(`order.service.js | Store owner ${service.owner_id} has reached the order limit this month.`);
+            return -5;
+        }
+    }
+    
     const store_full_name = service.owner.user_full_name;
     const store_phone_number = service.owner.user_phone_number;
     const store_address = `${service.owner.user_street}, ${service.owner.user_ward}, ${service.owner.user_district}, ${service.owner.user_city}`;
@@ -68,7 +101,6 @@ module.exports = async (customer_id, service_id, customer_full_name, customer_ph
         employee_full_name: null,
     });
 
-    
     const folderUrl = await uploadMedia.uploadImages(`order_${newOrder.order_id}`, order_images);
     await createRTCSession(newOrder.order_id);
 

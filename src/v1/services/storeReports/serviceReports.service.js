@@ -1,4 +1,4 @@
-const { Service, Order, Favorite } = require('../../models/index.model');
+const { Service, Order, Favorite, Payment, User, Authentication } = require('../../models/index.model');
 const { Sequelize, Op } = require('sequelize');
 const terminal = require('../../../utils/terminal');
 
@@ -13,6 +13,56 @@ const terminal = require('../../../utils/terminal');
 module.exports = async (user_id, service_id = null, index = 1, max_range = 10) => {
     try {
         if (index < 1) index = 1;
+
+        const user = await User.findOne({
+            where: {
+                user_id,
+                delete_flag: false
+            },
+            attributes: [
+                'user_id',
+                'user_full_name',
+                'user_avatar_url',
+                'user_alias',
+                'user_description',
+                'user_phone_number',
+                'user_street',
+                'user_ward',
+                'user_district',
+                'user_city',
+                'user_priority',
+                'created_at',
+                'updated_at'
+            ],
+            include: [
+                {
+                    model: Authentication,
+                    as: 'authentication',
+                    attributes: ['role']
+                },
+                {
+                    model: Payment,
+                    as: 'payments',
+                    attributes: [
+                        'payment_id',
+                        'transaction_id',
+                        'payment_description',
+                        'payment_type',
+                        'payment_status',
+                        'user_full_name',
+                        'payment_amount',
+                        'created_at',
+                        'updated_at'
+                    ],
+                    where: {
+                        payment_status: 'COMPLETED',
+                        delete_flag: false
+                    },
+                    required: false
+                }
+            ]
+        });
+
         const serviceQuery = {
             attributes: {
                 include: [
@@ -114,6 +164,43 @@ module.exports = async (user_id, service_id = null, index = 1, max_range = 10) =
 
         const services = await Service.findAll(serviceQuery);
 
+        const orderDates = await Order.findAll({
+            attributes: ['created_at'],
+            where: {
+                delete_flag: false,
+                service_id: {
+                    [Op.in]: services.map(s => s.service_id)
+                }
+            },
+            raw: true
+        });
+
+        const monthlyCountMap = {};
+
+        orderDates.forEach(order => {
+            const date = new Date(order.created_at);
+            const key = `${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+            monthlyCountMap[key] = (monthlyCountMap[key] || 0) + 1;
+        });
+
+        if (orderDates.length > 0) {
+            const startDate = new Date(orderDates[0].created_at);
+            const endDate = new Date();
+            const monthly_report = {};
+        
+            const current = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+            const end = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+        
+            while (current <= end) {
+                const key = `${String(current.getMonth() + 1).padStart(2, '0')}/${current.getFullYear()}`;
+                monthly_report[key] = monthlyCountMap[key] || 0;
+        
+                current.setMonth(current.getMonth() + 1);
+            }
+
+            services.monthly_report = monthly_report;
+        }
+
         terminal.success(`readServiceReport.service.js | Found ${services.length} services for user ${user_id}, service_id: ${service_id || 'all'}`);
 
         if (service_id && services.length === 0) {
@@ -174,7 +261,7 @@ module.exports = async (user_id, service_id = null, index = 1, max_range = 10) =
                 total_favorites: 0,
             }
         );
-        
+
         if (service_id) {
             const singleReport = serviceReport[0] || {};
             const orders = singleReport.orders || [];
@@ -187,6 +274,7 @@ module.exports = async (user_id, service_id = null, index = 1, max_range = 10) =
             return {
                 total_pages: total_pages,
                 current_page: index,
+                ...user.toJSON(),
                 service: {
                     ...singleReport.service,
                     total_orders: singleReport.total_orders || 0,
@@ -204,7 +292,8 @@ module.exports = async (user_id, service_id = null, index = 1, max_range = 10) =
                     total_pending_orders: singleReport.total_pending_orders || 0,
                     total_processing_orders: singleReport.total_processing_orders || 0,
                     total_favorites: singleReport.total_favorites || 0,
-                }
+                },
+                monthly_report: services.monthly_report || {}
             };
         }
 
@@ -218,8 +307,10 @@ module.exports = async (user_id, service_id = null, index = 1, max_range = 10) =
         return {
             total_pages: total_pages,
             current_page: index,
+            ...user.toJSON(),
             services: paginatedServices,
             total: total,
+            monthly_report: services.monthly_report || {}
         };
     } catch (error) {
         terminal.error(`readServiceReport.service.js | Error generating service report: ${error.message}`);

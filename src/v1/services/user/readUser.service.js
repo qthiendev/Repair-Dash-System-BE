@@ -1,4 +1,4 @@
-const { User, Authentication, Favorite } = require('../../models/index.model');
+const { User, Authentication, Favorite, Payment } = require('../../models/index.model');
 const { Op } = require('sequelize');
 
 /**
@@ -23,6 +23,15 @@ module.exports = async (user_id, sub_user_id = null) => {
                     model: Authentication,
                     as: 'authentication',
                     attributes: ['role']
+                },
+                {
+                    model: Payment,
+                    as: 'payments',
+                    where: {
+                        payment_status: 'COMPLETED',
+                        delete_flag: false
+                    },
+                    required: false,
                 }
             ],
         });
