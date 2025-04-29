@@ -1,4 +1,4 @@
-const { User, Service, Authentication } = require("../../models/index.model");
+const { User, Service, Authentication, Payment } = require("../../models/index.model");
 
 module.exports = async (user_id, current_page = 1, limit = 10) => {
   if (!user_id) return -1;
@@ -14,12 +14,15 @@ module.exports = async (user_id, current_page = 1, limit = 10) => {
       user_id,
       delete_flag: false,
     },
-    attributes: { exclude: ["user_priority"] },
     include: [
       {
         model: Authentication,
         as: "authentication",
         attributes: ["role", "identifier_email"],
+      },
+      {
+        model: Payment,
+        as: "payments",
       },
     ],
     raw: true,

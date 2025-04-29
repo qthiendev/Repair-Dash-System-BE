@@ -38,6 +38,23 @@ CREATE TABLE `users` (
     CONSTRAINT `fk_users_authentication_id` FOREIGN KEY (`authentication_id`) REFERENCES `authentications`(`authentication_id`)
 );
 
+CREATE TABLE `payments` (
+    `payment_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `transaction_id` VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
+    `payment_description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `payment_type` ENUM('MONTHLY', 'YEARLY') NOT NULL,
+    `payment_status` ENUM('PENDING', 'COMPLETED', 'CANCELED') NOT NULL,
+    `user_full_name` VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `payment_amount` INT NOT NULL,
+    
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `delete_flag` BOOLEAN NOT NULL DEFAULT FALSE,
+
+    `user_id` INT NOT NULL,
+    CONSTRAINT `fk_payments_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+)
+
 -- Table: system_reports
 CREATE TABLE `system_reports` (
     `report_id` INT AUTO_INCREMENT PRIMARY KEY,

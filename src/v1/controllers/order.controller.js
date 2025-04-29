@@ -85,6 +85,8 @@ exports.createOrder = async (req, res) => {
                 return res.status(400).json({ message: 'Store not found.', code: -3 });
             case -4:
                 return res.status(400).json({ message: 'Store not allowed to order its own service.', code: -4 });
+            case -5:
+                return res.status(403).json({ message: 'Total order is greater than current plan.', code: -5 });
             default:
                 return res.status(201).json({ message: 'Order created successfully', order_id });
         }

@@ -81,6 +81,20 @@ const calculateServicePriority = async (service, normInput) => {
     priority += similarityScore(normWard, ownerWard, LOCATION_WEIGHTS.ward);
     priority += similarityScore(normStreet, ownerStreet, LOCATION_WEIGHTS.street);
 
+    var timeEstimate = "hơn 30 phút";
+
+    if (priority > 3000) {
+        timeEstimate = "khoảng 5 phút";
+    } else if (priority > 2500) {
+        timeEstimate = "khoảng 10 phút";
+    } else if (priority > 2000) {
+        timeEstimate = "khoảng 15 phút";
+    } else if (priority > 1500) {
+        timeEstimate = "khoảng 20 phút";
+    } else if (priority > 1000) {
+        timeEstimate = "khoảng 30 phút";
+    }
+
     let distance = null;
     // distance = await distanceEstimate(
     //     {
@@ -133,6 +147,7 @@ const calculateServicePriority = async (service, normInput) => {
         avg_rating: avgRating,
         order_times: orderTimes,
         distance: distance,
+        time: timeEstimate,
         priority: priority
     };
 };
