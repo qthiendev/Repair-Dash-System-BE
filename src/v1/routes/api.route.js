@@ -11,7 +11,7 @@ const searchServiceRoutes = require("./searching.route");
 const favoriteRoutes = require("./favorite.route");
 const profileRoutes = require("./profile.route");
 const employeeRoutes = require("./employee.route");
-const storeReportRoutes = require("./storeReport.route");
+const reportsRoutes = require("./reports.route");
 const paymentRoutes = require("./payment.route");
 
 /**
@@ -114,7 +114,7 @@ app.use("/v1/employees", employeeRoutes);
  * 
  * @route GET /v1/reports/services/:service_id? - Get service report for store user
  */
-app.use("/v1/reports", storeReportRoutes);
+app.use("/v1/reports", reportsRoutes);
 
 /**
  * @description RESTful API for payment.
