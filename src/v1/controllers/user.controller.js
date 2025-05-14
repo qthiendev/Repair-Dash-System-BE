@@ -2,6 +2,7 @@ const readUser = require('../services/user/readUser.service');
 const createUser = require('../services/user/createUser.service');
 const deleteUser = require('../services/user/deleteUser.service');
 const updateUser = require('../services/user/updateUser.service');
+const lockUser = require('../services/user/lockUser.service');
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -95,39 +96,86 @@ exports.readUser = async (req, res) => {
 };
 
 /**
- * Update user details.
- * @route PUT /api/v1/user/:user_id
+ * Update user and authentication details.
+ * @route PUT /api/v1/users/:user_id
  * @param {string} user_id - The ID of the user to update.
- * @body {string} [user_full_name] - Updated full name (optional)
- * @body {string} [user_phone_number] - Updated phone number (optional)
- * @body {string} [user_address] - Updated address (optional)
- * @returns {Object} 200 - { message: 'User updated successfully' } if the update was successful
- * @returns {Object} 404 - { message: 'User not found' } if no user with the given ID exists
- * @returns {Object} 501 - { message: 'Cannot update user' } if the user was not updated
- * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal errors
+ * @body {string} [user_full_name] - User full name.
+ * @body {string} [user_alias] - User alias.
+ * @body {string} [user_phone_number] - User phone number.
+ * @body {string} [user_description] - User description.
+ * @body {string} [user_street] - User street address.
+ * @body {string} [user_ward] - User ward.
+ * @body {string} [user_district] - User district.
+ * @body {string} [user_city] - User city.
+ * @body {string} [identifier_email] - Authentication email.
+ * @body {string} [password] - Authentication password.
+ * @body {string} [role] - Authentication role.
+ * @body {File} [avatar_image] - Avatar image file (optional).
+ * @returns {Object} 200 - { message: 'User updated successfully', user, authentication } if the update was successful
+ * @returns {Object} 400 - { message: 'Alias already taken' } if the user alias is taken
+ * @returns {Object} 404 - { message: 'User not found or already deleted' } if no user with the given ID exists
+ * @returns {Object} 500 - { message: 'Failed to update user' } if the update failed
  */
 exports.updateUser = async (req, res) => {
     try {
         const { user_id } = req.params;
-        const updateData = req.body;
+        const {
+            user_full_name,
+            user_alias,
+            user_priority,
+            user_phone_number,
+            user_description,
+            user_street,
+            user_ward,
+            user_district,
+            user_city,
+            identifier_email,
+            password,
+            role,
+            avatar_image
+        } = req.body;
 
-        const result = await updateUser(user_id, updateData);
+        const updateData = {
+            user: {
+                user_full_name,
+                user_alias,
+                user_priority,
+                user_phone_number,
+                user_description,
+                user_street,
+                user_ward,
+                user_district,
+                user_city,
+                avatar_image
+            },
+            authentication: {
+                identifier_email,
+                password,
+                role
+            },
+
+        };
+
+        const result = await updateUser(parseInt(user_id, 10), updateData);
 
         if (result === -1) {
-            return res.status(404).json({ message: 'User not found', code: -1 });
+            return res.status(404).json({ message: 'User not found or already deleted', code: -1 });
         }
 
         if (result === -2) {
             return res.status(400).json({ message: 'Alias already taken', code: -2 });
         }
 
-        if (!result) {
-            return res.status(501).json({ message: 'Cannot update user', code: -3 });
+        if (result === -3) {
+            return res.status(500).json({ message: 'Failed to update user', code: -3 });
         }
 
-        return res.status(200).json({ message: 'User updated successfully' });
+        return res.status(200).json({
+            message: 'User updated successfully',
+            ...result.user,
+        });
     } catch (error) {
-        console.error(error);
+        terminal.error(`user.controller.js | Update User Error: ${error.message}`);
         res.status(500).json({ message: 'Unexpected error occurred' });
     }
 };
@@ -158,5 +206,37 @@ exports.deleteUser = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Unexpected error occurred' });
+    }
+};
+
+/**
+ * Soft-lock a user by setting delete_flag to true in the User model.
+ * @route PATCH /api/v1/users/:user_id/lock
+ * @param {number} user_id - The ID of the user to lock.
+ * @returns {Object} 200 - { message: 'User locked successfully' }
+ * @returns {Object} 404 - { message: 'User not found or already locked' }
+ * @returns {Object} 500 - { message: 'Unexpected error occurred' }
+ */
+exports.lockUser = async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        const result = await lockUser(parseInt(user_id, 10));
+
+        if (result === -1) {
+            return res.status(404).json({ message: 'User not found or already locked' });
+        }
+
+        if (!result) {
+            return res.status(500).json({ message: 'Failed to lock user' });
+        }
+
+        if (result === 1) {
+            return res.status(200).json({ message: 'User unlocked successfully' });
+        }
+
+        return res.status(200).json({ message: 'User locked successfully' });
+    } catch (error) {
+        terminal.error(`reports.controller.js | Lock User Error: ${error.message}`);
+        return res.status(500).json({ message: 'Unexpected error occurred' });
     }
 };

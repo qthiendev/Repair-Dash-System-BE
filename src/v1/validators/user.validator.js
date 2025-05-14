@@ -1,4 +1,4 @@
-const { body, param, validateRequest } = require('./validator');
+const { body, query, param, validateRequest } = require('./validator');
 
 const readUserValidation = validateRequest([
     param('user_id')
@@ -16,7 +16,17 @@ const readUserValidation = validateRequest([
                 throw new Error('Invalid user identifier format');
             }
             return true;
-        })
+        }),
+
+    query('index')
+        .optional()
+        .isInt({ min: 1 }).withMessage('Index must be a positive integer')
+        .toInt(),
+
+    query('max_range')
+        .optional()
+        .isInt({ min: 1, max: 100 }).withMessage('Max range must be between 1 and 100')
+        .toInt(),
 ]);
 
 const restPasswordValidation = validateRequest([
@@ -43,11 +53,6 @@ const createUserValidation = validateRequest([
         .isString()
         .isLength({ min: 1, max: 250 })
         .withMessage('Full name must be between 5 and 500 characters'),
-
-    body('user_alias')
-        .isString()
-        .isLength({ min: 1, max: 500 })
-        .withMessage('Alias must be between 1 and 500 characters'),
 
     body('user_phone_number')
         .isString()
@@ -77,43 +82,67 @@ const createUserValidation = validateRequest([
 
 const updateUserValidation = validateRequest([
     param('user_id')
+        .optional()
         .isInt({ min: 1 })
         .withMessage('User ID must be a positive integer or greater than 0'),
 
     body('user_full_name')
+        .optional()
         .isString()
         .isLength({ min: 5, max: 500 })
         .withMessage('Full name must be between 5 and 500 characters'),
-    
+
     body('user_alias')
+        .optional()
         .isString()
         .isLength({ min: 1, max: 50 })
         .withMessage('Alias must be between 1 and 20 characters'),
 
     body('user_phone_number')
+        .optional()
         .isString()
         .isLength({ min: 10, max: 20 })
         .withMessage('Phone number must be between 10 and 20 characters'),
 
     body('user_street')
+        .optional()
         .isString()
         .isLength({ min: 5 })
         .withMessage('Address must be at least 5 characters'),
 
     body('user_ward')
+        .optional()
         .isString()
         .isLength({ min: 5 })
         .withMessage('Address must be at least 5 characters'),
 
     body('user_district')
+        .optional()
         .isString()
         .isLength({ min: 5 })
         .withMessage('Address must be at least 5 characters'),
 
     body('user_city')
+        .optional()
         .isString()
         .isLength({ min: 5 })
         .withMessage('Address must be at least 5 characters'),
+
+    body('identifier_email')
+        .optional()
+        .isEmail()
+        .withMessage('Invalid email format'),
+        
+    body('password')
+        .optional()
+        .isLength({ min: 6, max: 20 })
+        .withMessage('Password must be between 6 and 20 characters'),
+
+    body('role')
+        .optional()
+        .isString()
+        .isIn(['ADMIN', 'STORE', 'CUSTOMER'])
+        .withMessage('Role must be either ADMIN, STORE, or CUSTOMER'),
 ]);
 
 const deleteUserValidation = validateRequest([

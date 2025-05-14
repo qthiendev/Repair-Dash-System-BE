@@ -7,7 +7,8 @@ const {
     createUser,
     readUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    lockUser
 } = require('../controllers/user.controller');
 
 const {
@@ -30,5 +31,6 @@ router.get('/', authMiddleware.ensureAdmin, readUser);
 router.get('/:user_id', readUserValidation, readUser);
 router.put('/:user_id', authMiddleware.ensureAdmin, updateUserValidation, updateUser);
 router.delete('/:user_id', authMiddleware.ensureAdmin, deleteUserValidation, deleteUser);
+router.put('/:user_id/lock', authMiddleware.ensureAdmin, lockUser);
 
 module.exports = router;

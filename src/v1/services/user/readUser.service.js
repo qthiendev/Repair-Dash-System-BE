@@ -16,13 +16,15 @@ module.exports = async (user_id, sub_user_id = null) => {
                     { user_id: user_id },
                     { user_alias: user_id }
                 ],
-                delete_flag: false
             },
             include: [
                 {
                     model: Authentication,
                     as: 'authentication',
-                    attributes: ['role']
+                    attributes: ['role'],
+                    where: {
+                        delete_flag: false
+                    }
                 },
                 {
                     model: Payment,
