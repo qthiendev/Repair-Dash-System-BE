@@ -32,10 +32,6 @@ exports.createReport = async (req, res) => {
     switch (reportId) {
       case -1:
         return res.status(400).json({ message: "User not found.", code: -1 });
-      case -2:
-        return res
-          .status(400)
-          .json({ message: "Report already exists.", code: -2 });
       default:
         return res
           .status(201)

@@ -31,7 +31,6 @@ const {
 router.post(
   "/",
   authenticate,
-  ensureCustomer,
   createReportValidation,
   createReport
 );
