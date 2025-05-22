@@ -13,16 +13,7 @@ module.exports = async (
 
   if (!user) {
     terminal.warning(`services.report.js | User ${user_id} not found.`);
-    return { success: false, message: "User not found" };
-  }
-
-  const existingReport = await SystemReport.findOne({
-    where: { report_description, user_id },
-  });
-
-  if (existingReport) {
-    terminal.warning(`services.report.js | Report already exists.`);
-    return { success: false, message: "Report already exists" };
+    return -1;
   }
 
   const newReport = await SystemReport.create({
