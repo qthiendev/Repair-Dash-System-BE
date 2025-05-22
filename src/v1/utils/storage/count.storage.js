@@ -11,7 +11,7 @@ exports.getCount = () => count;
  * @param {number} newCount - The new count value to set
  */
 exports.setCount = (newCount) => {
-    count = newCount;
+	count = newCount;
 };
 
 /**
@@ -19,8 +19,8 @@ exports.setCount = (newCount) => {
  * @returns {number} The incremented count
  */
 exports.incrementCount = () => {
-    count++;
-    return count;
+	count++;
+	return count;
 };
 
 /**
@@ -28,6 +28,6 @@ exports.incrementCount = () => {
  * @returns {number} The reset count (0)
  */
 exports.resetCount = () => {
-    count = 0;
-    return count;
+	count = 0;
+	return count;
 };

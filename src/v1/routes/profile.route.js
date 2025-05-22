@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  readProfile,
-  updateProfile,
+	readProfile,
+	updateProfile,
 } = require("../controllers/profile.controller");
 
 const { updateProfileValidation } = require("../validators/profile.validator");

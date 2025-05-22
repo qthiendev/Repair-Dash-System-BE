@@ -15,32 +15,35 @@ require("dotenv").config();
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } if an internal error happens
  */
 exports.createEmployee = async (req, res) => {
-  try {
-    const owner_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+	try {
+		const owner_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    const { employee_full_name, avatar_image } = req.body;
+		const { employee_full_name, avatar_image } = req.body;
 
-    const employee_id = await createEmployee(
-      owner_id,
-      employee_full_name,
-      avatar_image
-    );
+		const employee_id = await createEmployee(
+			owner_id,
+			employee_full_name,
+			avatar_image,
+		);
 
-    switch (employee_id) {
-      case -1:
-        return res.status(400).json({ message: "Owner not found.", code: -1 });
-      default:
-        return res
-          .status(201)
-          .json({ message: "Employee created successfully", employee_id });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		switch (employee_id) {
+			case -1:
+				return res
+					.status(400)
+					.json({ message: "Owner not found.", code: -1 });
+			default:
+				return res.status(201).json({
+					message: "Employee created successfully",
+					employee_id,
+				});
+		}
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -52,37 +55,37 @@ exports.createEmployee = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal server errors
  */
 exports.readEmployeeStore = async (req, res) => {
-  try {
-    const owner_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+	try {
+		const owner_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    const { employee_id } = req.params;
+		const { employee_id } = req.params;
 
-    let { current_page, limit } = req.query;
+		let { current_page, limit } = req.query;
 
-    current_page = Number(current_page);
-    limit = Number(limit) || 10;
+		current_page = Number(current_page);
+		limit = Number(limit) || 10;
 
-    if (isNaN(current_page) || current_page < 1) current_page = 1;
+		if (isNaN(current_page) || current_page < 1) current_page = 1;
 
-    const employees = await readEmployee(
-      owner_id,
-      employee_id,
-      current_page,
-      limit
-    );
+		const employees = await readEmployee(
+			owner_id,
+			employee_id,
+			current_page,
+			limit,
+		);
 
-    if (employees === -1) {
-      return res.status(404).json({ message: "Employee not found" });
-    }
+		if (employees === -1) {
+			return res.status(404).json({ message: "Employee not found" });
+		}
 
-    return res.status(200).json(employees);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		return res.status(200).json(employees);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -97,47 +100,47 @@ exports.readEmployeeStore = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal errors
  */
 exports.updateEmployee = async (req, res) => {
-  try {
-    const owner_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+	try {
+		const owner_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    const { employee_id } = req.params;
+		const { employee_id } = req.params;
 
-    let { current_page, limit } = req.query;
+		let { current_page, limit } = req.query;
 
-    current_page = Number(current_page);
-    limit = Number(limit) || 10;
+		current_page = Number(current_page);
+		limit = Number(limit) || 10;
 
-    if (isNaN(current_page) || current_page < 1) current_page = 1;
+		if (isNaN(current_page) || current_page < 1) current_page = 1;
 
-    const { employee_full_name, avatar_image } = req.body;
+		const { employee_full_name, avatar_image } = req.body;
 
-    const result = await updateEmployee(
-      owner_id,
-      employee_id,
-      employee_full_name,
-      avatar_image,
-      current_page,
-      limit
-    );
+		const result = await updateEmployee(
+			owner_id,
+			employee_id,
+			employee_full_name,
+			avatar_image,
+			current_page,
+			limit,
+		);
 
-    if (result === -1) {
-      return res.status(404).json({ message: "Employee not found" });
-    }
+		if (result === -1) {
+			return res.status(404).json({ message: "Employee not found" });
+		}
 
-    if (!result) {
-      return res.status(501).json({ message: "Cannot update employee" });
-    }
+		if (!result) {
+			return res.status(501).json({ message: "Cannot update employee" });
+		}
 
-    return res
-      .status(200)
-      .json({ message: "Employee updated successfully", result });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		return res
+			.status(200)
+			.json({ message: "Employee updated successfully", result });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -150,27 +153,29 @@ exports.updateEmployee = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal errors
  */
 exports.deleteEmployee = async (req, res) => {
-  try {
-    const owner_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+	try {
+		const owner_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    const { employee_id } = req.params;
+		const { employee_id } = req.params;
 
-    const result = await deleteEmployee(owner_id, employee_id);
+		const result = await deleteEmployee(owner_id, employee_id);
 
-    if (result === -1) {
-      return res.status(404).json({ message: "Employee not found" });
-    }
+		if (result === -1) {
+			return res.status(404).json({ message: "Employee not found" });
+		}
 
-    if (!result) {
-      return res.status(501).json({ message: "Cannot delete employee" });
-    }
+		if (!result) {
+			return res.status(501).json({ message: "Cannot delete employee" });
+		}
 
-    return res.status(200).json({ message: "Employee deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		return res
+			.status(200)
+			.json({ message: "Employee deleted successfully" });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };

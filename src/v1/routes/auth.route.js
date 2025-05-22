@@ -2,26 +2,26 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  login,
-  logout,
-  refreshToken,
-  status,
-  register,
-  sendLink,
-  otp,
-  resetPass,
+	login,
+	logout,
+	refreshToken,
+	status,
+	register,
+	sendLink,
+	otp,
+	resetPass,
 } = require("../controllers/auth.controller");
 const {
-  authenticate,
-  unauthenticate,
-  ensureAdmin,
-  ensureStore,
-  ensureCustomer,
+	authenticate,
+	unauthenticate,
+	ensureAdmin,
+	ensureStore,
+	ensureCustomer,
 } = require("../middlewares/auth.middleware");
 
 const {
-  loginValidation,
-  registerValidation,
+	loginValidation,
+	registerValidation,
 } = require("../validators/auth.validator");
 const { restPasswordValidation } = require("../validators/user.validator");
 

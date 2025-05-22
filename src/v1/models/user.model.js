@@ -1,9 +1,9 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../../configs/database.config');
-const Authentication = require('./authentication.model');
+const { DataTypes } = require("sequelize");
+const sequelize = require("../../configs/database.config");
+const Authentication = require("./authentication.model");
 
-/** 
- * @description User Model 
+/**
+ * @description User Model
  * @typedef {Object} User
  * @property {number} user_id - Unique identifier for the user.
  * @property {string} user_full_name - Full name of the user (max 500 chars, required).
@@ -15,26 +15,42 @@ const Authentication = require('./authentication.model');
  * @property {Date} updated_at - Timestamp for when the record was last updated.
  * @property {boolean} delete_flag - Soft delete flag (true if deleted).
  */
-const User = sequelize.define('User', {
-    user_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, },
-    user_full_name: { type: DataTypes.STRING(500), allowNull: false, },
-    user_avatar_url: { type: DataTypes.STRING(500), allowNull: true, },
-    user_alias: { type: DataTypes.STRING(500), allowNull: true, }, 
-    user_description: { type: DataTypes.TEXT, allowNull: true, },
-    user_phone_number: { type: DataTypes.STRING(20), allowNull: false, },
-    user_street: { type: DataTypes.TEXT, allowNull: false, },
-    user_ward: { type: DataTypes.TEXT, allowNull: false, },
-    user_district: { type: DataTypes.TEXT, allowNull: false, },
-    user_city: { type: DataTypes.TEXT, allowNull: false, },
-    user_priority: { type: DataTypes.INTEGER, defaultValue: 0, allowNull: false, },
-    delete_flag: { type: DataTypes.BOOLEAN, defaultValue: false, },
-    authentication_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: Authentication, key: 'authentication_id', }, },
-}, {
-    tableName: 'users',
-    timestamps: true,
-    underscored: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
-});
+const User = sequelize.define(
+	"User",
+	{
+		user_id: {
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
+			primaryKey: true,
+		},
+		user_full_name: { type: DataTypes.STRING(500), allowNull: false },
+		user_avatar_url: { type: DataTypes.STRING(500), allowNull: true },
+		user_alias: { type: DataTypes.STRING(500), allowNull: true },
+		user_description: { type: DataTypes.TEXT, allowNull: true },
+		user_phone_number: { type: DataTypes.STRING(20), allowNull: false },
+		user_street: { type: DataTypes.TEXT, allowNull: false },
+		user_ward: { type: DataTypes.TEXT, allowNull: false },
+		user_district: { type: DataTypes.TEXT, allowNull: false },
+		user_city: { type: DataTypes.TEXT, allowNull: false },
+		user_priority: {
+			type: DataTypes.INTEGER,
+			defaultValue: 0,
+			allowNull: false,
+		},
+		delete_flag: { type: DataTypes.BOOLEAN, defaultValue: false },
+		authentication_id: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			references: { model: Authentication, key: "authentication_id" },
+		},
+	},
+	{
+		tableName: "users",
+		timestamps: true,
+		underscored: true,
+		createdAt: "created_at",
+		updatedAt: "updated_at",
+	},
+);
 
 module.exports = User;

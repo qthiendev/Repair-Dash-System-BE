@@ -13,6 +13,7 @@ const profileRoutes = require("./profile.route");
 const employeeRoutes = require("./employee.route");
 const reportsRoutes = require("./reports.route");
 const paymentRoutes = require("./payment.route");
+const notificationRoutes = require("./notification.route");
 
 /**
  * @description RESTful API for managing users.
@@ -111,7 +112,7 @@ app.use("/v1/employees", employeeRoutes);
 
 /**
  * @description RESTful API for store's report.
- * 
+ *
  * @route GET /v1/reports/services/:service_id? - Get service report for store user
  */
 app.use("/v1/reports", reportsRoutes);
@@ -123,5 +124,12 @@ app.use("/v1/reports", reportsRoutes);
  * @route GET    /v1/payment/zalopay/:trans_id - Check ZaloPay transaction status
  */
 app.use("/v1/payment", paymentRoutes);
+
+/**
+ * @description RESTful API for managing notifications.
+ *
+ * @route GET /v1/notifications - Get paginated notifications
+ */
+app.use("/v1/notifications", notificationRoutes);
 
 module.exports = app;

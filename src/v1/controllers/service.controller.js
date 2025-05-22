@@ -17,43 +17,51 @@ require("dotenv").config();
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } if an internal error happens
  */
 exports.createService = async (req, res) => {
-  try {
-    const owner_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+	try {
+		const owner_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    const { service_name, service_description, service_image, service_alias } =
-      req.body;
+		const {
+			service_name,
+			service_description,
+			service_image,
+			service_alias,
+		} = req.body;
 
-    const serviceId = await createService(
-      owner_id,
-      service_name,
-      service_description,
-      service_image,
-      service_alias
-    );
+		const serviceId = await createService(
+			owner_id,
+			service_name,
+			service_description,
+			service_image,
+			service_alias,
+		);
 
-    switch (serviceId) {
-      case -1:
-        return res.status(400).json({ message: "Owner not found.", code: -1 });
-      case -2:
-        return res
-          .status(400)
-          .json({ message: "Service already exists.", code: -2 });
-      case -3:
-        return res
-          .status(400)
-          .json({ message: "Service alias already exists.", code: -3 });
-      default:
-        return res
-          .status(201)
-          .json({ message: "Service created successfully", serviceId });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		switch (serviceId) {
+			case -1:
+				return res
+					.status(400)
+					.json({ message: "Owner not found.", code: -1 });
+			case -2:
+				return res
+					.status(400)
+					.json({ message: "Service already exists.", code: -2 });
+			case -3:
+				return res.status(400).json({
+					message: "Service alias already exists.",
+					code: -3,
+				});
+			default:
+				return res.status(201).json({
+					message: "Service created successfully",
+					serviceId,
+				});
+		}
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -65,38 +73,38 @@ exports.createService = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal server errors
  */
 exports.readService = async (req, res) => {
-  try {
-    const { service_id } = req.params;
-    let { index, limit } = req.query;
+	try {
+		const { service_id } = req.params;
+		let { index, limit } = req.query;
 
-    index = Number(index);
-    limit = Number(limit) || 10;
+		index = Number(index);
+		limit = Number(limit) || 10;
 
-    if (isNaN(index) || index < 1) index = 1;
+		if (isNaN(index) || index < 1) index = 1;
 
-    let user_id = null;
-    try {
-      if (req.cookies?.accessToken) {
-        user_id = jwt.verify(
-          req.cookies.accessToken,
-          process.env.JWT_SECRET_KEY
-        ).user_id;
-      }
-    } catch (error) {
-      console.error('Token verification failed:', error);
-    }
+		let user_id = null;
+		try {
+			if (req.cookies?.accessToken) {
+				user_id = jwt.verify(
+					req.cookies.accessToken,
+					process.env.JWT_SECRET_KEY,
+				).user_id;
+			}
+		} catch (error) {
+			console.error("Token verification failed:", error);
+		}
 
-    const result = await readService(service_id, user_id, index, limit);
+		const result = await readService(service_id, user_id, index, limit);
 
-    if (result === -1) {
-      return res.status(404).json({ message: "Service not found" });
-    }
+		if (result === -1) {
+			return res.status(404).json({ message: "Service not found" });
+		}
 
-    return res.status(200).json(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		return res.status(200).json(result);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -109,29 +117,31 @@ exports.readService = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal errors
  */
 exports.deleteService = async (req, res) => {
-  try {
-    const owner_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+	try {
+		const owner_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    const { service_id } = req.params;
+		const { service_id } = req.params;
 
-    const result = await deleteService(service_id, owner_id);
+		const result = await deleteService(service_id, owner_id);
 
-    if (result === -1) {
-      return res.status(404).json({ message: "Service not found" });
-    }
+		if (result === -1) {
+			return res.status(404).json({ message: "Service not found" });
+		}
 
-    if (!result) {
-      return res.status(501).json({ message: "Cannot delete service" });
-    }
+		if (!result) {
+			return res.status(501).json({ message: "Cannot delete service" });
+		}
 
-    return res.status(200).json({ message: "Service deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		return res
+			.status(200)
+			.json({ message: "Service deleted successfully" });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -147,44 +157,49 @@ exports.deleteService = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal errors
  */
 exports.updateService = async (req, res) => {
-  try {
-    const owner_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+	try {
+		const owner_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    const { service_id } = req.params;
+		const { service_id } = req.params;
 
-    const { service_name, service_description, service_image, service_alias } =
-      req.body;
+		const {
+			service_name,
+			service_description,
+			service_image,
+			service_alias,
+		} = req.body;
 
-    const result = await updateService(
-      owner_id,
-      service_id,
-      service_name,
-      service_description,
-      service_image,
-      service_alias
-    );
+		const result = await updateService(
+			owner_id,
+			service_id,
+			service_name,
+			service_description,
+			service_image,
+			service_alias,
+		);
 
-    switch (result) {
-      case -1:
-        return res
-          .status(400)
-          .json({ message: "Service not found.", code: -1 });
-      case -2:
-        return res
-          .status(400)
-          .json({ message: "Service alias already exists.", code: -2 });
-      default:
-        return res
-          .status(201)
-          .json({ message: "Service created successfully", result });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		switch (result) {
+			case -1:
+				return res
+					.status(400)
+					.json({ message: "Service not found.", code: -1 });
+			case -2:
+				return res.status(400).json({
+					message: "Service alias already exists.",
+					code: -2,
+				});
+			default:
+				return res
+					.status(201)
+					.json({ message: "Service created successfully", result });
+		}
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -196,25 +211,25 @@ exports.updateService = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal server errors
  */
 exports.readServiceStore = async (req, res) => {
-  try {
-    const { owner_id } = req.params;
+	try {
+		const { owner_id } = req.params;
 
-    let { index, limit } = req.query;
+		let { index, limit } = req.query;
 
-    index = Number(index);
-    limit = Number(limit) || 10;
+		index = Number(index);
+		limit = Number(limit) || 10;
 
-    if (isNaN(index) || index < 1) index = 1;
+		if (isNaN(index) || index < 1) index = 1;
 
-    const services = await readServiceStore(owner_id, index, limit);
+		const services = await readServiceStore(owner_id, index, limit);
 
-    if (!services) {
-      return res.status(404).json({ message: "Store not found" });
-    }
+		if (!services) {
+			return res.status(404).json({ message: "Store not found" });
+		}
 
-    return res.status(200).json(services );
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		return res.status(200).json(services);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };

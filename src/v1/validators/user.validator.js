@@ -1,160 +1,162 @@
-const { body, query, param, validateRequest } = require('./validator');
+const { body, query, param, validateRequest } = require("./validator");
 
 const readUserValidation = validateRequest([
-    param('user_id')
-        .optional()
-        .custom(value => {
-            if (typeof value === 'string') {
-                if (!value.trim()) {
-                    throw new Error('User alias must not be empty');
-                }
-            } else if (typeof value === 'number') {
-                if (!Number.isInteger(value) || value <= 0) {
-                    throw new Error('User ID must be a positive integer greater than 0');
-                }
-            } else {
-                throw new Error('Invalid user identifier format');
-            }
-            return true;
-        }),
+	param("user_id")
+		.optional()
+		.custom((value) => {
+			if (typeof value === "string") {
+				if (!value.trim()) {
+					throw new Error("User alias must not be empty");
+				}
+			} else if (typeof value === "number") {
+				if (!Number.isInteger(value) || value <= 0) {
+					throw new Error(
+						"User ID must be a positive integer greater than 0",
+					);
+				}
+			} else {
+				throw new Error("Invalid user identifier format");
+			}
+			return true;
+		}),
 
-    query('index')
-        .optional()
-        .isInt({ min: 1 }).withMessage('Index must be a positive integer')
-        .toInt(),
+	query("index")
+		.optional()
+		.isInt({ min: 1 })
+		.withMessage("Index must be a positive integer")
+		.toInt(),
 
-    query('max_range')
-        .optional()
-        .isInt({ min: 1, max: 100 }).withMessage('Max range must be between 1 and 100')
-        .toInt(),
+	query("max_range")
+		.optional()
+		.isInt({ min: 1, max: 100 })
+		.withMessage("Max range must be between 1 and 100")
+		.toInt(),
 ]);
 
 const restPasswordValidation = validateRequest([
-    body('password')
-        .isLength({ min: 6, max: 20 })
-        .withMessage('Password must be between 6 and 20 characters'),
-])
+	body("password")
+		.isLength({ min: 6, max: 20 })
+		.withMessage("Password must be between 6 and 20 characters"),
+]);
 
 const createUserValidation = validateRequest([
-    body('identifier_email')
-        .isEmail()
-        .withMessage('Invalid email format'),
+	body("identifier_email").isEmail().withMessage("Invalid email format"),
 
-    body('password')
-        .isLength({ min: 6, max: 20 })
-        .withMessage('Password must be between 6 and 20 characters'),
+	body("password")
+		.isLength({ min: 6, max: 20 })
+		.withMessage("Password must be between 6 and 20 characters"),
 
-    body('role')
-        .isString()
-        .isIn(['ADMIN', 'STORE', 'CUSTOMER'])
-        .withMessage('Role must be either ADMIN, STORE, or CUSTOMER'),
+	body("role")
+		.isString()
+		.isIn(["ADMIN", "STORE", "CUSTOMER"])
+		.withMessage("Role must be either ADMIN, STORE, or CUSTOMER"),
 
-    body('user_full_name')
-        .isString()
-        .isLength({ min: 1, max: 250 })
-        .withMessage('Full name must be between 5 and 500 characters'),
+	body("user_full_name")
+		.isString()
+		.isLength({ min: 1, max: 250 })
+		.withMessage("Full name must be between 5 and 500 characters"),
 
-    body('user_phone_number')
-        .isString()
-        .isLength({ min: 10, max: 20 })
-        .withMessage('Phone number must be between 10 and 20 characters'),
+	body("user_phone_number")
+		.isString()
+		.isLength({ min: 10, max: 20 })
+		.withMessage("Phone number must be between 10 and 20 characters"),
 
-    body('user_street')
-        .isString()
-        .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters'),
+	body("user_street")
+		.isString()
+		.isLength({ min: 5 })
+		.withMessage("Address must be at least 5 characters"),
 
-    body('user_ward')
-        .isString()
-        .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters'),
+	body("user_ward")
+		.isString()
+		.isLength({ min: 5 })
+		.withMessage("Address must be at least 5 characters"),
 
-    body('user_district')
-        .isString()
-        .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters'),
+	body("user_district")
+		.isString()
+		.isLength({ min: 5 })
+		.withMessage("Address must be at least 5 characters"),
 
-    body('user_city')
-        .isString()
-        .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters'),
+	body("user_city")
+		.isString()
+		.isLength({ min: 5 })
+		.withMessage("Address must be at least 5 characters"),
 ]);
 
 const updateUserValidation = validateRequest([
-    param('user_id')
-        .optional()
-        .isInt({ min: 1 })
-        .withMessage('User ID must be a positive integer or greater than 0'),
+	param("user_id")
+		.optional()
+		.isInt({ min: 1 })
+		.withMessage("User ID must be a positive integer or greater than 0"),
 
-    body('user_full_name')
-        .optional()
-        .isString()
-        .isLength({ min: 5, max: 500 })
-        .withMessage('Full name must be between 5 and 500 characters'),
+	body("user_full_name")
+		.optional()
+		.isString()
+		.isLength({ min: 5, max: 500 })
+		.withMessage("Full name must be between 5 and 500 characters"),
 
-    body('user_alias')
-        .optional()
-        .isString()
-        .isLength({ min: 1, max: 50 })
-        .withMessage('Alias must be between 1 and 20 characters'),
+	body("user_alias")
+		.optional()
+		.isString()
+		.isLength({ min: 1, max: 50 })
+		.withMessage("Alias must be between 1 and 20 characters"),
 
-    body('user_phone_number')
-        .optional()
-        .isString()
-        .isLength({ min: 10, max: 20 })
-        .withMessage('Phone number must be between 10 and 20 characters'),
+	body("user_phone_number")
+		.optional()
+		.isString()
+		.isLength({ min: 10, max: 20 })
+		.withMessage("Phone number must be between 10 and 20 characters"),
 
-    body('user_street')
-        .optional()
-        .isString()
-        .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters'),
+	body("user_street")
+		.optional()
+		.isString()
+		.isLength({ min: 5 })
+		.withMessage("Address must be at least 5 characters"),
 
-    body('user_ward')
-        .optional()
-        .isString()
-        .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters'),
+	body("user_ward")
+		.optional()
+		.isString()
+		.isLength({ min: 5 })
+		.withMessage("Address must be at least 5 characters"),
 
-    body('user_district')
-        .optional()
-        .isString()
-        .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters'),
+	body("user_district")
+		.optional()
+		.isString()
+		.isLength({ min: 5 })
+		.withMessage("Address must be at least 5 characters"),
 
-    body('user_city')
-        .optional()
-        .isString()
-        .isLength({ min: 5 })
-        .withMessage('Address must be at least 5 characters'),
+	body("user_city")
+		.optional()
+		.isString()
+		.isLength({ min: 5 })
+		.withMessage("Address must be at least 5 characters"),
 
-    body('identifier_email')
-        .optional()
-        .isEmail()
-        .withMessage('Invalid email format'),
-        
-    body('password')
-        .optional()
-        .isLength({ min: 6, max: 20 })
-        .withMessage('Password must be between 6 and 20 characters'),
+	body("identifier_email")
+		.optional()
+		.isEmail()
+		.withMessage("Invalid email format"),
 
-    body('role')
-        .optional()
-        .isString()
-        .isIn(['ADMIN', 'STORE', 'CUSTOMER'])
-        .withMessage('Role must be either ADMIN, STORE, or CUSTOMER'),
+	body("password")
+		.optional()
+		.isLength({ min: 6, max: 20 })
+		.withMessage("Password must be between 6 and 20 characters"),
+
+	body("role")
+		.optional()
+		.isString()
+		.isIn(["ADMIN", "STORE", "CUSTOMER"])
+		.withMessage("Role must be either ADMIN, STORE, or CUSTOMER"),
 ]);
 
 const deleteUserValidation = validateRequest([
-    param('user_id')
-        .isInt({ min: 1 })
-        .withMessage('User ID must be a positive integer or greater than 0')
+	param("user_id")
+		.isInt({ min: 1 })
+		.withMessage("User ID must be a positive integer or greater than 0"),
 ]);
 
 module.exports = {
-    readUserValidation,
-    createUserValidation,
-    updateUserValidation,
-    deleteUserValidation,
-    restPasswordValidation
+	readUserValidation,
+	createUserValidation,
+	updateUserValidation,
+	deleteUserValidation,
+	restPasswordValidation,
 };

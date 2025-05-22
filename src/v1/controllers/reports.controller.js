@@ -1,9 +1,9 @@
-const readServiceReportService = require('../services/reports/serviceReports.service');
-const getUserStatistics = require('../services/reports/adminReport.service');
-const terminal = require('../../utils/terminal');
-const jwt = require('jsonwebtoken');
+const readServiceReportService = require("../services/reports/serviceReports.service");
+const getUserStatistics = require("../services/reports/adminReport.service");
+const terminal = require("../../utils/terminal");
+const jwt = require("jsonwebtoken");
 
-require('dotenv').config();
+require("dotenv").config();
 
 /**
  * Retrieve service report for the store user with pagination.
@@ -16,28 +16,35 @@ require('dotenv').config();
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal errors
  */
 exports.readServiceReport = async (req, res) => {
-    try {
-        const { service_id } = req.params;
-        const { index, max_range } = req.query;
+	try {
+		const { service_id } = req.params;
+		const { index, max_range } = req.query;
 
-        const user_id = jwt.verify(req.cookies?.accessToken, process.env.JWT_SECRET_KEY).user_id;
+		const user_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-        const result = await readServiceReportService(
-            user_id,
-            service_id ?? null,
-            Number(index) ?? 1,
-            Number(max_range) ?? 10
-        );
+		const result = await readServiceReportService(
+			user_id,
+			service_id ?? null,
+			Number(index) ?? 1,
+			Number(max_range) ?? 10,
+		);
 
-        if (result === -1) {
-            return res.status(404).json({ message: 'Service not found or not owned', code: -1 });
-        }
+		if (result === -1) {
+			return res
+				.status(404)
+				.json({ message: "Service not found or not owned", code: -1 });
+		}
 
-        res.status(200).json(result);
-    } catch (error) {
-        terminal.error(`order.controller.js | Read Service Report Error: ${error.message}`);
-        res.status(500).json({ message: 'Unexpected error occurred' });
-    }
+		res.status(200).json(result);
+	} catch (error) {
+		terminal.error(
+			`order.controller.js | Read Service Report Error: ${error.message}`,
+		);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -55,38 +62,49 @@ exports.readServiceReport = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal errors
  */
 exports.getUserStatistics = async (req, res) => {
-    try {
-        const { index, max_range, user_id, user_full_name, user_alias, user_phone_number, role, identifier_email } = req.query;
-        const parsedIndex = parseInt(index, 10);
-        const parsedMaxRange = parseInt(max_range, 10);
-        const finalIndex = isNaN(parsedIndex) || parsedIndex < 1 ? 1 : parsedIndex;
-        const finalMaxRange = isNaN(parsedMaxRange) || parsedMaxRange < 1 ? 20 : parsedMaxRange;
+	try {
+		const {
+			index,
+			max_range,
+			user_id,
+			user_full_name,
+			user_alias,
+			user_phone_number,
+			role,
+			identifier_email,
+		} = req.query;
+		const parsedIndex = parseInt(index, 10);
+		const parsedMaxRange = parseInt(max_range, 10);
+		const finalIndex =
+			isNaN(parsedIndex) || parsedIndex < 1 ? 1 : parsedIndex;
+		const finalMaxRange =
+			isNaN(parsedMaxRange) || parsedMaxRange < 1 ? 20 : parsedMaxRange;
 
-        const filters = {};
+		const filters = {};
 
-        if (user_id) 
-            filters.user_id = parseInt(user_id, 10);
+		if (user_id) filters.user_id = parseInt(user_id, 10);
 
-        if (user_full_name) 
-            filters.user_full_name = user_full_name;
+		if (user_full_name) filters.user_full_name = user_full_name;
 
-        if (user_alias) 
-            filters.user_alias = user_alias;
+		if (user_alias) filters.user_alias = user_alias;
 
-        if (user_phone_number) 
-            filters.user_phone_number = user_phone_number;
+		if (user_phone_number) filters.user_phone_number = user_phone_number;
 
-        if (role) 
-            filters.role = role;
+		if (role) filters.role = role;
 
-        if (identifier_email) 
-            filters.identifier_email = identifier_email;
+		if (identifier_email) filters.identifier_email = identifier_email;
 
-        const result = await getUserStatistics(finalIndex, finalMaxRange, filters);
+		const result = await getUserStatistics(
+			finalIndex,
+			finalMaxRange,
+			filters,
+		);
 
-        res.status(200).json(result);
-    } catch (error) {
-        terminal.error(`reports.controller.js | Get User Statistics Error: ${error.message}`);
-        res.status(500).json({ message: 'Unexpected error occurred' });
-    }
+		res.status(200).json(result);
+	} catch (error) {
+		terminal.error(
+			`reports.controller.js | Get User Statistics Error: ${error.message}`,
+		);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
