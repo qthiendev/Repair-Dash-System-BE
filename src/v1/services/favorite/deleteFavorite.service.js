@@ -1,4 +1,4 @@
-const { Favorite } = require('../../models/index.model');
+const { Favorite } = require("../../models/index.model");
 
 /**
  * Deletes a favorite.
@@ -6,6 +6,6 @@ const { Favorite } = require('../../models/index.model');
  * @returns {Promise<number>} 1 if deleted, 0 if not found.
  */
 module.exports = async (favorite_id) => {
-    const deleted = await Favorite.destroy({ where: { favorite_id } });
-    return deleted;
+	const deleted = await Favorite.destroy({ where: { favorite_id } });
+	return deleted;
 };

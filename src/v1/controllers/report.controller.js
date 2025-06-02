@@ -15,32 +15,34 @@ require("dotenv").config();
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } if an internal error happens
  */
 exports.createReport = async (req, res) => {
-  try {
-    const user_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+	try {
+		const user_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    const { report_description, report_images } = req.body;
+		const { report_description, report_images } = req.body;
 
-    const reportId = await createReport(
-      user_id,
-      report_description,
-      report_images
-    );
+		const reportId = await createReport(
+			user_id,
+			report_description,
+			report_images,
+		);
 
-    switch (reportId) {
-      case -1:
-        return res.status(400).json({ message: "User not found.", code: -1 });
-      default:
-        return res
-          .status(201)
-          .json({ message: "Report created successfully", reportId });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		switch (reportId) {
+			case -1:
+				return res
+					.status(400)
+					.json({ message: "User not found.", code: -1 });
+			default:
+				return res
+					.status(201)
+					.json({ message: "Report created successfully", reportId });
+		}
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -52,32 +54,32 @@ exports.createReport = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal server errors
  */
 exports.readReport = async (req, res) => {
-  try {
-    const { report_id } = req.params;
+	try {
+		const { report_id } = req.params;
 
-    const user_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+		const user_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    let { index, limit } = req.query;
+		let { index, limit } = req.query;
 
-    index = Number(index);
-    limit = Number(limit) || 10;
+		index = Number(index);
+		limit = Number(limit) || 10;
 
-    if (isNaN(index) || index < 1) index = 1;
+		if (isNaN(index) || index < 1) index = 1;
 
-    const reports = await readReport(report_id, user_id, index, limit);
+		const reports = await readReport(report_id, user_id, index, limit);
 
-    if (!reports) {
-      return res.status(404).json({ message: "Report not found" });
-    }
+		if (!reports) {
+			return res.status(404).json({ message: "Report not found" });
+		}
 
-    return res.status(200).json({ data: reports });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		return res.status(200).json({ data: reports });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -89,27 +91,27 @@ exports.readReport = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal server errors
  */
 exports.readReportAdmin = async (req, res) => {
-  try {
-    const { report_id } = req.params;
+	try {
+		const { report_id } = req.params;
 
-    let { index, limit } = req.query;
+		let { index, limit } = req.query;
 
-    index = Number(index);
-    limit = Number(limit) || 10;
+		index = Number(index);
+		limit = Number(limit) || 10;
 
-    if (isNaN(index) || index < 1) index = 1;
+		if (isNaN(index) || index < 1) index = 1;
 
-    const reports = await readReportAdmin(report_id, index, limit);
+		const reports = await readReportAdmin(report_id, index, limit);
 
-    if (!reports) {
-      return res.status(404).json({ message: "Report not found" });
-    }
+		if (!reports) {
+			return res.status(404).json({ message: "Report not found" });
+		}
 
-    return res.status(200).json({ data: reports });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		return res.status(200).json({ data: reports });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -122,27 +124,27 @@ exports.readReportAdmin = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal errors
  */
 exports.deleteReport = async (req, res) => {
-  try {
-    const user_id = jwt.verify(
-      req.cookies?.accessToken,
-      process.env.JWT_SECRET_KEY
-    ).user_id;
+	try {
+		const user_id = jwt.verify(
+			req.cookies?.accessToken,
+			process.env.JWT_SECRET_KEY,
+		).user_id;
 
-    const { report_id } = req.params;
+		const { report_id } = req.params;
 
-    const result = await deleteReport(report_id, user_id);
+		const result = await deleteReport(report_id, user_id);
 
-    if (result === -1) {
-      return res.status(404).json({ message: "Report not found" });
-    }
+		if (result === -1) {
+			return res.status(404).json({ message: "Report not found" });
+		}
 
-    if (!result) {
-      return res.status(501).json({ message: "Cannot delete report" });
-    }
+		if (!result) {
+			return res.status(501).json({ message: "Cannot delete report" });
+		}
 
-    return res.status(200).json({ message: "Report deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Unexpected error occurred" });
-  }
+		return res.status(200).json({ message: "Report deleted successfully" });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };

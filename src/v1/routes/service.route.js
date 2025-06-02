@@ -2,19 +2,19 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  createService,
-  readService,
-  updateService,
-  deleteService,
-  readServiceStore,
+	createService,
+	readService,
+	updateService,
+	deleteService,
+	readServiceStore,
 } = require("../controllers/service.controller");
 
 const {
-  createServiceValidation,
-  readServiceValidation,
-  updateServiceValidation,
-  deleteServiceValidation,
-  readServiceStoreValidation,
+	createServiceValidation,
+	readServiceValidation,
+	updateServiceValidation,
+	deleteServiceValidation,
+	readServiceStoreValidation,
 } = require("../validators/service.validator");
 
 const { authenticate, ensureStore } = require("../middlewares/auth.middleware");
@@ -29,31 +29,27 @@ const { authenticate, ensureStore } = require("../middlewares/auth.middleware");
  * @route DELETE /v1/service/:service_id  - Soft delete a service
  */
 router.post(
-  "/",
-  authenticate,
-  ensureStore,
-  createServiceValidation,
-  createService
+	"/",
+	authenticate,
+	ensureStore,
+	createServiceValidation,
+	createService,
 );
-router.get(
-  "/:service_id?", 
-  readServiceValidation, 
-  readService
-);
+router.get("/:service_id?", readServiceValidation, readService);
 router.get("/stores/:owner_id", readServiceStoreValidation, readServiceStore);
 router.put(
-  "/:service_id",
-  authenticate,
-  ensureStore,
-  updateServiceValidation,
-  updateService
+	"/:service_id",
+	authenticate,
+	ensureStore,
+	updateServiceValidation,
+	updateService,
 );
 router.delete(
-  "/:service_id",
-  authenticate,
-  ensureStore,
-  deleteServiceValidation,
-  deleteService
+	"/:service_id",
+	authenticate,
+	ensureStore,
+	deleteServiceValidation,
+	deleteService,
 );
 
 module.exports = router;

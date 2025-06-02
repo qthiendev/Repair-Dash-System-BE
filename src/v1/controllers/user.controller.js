@@ -1,8 +1,8 @@
-const readUser = require('../services/user/readUser.service');
-const createUser = require('../services/user/createUser.service');
-const deleteUser = require('../services/user/deleteUser.service');
-const updateUser = require('../services/user/updateUser.service');
-const lockUser = require('../services/user/lockUser.service');
+const readUser = require("../services/user/readUser.service");
+const createUser = require("../services/user/createUser.service");
+const deleteUser = require("../services/user/deleteUser.service");
+const updateUser = require("../services/user/updateUser.service");
+const lockUser = require("../services/user/lockUser.service");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -20,38 +20,50 @@ require("dotenv").config();
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } if an internal error happens
  */
 exports.createUser = async (req, res) => {
-    try {
-        const {
-            identifier_email,
-            password,
-            role,
-            user_full_name,
-            user_alias,
-            user_phone_number,
-            user_street,
-            user_ward,
-            user_district,
-            user_city,
-        } = req.body;
+	try {
+		const {
+			identifier_email,
+			password,
+			role,
+			user_full_name,
+			user_alias,
+			user_phone_number,
+			user_street,
+			user_ward,
+			user_district,
+			user_city,
+		} = req.body;
 
-        const authData = { identifier_email, password, role };
-        const userData = { user_full_name, user_alias, user_phone_number, user_street, user_ward, user_district, user_city };
+		const authData = { identifier_email, password, role };
+		const userData = {
+			user_full_name,
+			user_alias,
+			user_phone_number,
+			user_street,
+			user_ward,
+			user_district,
+			user_city,
+		};
 
-        const userID = await createUser(authData, userData);
+		const userID = await createUser(authData, userData);
 
-        if (userID === -1) {
-            return res.status(400).json({ message: 'User already exists', code: -1 });
-        }
+		if (userID === -1) {
+			return res
+				.status(400)
+				.json({ message: "User already exists", code: -1 });
+		}
 
-        if (userID === -2) {
-            return res.status(400).json({ message: 'Alias already taken', code: -2 });
-        }
+		if (userID === -2) {
+			return res
+				.status(400)
+				.json({ message: "Alias already taken", code: -2 });
+		}
 
-        return res.status(201).json({ user_id: userID });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Unexpected error occurred' });
-    }
+		return res.status(201).json({ user_id: userID });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -63,36 +75,36 @@ exports.createUser = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal server errors
  */
 exports.readUser = async (req, res) => {
-    try {
-        const { user_id } = req.params;
+	try {
+		const { user_id } = req.params;
 
-        let sub_user_id = null;
-        try {
-            if (req.cookies?.accessToken) {
-                sub_user_id = jwt.verify(
-                    req.cookies.accessToken,
-                    process.env.JWT_SECRET_KEY
-                ).user_id;
-            }
-        } catch (error) {
-            console.error('Token verification failed:', error);
-        }
+		let sub_user_id = null;
+		try {
+			if (req.cookies?.accessToken) {
+				sub_user_id = jwt.verify(
+					req.cookies.accessToken,
+					process.env.JWT_SECRET_KEY,
+				).user_id;
+			}
+		} catch (error) {
+			console.error("Token verification failed:", error);
+		}
 
-        const users = await readUser(user_id, sub_user_id);
+		const users = await readUser(user_id, sub_user_id);
 
-        if (!users) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+		if (!users) {
+			return res.status(404).json({ message: "User not found" });
+		}
 
-        if (!user_id) {
-            return res.status(200).json({ users });
-        }
+		if (!user_id) {
+			return res.status(200).json({ users });
+		}
 
-        return res.status(200).json({ ...users });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Unexpected error occurred' });
-    }
+		return res.status(200).json({ ...users });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -117,67 +129,75 @@ exports.readUser = async (req, res) => {
  * @returns {Object} 500 - { message: 'Failed to update user' } if the update failed
  */
 exports.updateUser = async (req, res) => {
-    try {
-        const { user_id } = req.params;
-        const {
-            user_full_name,
-            user_alias,
-            user_priority,
-            user_phone_number,
-            user_description,
-            user_street,
-            user_ward,
-            user_district,
-            user_city,
-            identifier_email,
-            password,
-            role,
-            avatar_image
-        } = req.body;
+	try {
+		const { user_id } = req.params;
+		const {
+			user_full_name,
+			user_alias,
+			user_priority,
+			user_phone_number,
+			user_description,
+			user_street,
+			user_ward,
+			user_district,
+			user_city,
+			identifier_email,
+			password,
+			role,
+			avatar_image,
+		} = req.body;
 
-        const updateData = {
-            user: {
-                user_full_name,
-                user_alias,
-                user_priority,
-                user_phone_number,
-                user_description,
-                user_street,
-                user_ward,
-                user_district,
-                user_city,
-                avatar_image
-            },
-            authentication: {
-                identifier_email,
-                password,
-                role
-            },
+		const updateData = {
+			user: {
+				user_full_name,
+				user_alias,
+				user_priority,
+				user_phone_number,
+				user_description,
+				user_street,
+				user_ward,
+				user_district,
+				user_city,
+				avatar_image,
+			},
+			authentication: {
+				identifier_email,
+				password,
+				role,
+			},
+		};
 
-        };
+		const result = await updateUser(parseInt(user_id, 10), updateData);
 
-        const result = await updateUser(parseInt(user_id, 10), updateData);
+		if (result === -1) {
+			return res.status(404).json({
+				message: "User not found or already deleted",
+				code: -1,
+			});
+		}
 
-        if (result === -1) {
-            return res.status(404).json({ message: 'User not found or already deleted', code: -1 });
-        }
+		if (result === -2) {
+			return res
+				.status(400)
+				.json({ message: "Alias already taken", code: -2 });
+		}
 
-        if (result === -2) {
-            return res.status(400).json({ message: 'Alias already taken', code: -2 });
-        }
+		if (result === -3) {
+			return res
+				.status(500)
+				.json({ message: "Failed to update user", code: -3 });
+		}
 
-        if (result === -3) {
-            return res.status(500).json({ message: 'Failed to update user', code: -3 });
-        }
-
-        return res.status(200).json({
-            message: 'User updated successfully',
-            ...result.user,
-        });
-    } catch (error) {
-        terminal.error(`user.controller.js | Update User Error: ${error.message}`);
-        res.status(500).json({ message: 'Unexpected error occurred' });
-    }
+		return res.status(200).json({
+			message: "User updated successfully",
+			...result.user,
+		});
+	} catch (error) {
+		terminal.error(
+			`user.controller.js | Update User Error: ${error.message}`,
+		);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -190,23 +210,27 @@ exports.updateUser = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' } for internal errors
  */
 exports.deleteUser = async (req, res) => {
-    try {
-        const { user_id } = req.params;
-        const result = await deleteUser(user_id);
+	try {
+		const { user_id } = req.params;
+		const result = await deleteUser(user_id);
 
-        if (result === -1) {
-            return res.status(404).json({ message: 'User not found', code: -1 });
-        }
+		if (result === -1) {
+			return res
+				.status(404)
+				.json({ message: "User not found", code: -1 });
+		}
 
-        if (!result) {
-            return res.status(501).json({ message: 'Cannot delete user', code: -2 });
-        }
+		if (!result) {
+			return res
+				.status(501)
+				.json({ message: "Cannot delete user", code: -2 });
+		}
 
-        return res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Unexpected error occurred' });
-    }
+		return res.status(200).json({ message: "User deleted successfully" });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };
 
 /**
@@ -218,25 +242,31 @@ exports.deleteUser = async (req, res) => {
  * @returns {Object} 500 - { message: 'Unexpected error occurred' }
  */
 exports.lockUser = async (req, res) => {
-    try {
-        const { user_id } = req.params;
-        const result = await lockUser(parseInt(user_id, 10));
+	try {
+		const { user_id } = req.params;
+		const result = await lockUser(parseInt(user_id, 10));
 
-        if (result === -1) {
-            return res.status(404).json({ message: 'User not found or already locked' });
-        }
+		if (result === -1) {
+			return res
+				.status(404)
+				.json({ message: "User not found or already locked" });
+		}
 
-        if (!result) {
-            return res.status(500).json({ message: 'Failed to lock user' });
-        }
+		if (!result) {
+			return res.status(500).json({ message: "Failed to lock user" });
+		}
 
-        if (result === 1) {
-            return res.status(200).json({ message: 'User unlocked successfully' });
-        }
+		if (result === 1) {
+			return res
+				.status(200)
+				.json({ message: "User unlocked successfully" });
+		}
 
-        return res.status(200).json({ message: 'User locked successfully' });
-    } catch (error) {
-        terminal.error(`reports.controller.js | Lock User Error: ${error.message}`);
-        return res.status(500).json({ message: 'Unexpected error occurred' });
-    }
+		return res.status(200).json({ message: "User locked successfully" });
+	} catch (error) {
+		terminal.error(
+			`reports.controller.js | Lock User Error: ${error.message}`,
+		);
+		return res.status(500).json({ message: "Unexpected error occurred" });
+	}
 };

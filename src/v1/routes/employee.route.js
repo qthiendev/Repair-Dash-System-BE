@@ -2,17 +2,17 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  createEmployee,
-  readEmployeeStore,
-  updateEmployee,
-  deleteEmployee,
+	createEmployee,
+	readEmployeeStore,
+	updateEmployee,
+	deleteEmployee,
 } = require("../controllers/employee.controller");
 
 const {
-  createEmployeeValidation,
-  readEmployeeValidation,
-  updateEmployeeValidation,
-  deleteEmployeeValidation,
+	createEmployeeValidation,
+	readEmployeeValidation,
+	updateEmployeeValidation,
+	deleteEmployeeValidation,
 } = require("../validators/employee.validator");
 
 const { authenticate, ensureStore } = require("../middlewares/auth.middleware");
@@ -26,34 +26,34 @@ const { authenticate, ensureStore } = require("../middlewares/auth.middleware");
  * @route DELETE  /v1/employees/:employee_id  - Soft delete a employee
  */
 router.post(
-  "/",
-  authenticate,
-  ensureStore,
-  createEmployeeValidation,
-  createEmployee
+	"/",
+	authenticate,
+	ensureStore,
+	createEmployeeValidation,
+	createEmployee,
 );
 router.get(
-  "/:employee_id?",
-  authenticate,
-  ensureStore,
-  readEmployeeValidation,
-  readEmployeeStore
+	"/:employee_id?",
+	authenticate,
+	ensureStore,
+	readEmployeeValidation,
+	readEmployeeStore,
 );
 
 router.put(
-  "/:employee_id",
-  authenticate,
-  ensureStore,
-  updateEmployeeValidation,
-  updateEmployee
+	"/:employee_id",
+	authenticate,
+	ensureStore,
+	updateEmployeeValidation,
+	updateEmployee,
 );
 
 router.delete(
-  "/:employee_id",
-  authenticate,
-  ensureStore,
-  deleteEmployeeValidation,
-  deleteEmployee
+	"/:employee_id",
+	authenticate,
+	ensureStore,
+	deleteEmployeeValidation,
+	deleteEmployee,
 );
 
 module.exports = router;
